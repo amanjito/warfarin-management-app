@@ -28,12 +28,14 @@ const loginSchema = z.object({
 });
 
 const signupSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
   password: z
     .string()
     .min(6, 'Password must be at least 6 characters')
     .max(72, 'Password must be less than 72 characters'),
-  confirmPassword: z.string(),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ['confirmPassword'],
@@ -52,7 +54,7 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onSubmit', // Only validate on submit
+    mode: 'onChange', // Validate as user types
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -62,7 +64,7 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onSubmit', // Only validate on submit
+    mode: 'onChange', // Validate as user types
   });
 
   useEffect(() => {
