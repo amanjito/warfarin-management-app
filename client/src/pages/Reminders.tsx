@@ -68,6 +68,7 @@ export default function Reminders() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [medicationToDelete, setMedicationToDelete] = useState<number | null>(null);
+  
   // Define type for medication with reminders
   type MedicationWithReminders = Medication & { reminders: Reminder[] };
   
@@ -236,8 +237,8 @@ export default function Reminders() {
     const reminder = selectedMedication.reminders[0];
     return {
       time: reminder.time,
-      notifyBefore: reminder.notifyBefore.toString(),
-      days: reminder.days.split(',')
+      notifyBefore: (reminder.notifyBefore || 15).toString(),
+      days: reminder.days ? reminder.days.split(',') : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     };
   };
   
@@ -415,7 +416,10 @@ export default function Reminders() {
                       <Trash2 className="h-5 w-5" />
                     </button>
                   ) : (
-                    <button className="text-gray-400 hover:text-gray-500 p-2">
+                    <button 
+                      className="text-gray-400 hover:text-gray-500 p-2"
+                      onClick={() => handleEditMedication(medication as MedicationWithReminders)}
+                    >
                       <ChevronRight className="h-5 w-5" />
                     </button>
                   )}
@@ -425,6 +429,7 @@ export default function Reminders() {
           </ul>
         </CardContent>
       </Card>
+      
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
@@ -447,6 +452,123 @@ export default function Reminders() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      {/* Edit Medication Reminder Dialog */}
+      <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit {selectedMedication?.name} Reminder</DialogTitle>
+            <DialogDescription>
+              Update when and how often to take this medication
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedMedication && (() => {
+            const form = useForm<EditReminderFormValues>({
+              resolver: zodResolver(editReminderSchema),
+              defaultValues: getEditFormDefaultValues(),
+              mode: "onChange"
+            });
+            
+            return (
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(handleEditFormSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="time"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Time</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="time" 
+                            {...field} 
+                            placeholder="08:00" 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="notifyBefore"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Notify Before</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value.toString()}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select when to be notified" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="5">5 minutes</SelectItem>
+                            <SelectItem value="10">10 minutes</SelectItem>
+                            <SelectItem value="15">15 minutes</SelectItem>
+                            <SelectItem value="30">30 minutes</SelectItem>
+                            <SelectItem value="60">1 hour</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="days"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Days</FormLabel>
+                        <div className="flex flex-wrap gap-2">
+                          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                            <Button
+                              key={day}
+                              type="button"
+                              variant={field.value.includes(day) ? "default" : "outline"}
+                              size="sm"
+                              onClick={() => {
+                                const updatedDays = field.value.includes(day)
+                                  ? field.value.filter((d: string) => d !== day)
+                                  : [...field.value, day];
+                                field.onChange(updatedDays);
+                              }}
+                            >
+                              {day}
+                            </Button>
+                          ))}
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <DialogFooter className="pt-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setEditModalOpen(false)}
+                      type="button"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit"
+                      disabled={!form.formState.isValid || updateReminderMutation.isPending}
+                    >
+                      {updateReminderMutation.isPending ? "Saving..." : "Save Changes"}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
