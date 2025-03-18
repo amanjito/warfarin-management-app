@@ -91,30 +91,27 @@ export default function Auth() {
     setLoading(true);
     
     try {
-      // Use a demo account for testing
-      const { error } = await supabase.auth.signInWithPassword({
-        email: 'demo@example.com',
-        password: 'demopassword',
-      });
+      // For demo mode, we'll use the in-memory storage without authentication
+      // Set a localStorage item to indicate we're in demo mode
+      localStorage.setItem('demoMode', 'true');
       
-      if (error) {
-        // If demo login fails, use anonymous session
-        toast({
-          title: "Using demo mode",
-          description: "You're using the app without an account."
-        });
-        setLocation('/');
-        return;
-      }
-      
-      setLocation('/');
-    } catch (error) {
-      // Use anonymous session
       toast({
         title: "Using demo mode",
         description: "You're using the app without an account."
       });
-      setLocation('/');
+      
+      // We'll bypass authentication for demo mode
+      // Redirect to dashboard
+      setTimeout(() => {
+        setLocation('/dashboard');
+      }, 500);
+    } catch (error) {
+      console.error("Error entering demo mode:", error);
+      toast({
+        title: "Error",
+        description: "Could not enter demo mode. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
