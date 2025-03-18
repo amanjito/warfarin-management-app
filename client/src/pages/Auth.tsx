@@ -20,8 +20,8 @@ import {
 } from '@/components/ui/form';
 
 const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 const signupSchema = z.object({
@@ -49,6 +49,7 @@ export default function Auth() {
       email: '',
       password: '',
     },
+    mode: 'onSubmit', // Only validate on submit
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -58,6 +59,7 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
+    mode: 'onSubmit', // Only validate on submit
   });
 
   useEffect(() => {
@@ -88,6 +90,15 @@ export default function Auth() {
       subscription.unsubscribe();
     };
   }, [setLocation]);
+
+  // Reset form errors when switching tabs
+  useEffect(() => {
+    if (tab === 'login') {
+      loginForm.clearErrors();
+    } else {
+      signupForm.clearErrors();
+    }
+  }, [tab, loginForm, signupForm]);
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
