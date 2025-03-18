@@ -25,12 +25,12 @@ const loginSchema = z.object({
 });
 
 const signupSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().trim().email('Please enter a valid email address'),
   password: z
     .string()
     .min(6, 'Password must be at least 6 characters')
     .max(72, 'Password must be less than 72 characters'),
-  confirmPassword: z.string(),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ['confirmPassword'],
@@ -41,6 +41,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(true);
   const [authLoading, setAuthLoading] = useState(false);
   const [tab, setTab] = useState<'login' | 'signup'>('login');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
@@ -58,7 +59,18 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
+    mode: 'onChange', // Validate on change for better user feedback
   });
+
+  // Reset form errors when tab changes
+  useEffect(() => {
+    setFormErrors({});
+    if (tab === 'login') {
+      loginForm.reset();
+    } else {
+      signupForm.reset();
+    }
+  }, [tab, loginForm, signupForm]);
 
   useEffect(() => {
     // Check if the user is already authenticated
@@ -123,6 +135,36 @@ export default function Auth() {
   }
 
   async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
+    console.log("Form values:", values); // Debug log to see actual values
+    
+    // Manual validation before proceeding
+    if (!values.email || !values.email.includes('@')) {
+      toast({
+        title: 'Invalid email',
+        description: 'Please enter a valid email address',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (!values.password || values.password.length < 6) {
+      toast({
+        title: 'Invalid password',
+        description: 'Password must be at least 6 characters',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    if (values.password !== values.confirmPassword) {
+      toast({
+        title: 'Password mismatch',
+        description: 'Passwords do not match',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setAuthLoading(true);
     
     try {
@@ -139,6 +181,7 @@ export default function Auth() {
       });
 
       if (error) {
+        console.error("Supabase signup error:", error);
         toast({
           title: 'Signup failed',
           description: error.message,
@@ -158,6 +201,7 @@ export default function Auth() {
         loginForm.setValue('email', values.email);
       }
     } catch (error) {
+      console.error("Signup error:", error); // Log the detailed error
       toast({
         title: 'Signup error',
         description: 'An unexpected error occurred. Please try again.',
@@ -254,7 +298,14 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input placeholder="your.email@example.com" className="pl-10" {...field} />
+                            <Input 
+                              placeholder="your.email@example.com" 
+                              className="pl-10" 
+                              type="email"
+                              autoComplete="email"
+                              required
+                              {...field} 
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -270,7 +321,15 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input 
+                              type="password" 
+                              placeholder="••••••••" 
+                              className="pl-10" 
+                              autoComplete="new-password"
+                              required
+                              minLength={6}
+                              {...field} 
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -286,7 +345,15 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input 
+                              type="password" 
+                              placeholder="••••••••" 
+                              className="pl-10" 
+                              autoComplete="new-password"
+                              required
+                              minLength={6}
+                              {...field} 
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
