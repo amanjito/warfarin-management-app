@@ -37,8 +37,8 @@ export async function sendNotification(
       title: payload.title,
       body: payload.body,
       url: payload.url || '/',
-      icon: payload.icon || '/icons/medicine-icon-192.png',
-      badge: payload.badge || '/icons/badge-72.png',
+      icon: payload.icon || '/icons/icon-192x192.png',
+      badge: payload.badge || '/icons/badge-72x72.png',
       data: payload.data || {}
     });
 
