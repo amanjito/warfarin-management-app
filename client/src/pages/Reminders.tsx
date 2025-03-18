@@ -9,10 +9,21 @@ import ReminderForm from "@/components/reminders/ReminderForm";
 import ReminderItem from "@/components/reminders/ReminderItem";
 import NotificationManager from "@/components/reminders/NotificationManager";
 import { Medication, Reminder, MedicationLog } from "@shared/schema";
-import { BellRing, ChevronRight } from "lucide-react";
+import { BellRing, ChevronRight, Trash2, X, Edit, Check } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function Reminders() {
   const today = format(new Date(), "MMM dd, yyyy");
+  const [isEditMode, setIsEditMode] = useState(false);
   
   // Fetch medications
   const { data: medications, isLoading: medicationsLoading } = useQuery<Medication[]>({
@@ -47,6 +58,18 @@ export default function Reminders() {
       return response.json();
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/reminders'] });
+    },
+  });
+  
+  // Create mutation for deleting a medication
+  const deleteMedicationMutation = useMutation({
+    mutationFn: async (medicationId: number) => {
+      const response = await apiRequest('DELETE', `/api/medications/${medicationId}`);
+      return response.ok;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/medications'] });
       queryClient.invalidateQueries({ queryKey: ['/api/reminders'] });
     },
   });
@@ -103,6 +126,16 @@ export default function Reminders() {
       active: true,
       notifyBefore: parseInt(data.notifyBefore || "15")
     });
+  };
+  
+  const toggleEditMode = () => {
+    setIsEditMode(prev => !prev);
+  };
+  
+  const handleDeleteMedication = (medicationId: number) => {
+    if (confirm("Are you sure you want to delete this medication? This will also delete all associated reminders.")) {
+      deleteMedicationMutation.mutate(medicationId);
+    }
   };
   
   const todaysReminders = getTodaysReminders();
@@ -166,7 +199,22 @@ export default function Reminders() {
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium">All Medications</h3>
-            <button className="text-sm text-primary">Edit List</button>
+            <button 
+              className="text-sm text-primary flex items-center gap-1"
+              onClick={toggleEditMode}
+            >
+              {isEditMode ? (
+                <>
+                  <Check className="h-4 w-4" />
+                  Done
+                </>
+              ) : (
+                <>
+                  <Edit className="h-4 w-4" />
+                  Edit List
+                </>
+              )}
+            </button>
           </div>
           
           <ul className="divide-y divide-gray-200">
@@ -223,9 +271,19 @@ export default function Reminders() {
                       </p>
                     </div>
                   </div>
-                  <button className="text-gray-400 hover:text-gray-500">
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
+                  {isEditMode ? (
+                    <button 
+                      className="text-red-500 hover:text-red-700 p-2" 
+                      onClick={() => handleDeleteMedication(medication.id)}
+                      disabled={deleteMedicationMutation.isPending}
+                    >
+                      <Trash2 className="h-5 w-5" />
+                    </button>
+                  ) : (
+                    <button className="text-gray-400 hover:text-gray-500 p-2">
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  )}
                 </div>
               </li>
             ))}
