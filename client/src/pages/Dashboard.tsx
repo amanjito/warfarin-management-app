@@ -111,19 +111,19 @@ export default function Dashboard() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">Welcome back, Sarah</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right">سارا، خوش آمدید</h2>
       
       {/* Today's Summary */}
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">Today's Summary</h3>
+            <h3 className="font-medium text-right">خلاصه امروز</h3>
             <span className="text-sm text-gray-500">{today}</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <StatusCard 
-              title="Next Warfarin Dose"
+              title="دوز بعدی وارفارین"
               value={medications?.find(m => m.name === "Warfarin")?.dosage || "Not set"}
               subtitle={medications?.find(m => m.name === "Warfarin") 
                 ? "8:00 PM Today" 
