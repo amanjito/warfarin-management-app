@@ -18,95 +18,95 @@ export default function MedicationInfo() {
   const sections = [
     {
       id: "what-is-warfarin",
-      title: "What is Warfarin?",
+      title: "وارفارین چیست؟",
       content: (
         <>
           <p className="text-sm text-gray-700 mb-3">
-            Warfarin (Coumadin) is an anticoagulant medication that helps prevent blood clots from forming or growing larger. It works by decreasing the clotting ability of the blood.
+            وارفارین (کومادین) یک داروی ضدانعقاد است که به جلوگیری از تشکیل یا بزرگ شدن لخته‌های خون کمک می‌کند. این دارو با کاهش توانایی انعقاد خون عمل می‌کند.
           </p>
           <p className="text-sm text-gray-700 mb-3">
-            Warfarin is commonly prescribed for people with:
+            وارفارین معمولاً برای افراد با شرایط زیر تجویز می‌شود:
           </p>
-          <ul className="list-disc pl-5 text-sm text-gray-700 mb-3">
-            <li>Atrial fibrillation</li>
-            <li>Deep vein thrombosis (DVT)</li>
-            <li>Pulmonary embolism</li>
-            <li>Artificial heart valves</li>
-            <li>History of stroke</li>
+          <ul className="list-disc pr-5 text-sm text-gray-700 mb-3 text-right">
+            <li>فیبریلاسیون دهلیزی</li>
+            <li>ترومبوز ورید عمقی (DVT)</li>
+            <li>آمبولی ریوی</li>
+            <li>دریچه‌های مصنوعی قلب</li>
+            <li>سابقه سکته</li>
           </ul>
           <p className="text-sm text-gray-700">
-            Regular monitoring of your INR (International Normalized Ratio) is essential while taking warfarin to ensure you're receiving the right dose.
+            نظارت منظم بر INR (نسبت نرمال شده بین‌المللی) شما هنگام مصرف وارفارین برای اطمینان از دریافت دوز مناسب ضروری است.
           </p>
         </>
       )
     },
     {
       id: "how-to-take",
-      title: "How to Take Warfarin",
+      title: "نحوه مصرف وارفارین",
       content: (
         <>
           <p className="text-sm text-gray-700 mb-3">
-            Take warfarin exactly as prescribed by your healthcare provider. Here are important guidelines:
+            وارفارین را دقیقاً طبق دستور پزشک مصرف کنید. دستورالعمل‌های مهم:
           </p>
-          <ul className="list-disc pl-5 text-sm text-gray-700 mb-3">
-            <li>Take at the same time each day, usually in the evening</li>
-            <li>Can be taken with or without food</li>
-            <li>Do not change your dose without consulting your doctor</li>
-            <li>If you miss a dose, take it as soon as you remember on the same day</li>
-            <li>Do not take a double dose to make up for a missed dose</li>
-            <li>Keep regular appointments for INR testing</li>
+          <ul className="list-disc pr-5 text-sm text-gray-700 mb-3 text-right">
+            <li>هر روز در ساعت مشخصی مصرف کنید، معمولاً در عصر</li>
+            <li>می‌تواند با غذا یا بدون غذا مصرف شود</li>
+            <li>بدون مشورت با پزشک، دوز خود را تغییر ندهید</li>
+            <li>اگر یک دوز را فراموش کردید، به محض یادآوری در همان روز آن را مصرف کنید</li>
+            <li>برای جبران دوز فراموش شده، دوز دوبرابر مصرف نکنید</li>
+            <li>قرار ملاقات‌های منظم برای آزمایش INR را رعایت کنید</li>
           </ul>
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 text-sm">
-            <p className="font-medium text-yellow-800">Important</p>
-            <p className="text-yellow-700">Never stop taking warfarin without talking to your healthcare provider first.</p>
+          <div className="bg-yellow-50 border-r-4 border-yellow-400 p-3 text-sm text-right">
+            <p className="font-medium text-yellow-800">مهم</p>
+            <p className="text-yellow-700">هرگز بدون صحبت با پزشک خود، مصرف وارفارین را متوقف نکنید.</p>
           </div>
         </>
       )
     },
     {
       id: "side-effects",
-      title: "Side Effects",
+      title: "عوارض جانبی",
       content: (
         <>
           <p className="text-sm text-gray-700 mb-3">
-            Common side effects of warfarin may include:
+            عوارض جانبی رایج وارفارین ممکن است شامل موارد زیر باشد:
           </p>
-          <ul className="list-disc pl-5 text-sm text-gray-700 mb-3">
-            <li>Bleeding gums when brushing teeth</li>
-            <li>Nosebleeds</li>
-            <li>Easy bruising</li>
-            <li>Prolonged bleeding from cuts</li>
+          <ul className="list-disc pr-5 text-sm text-gray-700 mb-3 text-right">
+            <li>خونریزی لثه هنگام مسواک زدن</li>
+            <li>خون‌دماغ</li>
+            <li>کبودی آسان</li>
+            <li>خونریزی طولانی از بریدگی‌ها</li>
           </ul>
-          <div className="bg-red-50 border-l-4 border-red-400 p-3 text-sm mb-3">
-            <p className="font-medium text-red-800">Seek medical attention immediately if you experience:</p>
-            <ul className="list-disc pl-5 text-red-700">
-              <li>Severe or unusual bleeding</li>
-              <li>Red or brown urine</li>
-              <li>Black or bloody stool</li>
-              <li>Vomit that looks like coffee grounds</li>
-              <li>Coughing up blood</li>
-              <li>Severe headache or dizziness</li>
-              <li>Unusual joint pain or swelling</li>
+          <div className="bg-red-50 border-r-4 border-red-400 p-3 text-sm mb-3 text-right">
+            <p className="font-medium text-red-800">در صورت بروز موارد زیر فوراً به پزشک مراجعه کنید:</p>
+            <ul className="list-disc pr-5 text-red-700">
+              <li>خونریزی شدید یا غیرمعمول</li>
+              <li>ادرار قرمز یا قهوه‌ای</li>
+              <li>مدفوع سیاه یا خونی</li>
+              <li>استفراغی که شبیه تفاله قهوه است</li>
+              <li>سرفه خونی</li>
+              <li>سردرد شدید یا سرگیجه</li>
+              <li>درد یا تورم غیرمعمول مفصل</li>
             </ul>
           </div>
           <p className="text-sm text-gray-700">
-            Report any unusual symptoms to your healthcare provider promptly.
+            هرگونه علائم غیرمعمول را فوراً به پزشک خود گزارش دهید.
           </p>
         </>
       )
     },
     {
       id: "food-interactions",
-      title: "Food and Medication Interactions",
+      title: "تداخلات غذایی و دارویی",
       content: (
         <>
           <p className="text-sm text-gray-700 mb-3">
-            Warfarin interacts with many foods, supplements, and medications. It's important to maintain consistency in your diet while taking warfarin.
+            وارفارین با بسیاری از غذاها، مکمل‌ها و داروها تداخل دارد. حفظ ثبات در رژیم غذایی هنگام مصرف وارفارین مهم است.
           </p>
           
-          <h4 className="font-medium text-sm mb-2">Foods containing vitamin K may reduce warfarin's effectiveness:</h4>
+          <h4 className="font-medium text-sm mb-2 text-right">غذاهای حاوی ویتامین K ممکن است اثربخشی وارفارین را کاهش دهند:</h4>
           <div className="grid grid-cols-2 gap-2 mb-3">
-            {["Kale", "Spinach", "Brussels sprouts", "Collard greens", "Broccoli", "Green tea"].map((food, index) => (
+            {["کیل", "اسفناج", "کلم بروکسل", "کلم برگ", "بروکلی", "چای سبز"].map((food, index) => (
               <div key={index} className="bg-green-50 p-2 rounded text-xs flex items-center">
                 <svg 
                   className="mr-1 text-green-600 h-3 w-3" 
@@ -128,37 +128,37 @@ export default function MedicationInfo() {
             ))}
           </div>
           
-          <h4 className="font-medium text-sm mb-2">Medications to discuss with your doctor:</h4>
-          <ul className="list-disc pl-5 text-sm text-gray-700 mb-3">
-            <li>Antibiotics</li>
-            <li>Anti-inflammatory drugs (like aspirin, ibuprofen)</li>
-            <li>Antidepressants</li>
-            <li>Antacids</li>
-            <li>Vitamin supplements (especially vitamin K)</li>
-            <li>Herbal supplements (like St. John's Wort, ginseng)</li>
+          <h4 className="font-medium text-sm mb-2 text-right">داروهایی که باید با پزشک خود در مورد آن‌ها صحبت کنید:</h4>
+          <ul className="list-disc pr-5 text-sm text-gray-700 mb-3 text-right">
+            <li>آنتی‌بیوتیک‌ها</li>
+            <li>داروهای ضدالتهاب (مانند آسپرین، ایبوپروفن)</li>
+            <li>داروهای ضدافسردگی</li>
+            <li>آنتی‌اسیدها</li>
+            <li>مکمل‌های ویتامینی (به ویژه ویتامین K)</li>
+            <li>مکمل‌های گیاهی (مانند علف چای، جینسنگ)</li>
           </ul>
           
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-3 text-sm">
-            <p className="font-medium text-blue-800">Recommendation</p>
-            <p className="text-blue-700">Always inform all healthcare providers that you are taking warfarin before starting any new medication or supplement.</p>
+          <div className="bg-blue-50 border-r-4 border-blue-400 p-3 text-sm text-right">
+            <p className="font-medium text-blue-800">توصیه</p>
+            <p className="text-blue-700">همیشه قبل از شروع هر داروی جدید یا مکمل، همه پزشکان خود را از مصرف وارفارین مطلع کنید.</p>
           </div>
         </>
       )
     },
     {
       id: "emergency-info",
-      title: "Emergency Information",
+      title: "اطلاعات اضطراری",
       content: (
         <>
-          <div className="bg-red-50 border-l-4 border-red-500 p-3 mb-4">
-            <p className="text-sm font-medium text-red-700">Always carry identification that states you take warfarin.</p>
+          <div className="bg-red-50 border-r-4 border-red-500 p-3 mb-4 text-right">
+            <p className="text-sm font-medium text-red-700">همیشه شناسایی که نشان می‌دهد وارفارین مصرف می‌کنید را همراه داشته باشید.</p>
           </div>
           
-          <p className="text-sm text-gray-700 mb-3">In case of emergency:</p>
-          <ol className="list-decimal pl-5 text-sm text-gray-700 mb-4">
-            <li className="mb-2">Call emergency services (911) immediately for severe bleeding or injury</li>
-            <li className="mb-2">Inform medical personnel that you take warfarin</li>
-            <li className="mb-2">Contact your healthcare provider for guidance on minor bleeding episodes</li>
+          <p className="text-sm text-gray-700 mb-3">در موارد اضطراری:</p>
+          <ol className="list-decimal pr-5 text-sm text-gray-700 mb-4 text-right">
+            <li className="mb-2">در صورت خونریزی شدید یا آسیب، فوراً با خدمات اورژانس (115) تماس بگیرید</li>
+            <li className="mb-2">به کادر پزشکی اطلاع دهید که وارفارین مصرف می‌کنید</li>
+            <li className="mb-2">برای راهنمایی در مورد خونریزی‌های جزئی با پزشک خود تماس بگیرید</li>
           </ol>
         </>
       )
@@ -167,26 +167,26 @@ export default function MedicationInfo() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">Warfarin Information</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right">اطلاعات وارفارین</h2>
       
       {/* Current Medication */}
       <Card className="mb-6">
         <CardContent className="pt-6">
           <div className="flex items-start">
-            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
-              <Pill className="h-8 w-8 text-primary" />
-            </div>
             <div>
-              <h3 className="font-medium">Warfarin</h3>
-              <p className="text-sm text-gray-500 mb-2">Anticoagulant medication</p>
+              <h3 className="font-medium text-right">وارفارین</h3>
+              <p className="text-sm text-gray-500 mb-2 text-right">داروی ضدانعقاد</p>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-                  Current Dose: 5mg
-                </Badge>
                 <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
-                  Target INR: 2.0-3.0
+                  محدوده هدف INR: ۲/۰-۳/۰
+                </Badge>
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                  دوز فعلی: ۵ میلی‌گرم
                 </Badge>
               </div>
+            </div>
+            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 mr-4">
+              <Pill className="h-8 w-8 text-primary" />
             </div>
           </div>
         </CardContent>
