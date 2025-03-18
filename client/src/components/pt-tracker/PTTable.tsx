@@ -14,18 +14,18 @@ export default function PTTable({ ptTests }: PTTableProps) {
   // Helper to determine status label and color based on INR value
   const getStatusBadge = (inrValue: number) => {
     if (inrValue >= 2.0 && inrValue <= 3.0) {
-      return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">In Range</Badge>;
+      return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">در محدوده</Badge>;
     } else if (inrValue < 2.0) {
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Below Range</Badge>;
+      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">زیر محدوده</Badge>;
     } else {
-      return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">Above Range</Badge>;
+      return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">بالای محدوده</Badge>;
     }
   };
   
   if (ptTests.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
-        No PT tests recorded yet. Use the form above to add your first test.
+        هنوز آزمایش PT ثبت نشده است. از فرم بالا برای افزودن اولین آزمایش استفاده کنید.
       </div>
     );
   }
@@ -35,21 +35,21 @@ export default function PTTable({ ptTests }: PTTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Date</TableHead>
-            <TableHead>INR Value</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="hidden md:table-cell">Notes</TableHead>
+            <TableHead className="w-[100px] text-right">تاریخ</TableHead>
+            <TableHead className="text-right">مقدار INR</TableHead>
+            <TableHead className="text-right">وضعیت</TableHead>
+            <TableHead className="hidden md:table-cell text-right">یادداشت‌ها</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {recentTests.map((test) => (
             <TableRow key={test.id}>
-              <TableCell className="font-medium whitespace-nowrap">
+              <TableCell className="font-medium whitespace-nowrap text-right">
                 {format(new Date(test.testDate), "MMM dd, yyyy")}
               </TableCell>
-              <TableCell className="font-medium">{test.inrValue.toFixed(1)}</TableCell>
-              <TableCell>{getStatusBadge(test.inrValue)}</TableCell>
-              <TableCell className="hidden md:table-cell text-gray-500 truncate max-w-[200px]">
+              <TableCell className="font-medium text-right">{test.inrValue.toFixed(1)}</TableCell>
+              <TableCell className="text-right">{getStatusBadge(test.inrValue)}</TableCell>
+              <TableCell className="hidden md:table-cell text-gray-500 truncate max-w-[200px] text-right">
                 {test.notes || "—"}
               </TableCell>
             </TableRow>

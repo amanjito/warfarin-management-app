@@ -41,11 +41,11 @@ export default function PTTracker() {
   // Get status based on INR value
   const getInrStatus = (inrValue: number) => {
     if (inrValue >= 2.0 && inrValue <= 3.0) {
-      return { label: "Within Target Range", color: "green" };
+      return { label: "در محدوده هدف", color: "green" };
     } else if (inrValue < 2.0) {
-      return { label: "Below Target Range", color: "yellow" };
+      return { label: "زیر محدوده هدف", color: "yellow" };
     } else {
-      return { label: "Above Target Range", color: "red" };
+      return { label: "بالای محدوده هدف", color: "red" };
     }
   };
   
@@ -95,21 +95,21 @@ export default function PTTracker() {
   };
   
   if (isLoading) {
-    return <div className="p-8 text-center">Loading PT test data...</div>;
+    return <div className="p-8 text-center">در حال بارگذاری اطلاعات آزمایش PT...</div>;
   }
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">PT/INR Tracker</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right">پیگیری آزمایش PT/INR</h2>
       
       {/* Current Status */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-3">Current Status</h3>
+          <h3 className="font-medium mb-3 text-right">وضعیت فعلی</h3>
           {latestTest ? (
-            <div className="flex items-center">
+            <div className="flex items-center flex-row-reverse">
               <div 
-                className={`w-24 h-24 rounded-full border-8 flex items-center justify-center mr-4 ${
+                className={`w-24 h-24 rounded-full border-8 flex items-center justify-center ml-4 ${
                   latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
                     ? "border-secondary"
                     : latestTest.inrValue < 2.0
@@ -119,10 +119,10 @@ export default function PTTracker() {
               >
                 <span className="text-2xl font-bold">{latestTest.inrValue.toFixed(1)}</span>
               </div>
-              <div>
-                <p className="font-medium">Latest INR</p>
+              <div className="text-right">
+                <p className="font-medium">آخرین INR</p>
                 <p className="text-sm text-gray-500">
-                  Measured: {format(new Date(latestTest.testDate), "MMM dd, yyyy")}
+                  اندازه‌گیری شده: {format(new Date(latestTest.testDate), "MMM dd, yyyy")}
                 </p>
                 <div className="mt-1">
                   <Badge 
@@ -136,7 +136,7 @@ export default function PTTracker() {
                     }`}
                   >
                     <svg
-                      className="mr-1 h-3 w-3"
+                      className="ml-1 h-3 w-3"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="none"
@@ -158,13 +158,13 @@ export default function PTTracker() {
                         </>
                       )}
                     </svg>
-                    {getInrStatus(latestTest.inrValue).label} (2.0-3.0)
+                    {getInrStatus(latestTest.inrValue).label} (۲/۰-۳/۰)
                   </Badge>
                 </div>
               </div>
             </div>
           ) : (
-            <p>No PT tests recorded yet.</p>
+            <p className="text-right">هنوز آزمایش PT ثبت نشده است.</p>
           )}
         </CardContent>
       </Card>
@@ -173,33 +173,33 @@ export default function PTTracker() {
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">PT/INR History</h3>
             <Select
               value={timeRange}
               onValueChange={(value) => setTimeRange(value)}
             >
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select time range" />
+                <SelectValue placeholder="انتخاب بازه زمانی" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="3">Last 3 Months</SelectItem>
-                <SelectItem value="6">Last 6 Months</SelectItem>
-                <SelectItem value="12">Last Year</SelectItem>
-                <SelectItem value="all">All Time</SelectItem>
+                <SelectItem value="3">۳ ماه اخیر</SelectItem>
+                <SelectItem value="6">۶ ماه اخیر</SelectItem>
+                <SelectItem value="12">سال اخیر</SelectItem>
+                <SelectItem value="all">تمام زمان‌ها</SelectItem>
               </SelectContent>
             </Select>
+            <h3 className="font-medium text-right">تاریخچه PT/INR</h3>
           </div>
           
           <PTChart ptTests={filteredTests} />
           
           <div className="mt-4 flex justify-center gap-4 text-sm">
             <div className="flex items-center">
-              <span className="w-3 h-3 rounded-full bg-primary inline-block mr-1"></span>
-              <span>INR Value</span>
+              <span>محدوده هدف</span>
+              <span className="w-3 h-3 rounded-full bg-green-200 inline-block mr-1 ml-1"></span>
             </div>
             <div className="flex items-center">
-              <span className="w-3 h-3 rounded-full bg-green-200 inline-block mr-1"></span>
-              <span>Target Range</span>
+              <span>مقدار INR</span>
+              <span className="w-3 h-3 rounded-full bg-primary inline-block mr-1 ml-1"></span>
             </div>
           </div>
         </CardContent>
@@ -208,7 +208,7 @@ export default function PTTracker() {
       {/* Record New PT Test */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4">Record New PT/INR Test</h3>
+          <h3 className="font-medium mb-4 text-right">ثبت آزمایش PT/INR جدید</h3>
           <PTForm onSubmit={handleSubmit} isPending={addPtTestMutation.isPending} />
         </CardContent>
       </Card>
@@ -217,7 +217,7 @@ export default function PTTracker() {
       <Card>
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">Recent Tests</h3>
+            <h3 className="font-medium text-right w-full">آزمایش‌های اخیر</h3>
           </div>
           
           <PTTable ptTests={ptTests || []} />

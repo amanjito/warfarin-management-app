@@ -10,10 +10,10 @@ import { format } from "date-fns";
 
 // Create a schema for form validation
 const formSchema = z.object({
-  testDate: z.string().nonempty({ message: "Test date is required" }),
+  testDate: z.string().nonempty({ message: "تاریخ آزمایش الزامی است" }),
   inrValue: z.string().refine(
     (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
-    { message: "INR value must be a positive number" }
+    { message: "مقدار INR باید یک عدد مثبت باشد" }
   ),
   notes: z.string().optional()
 });
@@ -56,8 +56,8 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
             control={form.control}
             name="testDate"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Test Date</FormLabel>
+              <FormItem className="text-right">
+                <FormLabel>تاریخ آزمایش</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} max={today} />
                 </FormControl>
@@ -70,13 +70,13 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
             control={form.control}
             name="inrValue"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>INR Value</FormLabel>
+              <FormItem className="text-right">
+                <FormLabel>مقدار INR</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
                     step="0.1" 
-                    placeholder="Ex: 2.5" 
+                    placeholder="مثال: ۲/۵" 
                     {...field} 
                   />
                 </FormControl>
@@ -90,12 +90,12 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           control={form.control}
           name="notes"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notes</FormLabel>
+            <FormItem className="text-right">
+              <FormLabel>یادداشت‌ها</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Any additional details about this test" 
-                  className="resize-none" 
+                  placeholder="هر گونه توضیحات اضافی درباره این آزمایش" 
+                  className="resize-none text-right" 
                   rows={3}
                   {...field} 
                 />
@@ -105,9 +105,9 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           )}
         />
         
-        <div className="flex justify-end">
+        <div className="flex justify-start">
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save Record"}
+            {isPending ? "در حال ذخیره..." : "ذخیره آزمایش"}
           </Button>
         </div>
       </form>
