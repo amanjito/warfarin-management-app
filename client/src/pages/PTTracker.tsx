@@ -9,6 +9,7 @@ import PTChart from "@/components/pt-tracker/PTChart";
 import PTForm from "@/components/pt-tracker/PTForm";
 import PTTable from "@/components/pt-tracker/PTTable";
 import { apiRequest } from "@/lib/queryClient";
+import { formatDateForApi } from "@/lib/dateUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PTTracker() {
@@ -79,7 +80,7 @@ export default function PTTracker() {
   
   const handleSubmit = (data: any) => {
     addPtTestMutation.mutate({
-      testDate: format(new Date(data.testDate), 'yyyy-MM-dd'),
+      testDate: formatDateForApi(new Date(data.testDate)),
       inrValue: parseFloat(data.inrValue),
       notes: data.notes
     });
