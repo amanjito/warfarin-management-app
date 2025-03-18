@@ -132,7 +132,7 @@ export default function Dashboard() {
             />
             
             <StatusCard 
-              title="Next PT Test"
+              title="آزمایش PT بعدی"
               value={nextTestDate}
               subtitle={nextTestDate === "Due Tomorrow" ? "Lab appointment: 10:30 AM" : ""}
               color="warning"
@@ -145,9 +145,9 @@ export default function Dashboard() {
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">PT/INR Trend</h3>
+            <h3 className="font-medium text-right">روند PT/INR</h3>
             <Link href="/pt-tracker" className="text-sm text-primary">
-              View Details
+              مشاهده جزئیات
             </Link>
           </div>
           
@@ -191,10 +191,10 @@ export default function Dashboard() {
                   )}
                 </svg>
                 {inrStatus === "within" 
-                  ? "Within target range" 
+                  ? "در محدوده هدف" 
                   : inrStatus === "below"
-                    ? "Below target range"
-                    : "Above target range"
+                    ? "پایین‌تر از محدوده هدف"
+                    : "بالاتر از محدوده هدف"
                 }
               </div>
             </div>
@@ -205,25 +205,25 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <QuickAction 
-          title="Log PT Test"
+          title="ثبت آزمایش PT"
           icon="chart"
           color="primary"
           path="/pt-tracker"
         />
         <QuickAction 
-          title="Set Reminder"
+          title="تنظیم یادآور"
           icon="bell" 
           color="secondary"
           path="/reminders"
         />
         <QuickAction 
-          title="Medication Info"
+          title="اطلاعات دارو"
           icon="info"
           color="warning"
           path="/medication"
         />
         <QuickAction 
-          title="Ask Assistant"
+          title="پرسش از دستیار"
           icon="chat"
           color="accent"
           path="/assistant"
@@ -233,7 +233,7 @@ export default function Dashboard() {
       {/* Today's Medications */}
       <Card>
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4">Today's Medications</h3>
+          <h3 className="font-medium mb-4 text-right">داروهای امروز</h3>
           <MedicationSummary medications={todaysMedications} />
         </CardContent>
       </Card>
