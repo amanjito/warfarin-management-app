@@ -39,15 +39,9 @@ const signupSchema = z.object({
     .max(72, 'Password must be less than 72 characters'),
   confirmPassword: z.string()
     .min(1, 'Please confirm your password'),
-}).superRefine((data, ctx) => {
-  // Only check password match if both fields have values
-  if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Passwords don't match",
-      path: ['confirmPassword'],
-    });
-  }
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
 });
 
 export default function Auth() {
