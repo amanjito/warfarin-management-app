@@ -1,0 +1,38 @@
+:root {
+  /* Main color palette */
+  --color-dark-teal: #022B3A;
+  --color-teal: #1F7A8C;
+  --color-light-blue: #BFDBF7;
+  --color-light-gray: #E1E5F2;
+  --color-white: #FFFFFF;
+  
+  /* Primary colors (from theme.json) are automatically set as CSS variables */
+  /* Let's extend with our secondary colors */
+  --secondary: var(--color-teal);
+  --secondary-foreground: white;
+  
+  --accent: var(--color-light-blue);
+  --accent-foreground: var(--color-dark-teal);
+  
+  --muted: var(--color-light-gray);
+  --muted-foreground: var(--color-teal);
+  
+  /* Customize card/surfaces */
+  --card: var(--color-white);
+  --card-foreground: var(--color-dark-teal);
+  
+  /* Update background */
+  --background: var(--color-light-gray);
+  --foreground: var(--color-dark-teal);
+  
+  /* Text colors */
+  --text-primary: var(--color-dark-teal);
+  --text-secondary: var(--color-teal);
+  --text-muted: rgba(2, 43, 58, 0.6);
+  
+  /* Status colors */
+  --success: #2B9348;
+  --warning: #F9C74F;
+  --error: #D62828;
+  --info: var(--color-light-blue);
+}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search } from "lucide-react";
+import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search, ActivitySquare, Pill, Clock, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useLocation } from "wouter";
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
   const [, setLocation] = useLocation();
@@ -82,9 +83,12 @@ export default function Header() {
   return (
     <>
       <motion.header 
-        className={`fixed top-0 left-0 right-0 z-40 ${
-          scrolled ? "bg-primary/95 backdrop-blur-md shadow-lg" : "bg-primary"
-        } text-white transition-all duration-300`}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-40 text-white transition-all duration-300",
+          scrolled 
+            ? "bg-primary/95 backdrop-blur-md shadow-lg" 
+            : "bg-primary"
+        )}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -97,7 +101,7 @@ export default function Header() {
             transition={{ type: "spring", stiffness: 400 }}
           >
             <motion.div
-              className="mr-3 bg-white/20 p-2 rounded-full flex items-center justify-center" 
+              className="mr-3 bg-secondary p-2 rounded-full flex items-center justify-center" 
               whileHover={{ rotate: 15 }}
               transition={{ type: "spring", stiffness: 500 }}
             >
