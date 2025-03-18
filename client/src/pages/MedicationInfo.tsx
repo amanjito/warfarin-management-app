@@ -160,22 +160,6 @@ export default function MedicationInfo() {
             <li className="mb-2">Inform medical personnel that you take warfarin</li>
             <li className="mb-2">Contact your healthcare provider for guidance on minor bleeding episodes</li>
           </ol>
-          
-          <div className="border border-gray-200 rounded-lg p-3 mb-3">
-            <h4 className="font-medium text-sm mb-2">Emergency Contact Information</h4>
-            <p className="text-sm mb-1"><span className="font-medium">Doctor:</span> Dr. Elizabeth Chen</p>
-            <p className="text-sm mb-1"><span className="font-medium">Phone:</span> (555) 123-4567</p>
-            <p className="text-sm"><span className="font-medium">Anticoagulation Clinic:</span> (555) 987-6543</p>
-          </div>
-          
-          <div className="flex flex-col gap-2">
-            <Button variant="destructive">
-              <AlertCircle className="mr-1 h-4 w-4" /> Emergency Contacts
-            </Button>
-            <Button variant="outline" className="text-primary border-primary">
-              <CreditCard className="mr-1 h-4 w-4" /> Medical ID Card
-            </Button>
-          </div>
         </>
       )
     }
