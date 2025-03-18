@@ -6,10 +6,12 @@ import {
   insertMedicationSchema, 
   insertReminderSchema, 
   insertMedicationLogSchema,
-  insertAssistantMessageSchema
+  insertAssistantMessageSchema,
+  insertPushSubscriptionSchema
 } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
+import { getVapidPublicKey, saveSubscription, sendNotificationToUser } from "./services/push-service";
 
 // Create OpenAI instance
 const openai = new OpenAI({
@@ -255,7 +257,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
         const response = await openai.chat.completions.create({
           model: "gpt-4o",
-          messages: formattedMessages,
+          messages: formattedMessages as any,
           max_tokens: 500,
         });
         
@@ -291,6 +293,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       } else {
         res.status(500).json({ message: "Failed to process message" });
       }
+    }
+  });
+
+  // Push Notification Routes
+  app.get("/api/push/vapid-public-key", (req, res) => {
+    res.json({ publicKey: getVapidPublicKey() });
+  });
+
+  app.post("/api/push/register", async (req, res) => {
+    try {
+      const userId = 1; // In a real app, get from session/auth
+      const subscription = req.body;
+      
+      if (!subscription || !subscription.endpoint || !subscription.keys) {
+        return res.status(400).json({ message: "Invalid subscription object" });
+      }
+      
+      const savedSubscription = await saveSubscription(userId, subscription);
+      res.status(201).json(savedSubscription);
+    } catch (error) {
+      console.error("Error registering push subscription:", error);
+      res.status(500).json({ message: "Failed to register push subscription" });
+    }
+  });
+
+  app.post("/api/push/send-test", async (req, res) => {
+    try {
+      const userId = 1; // In a real app, get from session/auth
+      
+      const successCount = await sendNotificationToUser(userId, {
+        title: "Test Notification",
+        body: "This is a test notification from your Warfarin Manager app!",
+      });
+      
+      if (successCount > 0) {
+        res.json({ success: true, message: `Sent notifications to ${successCount} devices` });
+      } else {
+        res.json({ success: false, message: "No active subscriptions found" });
+      }
+    } catch (error) {
+      console.error("Error sending test notification:", error);
+      res.status(500).json({ message: "Failed to send test notification" });
     }
   });
 
