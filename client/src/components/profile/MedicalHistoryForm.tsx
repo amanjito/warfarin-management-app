@@ -143,7 +143,7 @@ export default function MedicalHistoryForm({
       await apiRequest({
         url: endpoint,
         method,
-        body: JSON.stringify(values),
+        body: values,
       });
       
       // Show success message
