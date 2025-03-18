@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Swiper Styles */
+.swiper-pagination-bullet {
+  @apply bg-gray-300 opacity-70;
+}
+
+.swiper-pagination-bullet-active {
+  @apply bg-primary opacity-100;
+}
+
+.swiper-container {
+  @apply overflow-hidden relative;
+}
+
+/* Auth UI Customizations */
+.supabase-auth-ui_ui-container {
+  @apply w-full max-w-md mx-auto;
+}
+
+.supabase-auth-ui_ui-button {
+  @apply bg-primary hover:bg-primary/90 text-white;
+}
+
 @layer base {
   * {
     @apply border-border;
