@@ -346,6 +346,7 @@ export class MemStorage implements IStorage {
     
     return Array.from(this.medicationLogs.values())
       .filter(log => {
+        if (!log.takenAt) return false;
         const logDate = new Date(log.takenAt);
         return log.userId === userId && 
                logDate >= targetDate && 

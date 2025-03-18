@@ -68,8 +68,21 @@ export default function Dashboard() {
     return format(nextTestDate, "MMM dd, yyyy");
   };
   
+  // Define the MedicationWithStatus type
+  interface MedicationWithStatus {
+    id: number;
+    name: string;
+    userId: number;
+    dosage: string;
+    quantity: string;
+    instructions: string | null;
+    time: string;
+    reminderId: number;
+    isTaken: boolean;
+  }
+  
   // Get medications for today with status
-  const getTodaysMedications = () => {
+  const getTodaysMedications = (): MedicationWithStatus[] => {
     if (!medications || !reminders || !medicationLogs) return [];
     
     return reminders.map(reminder => {
@@ -85,7 +98,7 @@ export default function Dashboard() {
         reminderId: reminder.id,
         isTaken
       };
-    }).filter(Boolean);
+    }).filter((med): med is MedicationWithStatus => med !== null);
   };
   
   // Get the most recent INR value
