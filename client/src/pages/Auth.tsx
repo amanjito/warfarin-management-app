@@ -23,22 +23,31 @@ import {
 } from '@/components/ui/form';
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  password: z.string()
+    .min(1, 'Password is required'),
 });
 
 const signupSchema = z.object({
   email: z.string()
     .min(1, 'Email is required')
     .email('Please enter a valid email address'),
-  password: z
-    .string()
+  password: z.string()
     .min(6, 'Password must be at least 6 characters')
     .max(72, 'Password must be less than 72 characters'),
-  confirmPassword: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ['confirmPassword'],
+  confirmPassword: z.string()
+    .min(1, 'Please confirm your password'),
+}).superRefine((data, ctx) => {
+  // Only check password match if both fields have values
+  if (data.password && data.confirmPassword && data.password !== data.confirmPassword) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Passwords don't match",
+      path: ['confirmPassword'],
+    });
+  }
 });
 
 export default function Auth() {
@@ -54,7 +63,8 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onChange', // Validate as user types
+    mode: 'onBlur', // Validate when field loses focus
+    criteriaMode: 'firstError',
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -64,7 +74,8 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange', // Validate as user types
+    mode: 'onBlur', // Validate when field loses focus
+    criteriaMode: 'firstError',
   });
 
   useEffect(() => {
@@ -100,10 +111,34 @@ export default function Auth() {
   useEffect(() => {
     if (tab === 'login') {
       loginForm.clearErrors();
+      loginForm.reset();
     } else {
       signupForm.clearErrors();
+      signupForm.reset();
     }
   }, [tab, loginForm, signupForm]);
+  
+  // Add handler to clear error when user starts typing
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>, form: typeof loginForm | typeof signupForm) => {
+    const value = e.target.value;
+    if (value) {
+      form.clearErrors('email');
+    }
+  };
+  
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>, form: typeof loginForm | typeof signupForm) => {
+    const value = e.target.value;
+    if (value) {
+      form.clearErrors('password');
+    }
+  };
+  
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value) {
+      signupForm.clearErrors('confirmPassword');
+    }
+  };
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
@@ -276,7 +311,15 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input placeholder="your.email@example.com" className="pl-10" {...field} />
+                            <Input 
+                              placeholder="your.email@example.com" 
+                              className="pl-10" 
+                              {...field} 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleEmailChange(e, loginForm);
+                              }}
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -292,7 +335,16 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input 
+                              type="password" 
+                              placeholder="••••••••" 
+                              className="pl-10" 
+                              {...field} 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handlePasswordChange(e, loginForm);
+                              }}
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -339,7 +391,15 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input placeholder="your.email@example.com" className="pl-10" {...field} />
+                            <Input 
+                              placeholder="your.email@example.com" 
+                              className="pl-10" 
+                              {...field} 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleEmailChange(e, signupForm);
+                              }}
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -355,7 +415,16 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input 
+                              type="password" 
+                              placeholder="••••••••" 
+                              className="pl-10" 
+                              {...field} 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handlePasswordChange(e, signupForm);
+                              }}
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -371,7 +440,16 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
+                            <Input 
+                              type="password" 
+                              placeholder="••••••••" 
+                              className="pl-10" 
+                              {...field} 
+                              onChange={(e) => {
+                                field.onChange(e);
+                                handleConfirmPasswordChange(e);
+                              }}
+                            />
                           </div>
                         </FormControl>
                         <FormMessage />
