@@ -1,7 +1,7 @@
 import { Switch, Route, useLocation } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
+import { useAuth } from "@/lib/authContext";
+import { useEffect } from "react";
 
 import Header from "@/components/ui/Header";
 import Navigation from "@/components/ui/Navigation";
@@ -11,8 +11,11 @@ import MedicationInfo from "@/pages/MedicationInfo";
 import Reminders from "@/pages/Reminders";
 import Assistant from "@/pages/Assistant";
 import NotFound from "@/pages/not-found";
+import Intro from "@/pages/Intro";
+import Auth from "@/pages/Auth";
+import RouteGuard from "@/components/auth/RouteGuard";
 
-function Router() {
+function AuthenticatedApp() {
   const [location] = useLocation();
   
   return (
@@ -34,14 +37,61 @@ function Router() {
   );
 }
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
-        <Router />
-        <Toaster />
+function Router() {
+  const { loading } = useAuth();
+
+  // Show loading indicator while checking authentication
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
-    </QueryClientProvider>
+    );
+  }
+  
+  return (
+    <Switch>
+      {/* Public routes */}
+      <Route path="/intro">
+        <RouteGuard requireAuth={false}>
+          <Intro />
+        </RouteGuard>
+      </Route>
+      <Route path="/auth">
+        <RouteGuard requireAuth={false}>
+          <Auth />
+        </RouteGuard>
+      </Route>
+      
+      {/* Protected routes */}
+      <Route path="/:rest*">
+        <RouteGuard>
+          <AuthenticatedApp />
+        </RouteGuard>
+      </Route>
+    </Switch>
+  );
+}
+
+function App() {
+  const [, setLocation] = useLocation();
+  
+  // Check if user has visited the app before
+  useEffect(() => {
+    const hasVisitedBefore = localStorage.getItem('hasVisitedBefore');
+    
+    // If first visit, redirect to intro
+    if (!hasVisitedBefore) {
+      localStorage.setItem('hasVisitedBefore', 'true');
+      setLocation('/intro');
+    }
+  }, [setLocation]);
+  
+  return (
+    <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
+      <Router />
+      <Toaster />
+    </div>
   );
 }
 
