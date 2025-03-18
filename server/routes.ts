@@ -7,7 +7,8 @@ import {
   insertReminderSchema, 
   insertMedicationLogSchema,
   insertAssistantMessageSchema,
-  insertPushSubscriptionSchema
+  insertPushSubscriptionSchema,
+  insertUserSchema
 } from "@shared/schema";
 import { z } from "zod";
 import OpenAI from "openai";
@@ -39,6 +40,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Don't send the password to the client
     const { password, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
+  });
+  
+  // Get the current user
+  app.get("/api/users/current", async (req, res) => {
+    // In a real app, you'd get userId from the session/auth
+    const userId = 1;
+    const user = await storage.getUser(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Don't send the password to the client
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
+  });
+  
+  // Update user profile
+  app.put("/api/users/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      // In a real app, verify user has permission to edit this profile
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Don't allow changing username or password via this endpoint
+      const { username, password, id: userId, ...updateData } = req.body;
+      
+      // Update the user in storage
+      // Note: In a real implementation with TypeScript strict null checking,
+      // we would need proper null handling here
+      const updatedUser = {
+        ...user,
+        ...updateData,
+      };
+      
+      // Save the updated user
+      // Note: We're simulating an update since MemStorage doesn't have a dedicated update method
+      const savedUser = await storage.createUser(updatedUser);
+      
+      // Don't send the password back to the client
+      const { password: _, ...userWithoutPassword } = savedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error updating user:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to update user" });
+      }
+    }
+  });
+  
+  // Submit medical history form after registration
+  app.post("/api/users/:id/medical-history", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      // In a real app, verify user has permission to edit this profile
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Update the medical history fields
+      const updatedUser = {
+        ...user,
+        ...req.body,
+        hasCompletedSetup: true // Mark setup as complete
+      };
+      
+      // Save the updated user
+      const savedUser = await storage.createUser(updatedUser);
+      
+      // Don't send the password back to the client
+      const { password: _, ...userWithoutPassword } = savedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      console.error("Error updating medical history:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to update medical history" });
+      }
+    }
   });
 
   // PT Tests Routes

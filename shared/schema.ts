@@ -14,6 +14,16 @@ export const users = pgTable("users", {
   birthDate: text("birth_date"),
   targetInrMin: real("target_inr_min").default(2.0),
   targetInrMax: real("target_inr_max").default(3.0),
+  // Medical history fields
+  medicalConditions: text("medical_conditions"),
+  allergies: text("allergies"),
+  primaryPhysician: text("primary_physician"),
+  emergencyContact: text("emergency_contact"),
+  anticoagulantIndicationReason: text("anticoagulant_indication_reason"),
+  dateStartedWarfarin: text("date_started_warfarin"),
+  lastInrDate: text("last_inr_date"),
+  lastInrValue: real("last_inr_value"),
+  hasCompletedSetup: boolean("has_completed_setup").default(false),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -26,6 +36,15 @@ export const insertUserSchema = createInsertSchema(users).pick({
   birthDate: true,
   targetInrMin: true,
   targetInrMax: true,
+  medicalConditions: true,
+  allergies: true,
+  primaryPhysician: true,
+  emergencyContact: true,
+  anticoagulantIndicationReason: true,
+  dateStartedWarfarin: true,
+  lastInrDate: true,
+  lastInrValue: true,
+  hasCompletedSetup: true,
 });
 
 // PT test table

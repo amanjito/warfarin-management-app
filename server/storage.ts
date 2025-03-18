@@ -103,6 +103,15 @@ export class MemStorage implements IStorage {
       birthDate: "1985-06-15",
       targetInrMin: 2.0,
       targetInrMax: 3.0,
+      medicalConditions: "Atrial fibrillation, Hypertension",
+      allergies: "Penicillin",
+      primaryPhysician: "Dr. Michael Chen",
+      emergencyContact: "John Johnson (Husband), 555-123-4567",
+      anticoagulantIndicationReason: "Atrial fibrillation",
+      dateStartedWarfarin: "2022-08-15",
+      lastInrDate: "2023-05-12",
+      lastInrValue: 2.4,
+      hasCompletedSetup: true,
     };
     this.users.set(user.id, user);
     
