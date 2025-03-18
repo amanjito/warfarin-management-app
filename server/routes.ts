@@ -338,6 +338,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  app.post("/api/push/check", async (req, res) => {
+    try {
+      const userId = 1; // In a real app, get from session/auth
+      const { endpoint } = req.body;
+      
+      if (!endpoint) {
+        return res.status(400).json({ message: "Endpoint is required" });
+      }
+      
+      const subscription = await storage.getPushSubscriptionByEndpoint(endpoint);
+      res.json({ registered: !!subscription });
+    } catch (error) {
+      console.error("Error checking subscription:", error);
+      res.status(500).json({ message: "Failed to check subscription" });
+    }
+  });
+  
+  app.delete("/api/push/unregister", async (req, res) => {
+    try {
+      const userId = 1; // In a real app, get from session/auth
+      const { endpoint } = req.body;
+      
+      if (!endpoint) {
+        return res.status(400).json({ message: "Endpoint is required" });
+      }
+      
+      const subscription = await storage.getPushSubscriptionByEndpoint(endpoint);
+      
+      if (!subscription) {
+        return res.status(404).json({ message: "Subscription not found" });
+      }
+      
+      // Make sure the subscription belongs to the current user
+      if (subscription.userId !== userId) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
+      
+      const result = await storage.deletePushSubscription(subscription.id);
+      
+      if (result) {
+        res.json({ success: true });
+      } else {
+        res.status(500).json({ message: "Failed to delete subscription" });
+      }
+    } catch (error) {
+      console.error("Error unregistering subscription:", error);
+      res.status(500).json({ message: "Failed to unregister subscription" });
+    }
+  });
+  
   // Handle medication taken from push notification
   app.get("/api/reminders/taken", async (req, res) => {
     try {

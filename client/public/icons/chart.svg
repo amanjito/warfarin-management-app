@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192px" height="192px" viewBox="0 0 192 192" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>Chart Icon</title>
+    <g id="chart-icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="background" fill="#4CAF50" cx="96" cy="96" r="96"></circle>
+        <g id="chart" transform="translate(40.000000, 40.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="10">
+            <polyline id="line" stroke="#FFFFFF" points="0 72 32 40 64 64 96 24 112 40"></polyline>
+            <rect id="frame" stroke="#FFFFFF" x="0" y="0" width="112" height="112"></rect>
+            <path d="M112,88 L112,112 L0,112 L0,0" id="axes"></path>
+        </g>
+    </g>
+</svg>
