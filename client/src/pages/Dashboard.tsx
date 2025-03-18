@@ -146,8 +146,8 @@ export default function Dashboard() {
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-medium">PT/INR Trend</h3>
-            <Link href="/pt-tracker">
-              <a className="text-sm text-primary">View Details</a>
+            <Link href="/pt-tracker" className="text-sm text-primary">
+              View Details
             </Link>
           </div>
           
