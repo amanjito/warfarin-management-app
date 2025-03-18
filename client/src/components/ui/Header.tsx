@@ -21,29 +21,11 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true);
-      
-      // Check if we're in demo mode
-      const isSkipAuth = localStorage.getItem('skipAuth') === 'true';
-      
-      if (isSkipAuth) {
-        // Clear the skipAuth flag
-        localStorage.removeItem('skipAuth');
-        // Mark that we're coming from demo mode to go directly to auth page
-        sessionStorage.setItem('fromDemo', 'true');
-        toast({
-          title: "Exited demo mode",
-          description: "You have been logged out of demo mode",
-        });
-      } else {
-        // Regular Supabase logout
-        await supabase.auth.signOut();
-        toast({
-          title: "Logged out successfully",
-          description: "You have been signed out of your account",
-        });
-      }
-      
-      // Redirect to auth page
+      await supabase.auth.signOut();
+      toast({
+        title: "Logged out successfully",
+        description: "You have been signed out of your account",
+      });
       setLocation('/auth');
     } catch (error) {
       toast({
