@@ -4,12 +4,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { useLocation } from 'wouter';
-import { HeartPulse, Mail, Lock, UserPlus, LogIn } from 'lucide-react';
+import { HeartPulse, Mail, Lock, UserPlus, LogIn, AlertCircle } from 'lucide-react';
 import { SiGoogle } from 'react-icons/si';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import {
@@ -181,8 +182,11 @@ export default function Auth() {
     }
   }
   
+  const [googleAuthError, setGoogleAuthError] = useState(false);
+  
   async function signInWithGoogle() {
     setAuthLoading(true);
+    setGoogleAuthError(false);
     
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -193,17 +197,21 @@ export default function Auth() {
       });
       
       if (error) {
+        console.error('Google OAuth error:', error);
+        setGoogleAuthError(true);
         toast({
           title: 'Google sign in failed',
-          description: error.message,
+          description: 'Google authentication is not available at this time. Please use email sign in.',
           variant: 'destructive',
         });
       }
       // Success will be handled by the redirect
     } catch (error) {
+      console.error('Unexpected OAuth error:', error);
+      setGoogleAuthError(true);
       toast({
         title: 'Google sign in error',
-        description: 'An unexpected error occurred. Please try again.',
+        description: 'Google authentication is not available at this time. Please use email sign in.',
         variant: 'destructive',
       });
     } finally {
@@ -244,6 +252,16 @@ export default function Auth() {
             </Tabs>
           </CardHeader>
           <CardContent className="pt-6">
+            {googleAuthError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Google Sign In Unavailable</AlertTitle>
+                <AlertDescription>
+                  Google authentication isn't available in this environment. Please use email and password to sign in.
+                </AlertDescription>
+              </Alert>
+            )}
+          
             {tab === 'login' ? (
               <Form {...loginForm}>
                 <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
