@@ -1,4 +1,5 @@
 import { apiRequest } from './queryClient';
+import { queryClient } from './queryClient';
 
 // Convert a base64 string to a Uint8Array
 function urlBase64ToUint8Array(base64String: string): Uint8Array {
@@ -48,10 +49,41 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   try {
     const registration = await navigator.serviceWorker.register('/service-worker.js');
     console.log('Service worker registered:', registration);
+    
+    // Set up a listener for messages from the service worker
+    navigator.serviceWorker.addEventListener('message', event => {
+      console.log('Received message from service worker:', event.data);
+      
+      // Handle medication taken message
+      if (event.data && event.data.type === 'MEDICATION_TAKEN') {
+        // Invalidate the medication logs to refresh the UI
+        queryClient.invalidateQueries({ queryKey: ['/api/medication-logs'] });
+      }
+    });
+    
     return registration;
   } catch (error) {
     console.error('Service worker registration failed:', error);
     return null;
+  }
+}
+
+// Update an existing service worker
+export async function updateServiceWorker(): Promise<void> {
+  if (!isPushNotificationSupported()) {
+    return;
+  }
+  
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    await registration.update();
+    
+    if (registration.waiting) {
+      // If there's a new service worker waiting, tell it to take over
+      registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    }
+  } catch (error) {
+    console.error('Error updating service worker:', error);
   }
 }
 
@@ -141,6 +173,14 @@ export async function unsubscribeFromPushNotifications(): Promise<boolean> {
     const subscription = await getCurrentPushSubscription();
     
     if (subscription) {
+      // Unregister from the server first
+      try {
+        await apiRequest('DELETE', '/api/push/unregister', { endpoint: subscription.endpoint });
+      } catch (error) {
+        console.error('Error unregistering subscription from server:', error);
+      }
+      
+      // Then unsubscribe from the browser
       const success = await subscription.unsubscribe();
       if (success) {
         console.log('Successfully unsubscribed from push notifications');
@@ -152,5 +192,38 @@ export async function unsubscribeFromPushNotifications(): Promise<boolean> {
   } catch (error) {
     console.error('Error unsubscribing from push notifications:', error);
     return false;
+  }
+}
+
+// Initialize push notifications (call this when app starts)
+export async function initializePushNotifications(): Promise<void> {
+  if (!isPushNotificationSupported()) {
+    return;
+  }
+  
+  try {
+    // Register service worker if it's not already registered
+    if (!navigator.serviceWorker.controller) {
+      await registerServiceWorker();
+    }
+    
+    // Check for existing subscription and make sure it's registered on the server
+    const subscription = await getCurrentPushSubscription();
+    if (subscription) {
+      try {
+        // Check if the server recognizes this subscription
+        const response = await apiRequest('POST', '/api/push/check', { endpoint: subscription.endpoint });
+        const data = await response.json();
+        
+        // If not recognized, register it
+        if (!data.registered) {
+          await apiRequest('POST', '/api/push/register', subscription);
+        }
+      } catch (error) {
+        console.error('Error checking subscription status:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error initializing push notifications:', error);
   }
 }

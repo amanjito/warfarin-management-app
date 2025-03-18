@@ -7,8 +7,9 @@ import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
 import ReminderForm from "@/components/reminders/ReminderForm";
 import ReminderItem from "@/components/reminders/ReminderItem";
+import NotificationManager from "@/components/reminders/NotificationManager";
 import { Medication, Reminder, MedicationLog } from "@shared/schema";
-import { ChevronRight } from "lucide-react";
+import { BellRing, ChevronRight } from "lucide-react";
 
 export default function Reminders() {
   const today = format(new Date(), "MMM dd, yyyy");
@@ -138,6 +139,15 @@ export default function Reminders() {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Notification Settings */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <BellRing className="h-5 w-5 text-primary" />
+          <h3 className="font-medium">Notifications</h3>
+        </div>
+        <NotificationManager />
+      </div>
       
       {/* Create New Reminder */}
       <Card className="mb-6">
