@@ -322,19 +322,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userId = 1; // In a real app, get from session/auth
       
-      const successCount = await sendNotificationToUser(userId, {
+      const result = await sendNotificationToUser(userId, {
         title: "Test Notification",
         body: "This is a test notification from your Warfarin Manager app!",
       });
       
-      if (successCount > 0) {
-        res.json({ success: true, message: `Sent notifications to ${successCount} devices` });
+      if (result.sent > 0) {
+        res.json({ success: true, message: `Sent notifications to ${result.sent} devices` });
       } else {
         res.json({ success: false, message: "No active subscriptions found" });
       }
     } catch (error) {
       console.error("Error sending test notification:", error);
       res.status(500).json({ message: "Failed to send test notification" });
+    }
+  });
+  
+  // Handle medication taken from push notification
+  app.get("/api/reminders/taken", async (req, res) => {
+    try {
+      const reminderId = parseInt(req.query.id as string);
+      if (isNaN(reminderId)) {
+        return res.status(400).json({ message: "Invalid reminder ID" });
+      }
+      
+      const userId = 1; // In a real app, get from session/auth
+      
+      // Get the reminder
+      const reminder = await storage.getReminder(reminderId);
+      if (!reminder) {
+        return res.status(404).json({ message: "Reminder not found" });
+      }
+      
+      // Create a medication log for this reminder
+      const logData = insertMedicationLogSchema.parse({
+        userId,
+        reminderId,
+        medicationId: reminder.medicationId
+      });
+      
+      await storage.createMedicationLog(logData);
+      
+      // Redirect to the homepage or show a success page
+      res.redirect('/');
+    } catch (error) {
+      console.error("Error marking medication as taken:", error);
+      res.status(500).send("An error occurred. Please try again.");
+    }
+  });
+  
+  // Handle notification snooze from push notification
+  app.get("/api/reminders/snooze", async (req, res) => {
+    try {
+      const reminderId = parseInt(req.query.id as string);
+      if (isNaN(reminderId)) {
+        return res.status(400).json({ message: "Invalid reminder ID" });
+      }
+      
+      // Get the reminder
+      const reminder = await storage.getReminder(reminderId);
+      if (!reminder) {
+        return res.status(404).json({ message: "Reminder not found" });
+      }
+      
+      // In a real app, we would reschedule the reminder for later
+      // For now, we'll just acknowledge the snooze request
+      
+      // Redirect to the homepage or show a success page
+      res.redirect('/');
+    } catch (error) {
+      console.error("Error snoozing reminder:", error);
+      res.status(500).send("An error occurred. Please try again.");
     }
   });
 

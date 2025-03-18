@@ -1,21 +1,27 @@
 import webpush from 'web-push';
-import { PushSubscription } from '@shared/schema';
+import { PushSubscription } from '../../shared/schema';
 import { storage } from '../storage';
 
-// Generate VAPID keys using: webpush.generateVAPIDKeys()
-// These should be moved to environment variables in production
-const VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || 'BFnXYDUYH0Cv_zqcmIYkcvuK4WR5irCa1nRgLdS_pfbCriwYQxdozJAwFEYV2qKhMKA-5s7nY9CpJ5S4tMEWgDI';
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || 'N3UvTmDV3Tb0Ez9CuKq6RHR78Ml2YnN1fbvxKIZqsU8';
+// VAPID keys should be generated only once and stored securely
+// In this example, we're generating new keys each time the server starts
+// In a production environment, these should be stored in environment variables
+const vapidKeys = webpush.generateVAPIDKeys();
 
-// Configure web-push
+const PUBLIC_KEY = vapidKeys.publicKey;
+const PRIVATE_KEY = vapidKeys.privateKey;
+
+// Configure web-push with our VAPID keys
 webpush.setVapidDetails(
-  'mailto:support@warfarinapp.com',
-  VAPID_PUBLIC_KEY,
-  VAPID_PRIVATE_KEY
+  'mailto:support@warfarinmanager.com', // contact email (should be real in production)
+  PUBLIC_KEY,
+  PRIVATE_KEY
 );
 
+/**
+ * Returns the VAPID public key to be used in the client
+ */
 export function getVapidPublicKey(): string {
-  return VAPID_PUBLIC_KEY;
+  return PUBLIC_KEY;
 }
 
 /**
@@ -23,49 +29,39 @@ export function getVapidPublicKey(): string {
  */
 export async function sendNotification(
   subscription: PushSubscription,
-  payload: { title: string; body: string; tag?: string; actions?: { action: string; title: string }[] }
+  payload: { title: string; body: string; url?: string; icon?: string; badge?: string; data?: any }
 ): Promise<boolean> {
   try {
-    // Format the payload according to the Push API spec
+    // Format the payload as expected by the client
     const notificationPayload = JSON.stringify({
-      notification: {
-        title: payload.title,
-        body: payload.body,
-        icon: '/icons/medicine-icon-192.png',
-        badge: '/icons/badge-72.png',
-        tag: payload.tag || 'medication-reminder',
-        actions: payload.actions || [],
-        data: {
-          url: '/reminders',
-        },
-      },
+      title: payload.title,
+      body: payload.body,
+      url: payload.url || '/',
+      icon: payload.icon || '/icons/medicine-icon-192.png',
+      badge: payload.badge || '/icons/badge-72.png',
+      data: payload.data || {}
     });
 
-    // Send the notification using web-push
     await webpush.sendNotification(
       {
         endpoint: subscription.endpoint,
         keys: {
           p256dh: subscription.p256dh,
-          auth: subscription.auth,
-        },
+          auth: subscription.auth
+        }
       },
       notificationPayload
     );
 
     return true;
-  } catch (error: any) {
-    console.error('Error sending push notification:', error);
-    
-    // If the subscription is no longer valid (404 or 410), remove it
-    // 404: Not Found, 410: Gone (both indicate an expired or revoked subscription)
-    if (
-      error.statusCode === 404 ||
-      error.statusCode === 410
-    ) {
+  } catch (error) {
+    // If we get a 410 error, the subscription is no longer valid
+    // and should be removed from the database
+    if (error && typeof error === 'object' && 'statusCode' in error && error.statusCode === 410) {
       await storage.deletePushSubscription(subscription.id);
     }
     
+    console.error('Error sending push notification:', error);
     return false;
   }
 }
@@ -75,17 +71,40 @@ export async function sendNotification(
  */
 export async function sendNotificationToUser(
   userId: number,
-  payload: { title: string; body: string; tag?: string; actions?: { action: string; title: string }[] }
-): Promise<number> {
-  const subscriptions = await storage.getPushSubscriptions(userId);
-  let successCount = 0;
-  
-  for (const subscription of subscriptions) {
-    const success = await sendNotification(subscription, payload);
-    if (success) successCount++;
+  payload: { title: string; body: string; url?: string; icon?: string; badge?: string; data?: any }
+): Promise<{ success: boolean; sent: number; failed: number }> {
+  try {
+    const subscriptions = await storage.getPushSubscriptions(userId);
+    
+    if (subscriptions.length === 0) {
+      return { success: true, sent: 0, failed: 0 };
+    }
+    
+    let sent = 0;
+    let failed = 0;
+    
+    for (const subscription of subscriptions) {
+      const result = await sendNotification(subscription, payload);
+      if (result) {
+        sent++;
+      } else {
+        failed++;
+      }
+    }
+    
+    return {
+      success: sent > 0,
+      sent,
+      failed
+    };
+  } catch (error) {
+    console.error('Error sending notifications to user:', error);
+    return {
+      success: false,
+      sent: 0,
+      failed: 0
+    };
   }
-  
-  return successCount;
 }
 
 /**
@@ -93,26 +112,40 @@ export async function sendNotificationToUser(
  */
 export async function saveSubscription(
   userId: number,
-  subscription: { endpoint: string; keys: { p256dh: string; auth: string } }
+  subscription: {
+    endpoint: string;
+    expirationTime: number | null;
+    keys: {
+      p256dh: string;
+      auth: string;
+    };
+  }
 ): Promise<PushSubscription> {
-  // Check if this subscription already exists
-  const existingSub = await storage.getPushSubscriptionByEndpoint(subscription.endpoint);
-  
-  // If exists and belongs to the same user, we're done
-  if (existingSub && existingSub.userId === userId) {
-    return existingSub;
+  try {
+    // Check if subscription already exists based on endpoint
+    const existingSubscription = await storage.getPushSubscriptionByEndpoint(subscription.endpoint);
+    
+    if (existingSubscription) {
+      // Update existing subscription if it belongs to the same user
+      if (existingSubscription.userId === userId) {
+        return existingSubscription;
+      }
+      
+      // If it belongs to a different user, delete it first
+      await storage.deletePushSubscription(existingSubscription.id);
+    }
+    
+    // Create a new subscription
+    const newSubscription = await storage.createPushSubscription({
+      userId,
+      endpoint: subscription.endpoint,
+      p256dh: subscription.keys.p256dh,
+      auth: subscription.keys.auth
+    });
+    
+    return newSubscription;
+  } catch (error) {
+    console.error('Error saving push subscription:', error);
+    throw error;
   }
-  
-  // If exists but different user, delete old one
-  if (existingSub) {
-    await storage.deletePushSubscription(existingSub.id);
-  }
-  
-  // Create new subscription
-  return await storage.createPushSubscription({
-    userId,
-    endpoint: subscription.endpoint,
-    p256dh: subscription.keys.p256dh,
-    auth: subscription.keys.auth,
-  });
 }
