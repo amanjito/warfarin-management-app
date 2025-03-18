@@ -7,11 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { FcGoogle } from 'react-icons/fc';
 
 export default function Auth() {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const { toast } = useToast();
 
@@ -217,6 +220,40 @@ export default function Auth() {
       setIsLoggingIn(false);
     }
   };
+  
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+      
+      if (error) {
+        console.error("Google sign-in error:", error);
+        toast({
+          title: 'Google sign-in failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+      // Successful login will redirect automatically
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      toast({
+        title: 'Google sign-in error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -293,9 +330,35 @@ export default function Auth() {
                   <div className="text-red-500 text-sm">{loginError}</div>
                 )}
                 
-                <Button type="submit" className="w-full" disabled={isLoggingIn}>
+                <Button type="submit" className="w-full" disabled={isLoggingIn || isGoogleLoading}>
                   {isLoggingIn ? 'Signing In...' : 'Sign In'}
                   <LogIn className="ml-2 h-5 w-5" />
+                </Button>
+                
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-2 text-sm text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleGoogleSignIn}
+                  disabled={isGoogleLoading || isLoggingIn}
+                >
+                  {isGoogleLoading ? 'Connecting...' : (
+                    <>
+                      <FcGoogle className="mr-2 h-5 w-5" />
+                      Sign in with Google
+                    </>
+                  )}
                 </Button>
               </form>
             ) : (
@@ -365,9 +428,35 @@ export default function Auth() {
                   )}
                 </div>
                 
-                <Button type="submit" className="w-full" disabled={isLoggingIn}>
+                <Button type="submit" className="w-full" disabled={isLoggingIn || isGoogleLoading}>
                   {isLoggingIn ? 'Creating Account...' : 'Create Account'}
                   <UserPlus className="ml-2 h-5 w-5" />
+                </Button>
+                
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <Separator className="w-full" />
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-2 text-sm text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleGoogleSignIn}
+                  disabled={isGoogleLoading || isLoggingIn}
+                >
+                  {isGoogleLoading ? 'Connecting...' : (
+                    <>
+                      <FcGoogle className="mr-2 h-5 w-5" />
+                      Sign up with Google
+                    </>
+                  )}
                 </Button>
               </form>
             )}
