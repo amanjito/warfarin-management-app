@@ -97,7 +97,7 @@ export default function Header() {
             transition={{ type: "spring", stiffness: 400 }}
           >
             <motion.div
-              className="mr-3 bg-white/20 p-2 rounded-full flex items-center justify-center" 
+              className="ml-3 bg-white/20 p-2 rounded-full flex items-center justify-center" 
               whileHover={{ rotate: 15 }}
               transition={{ type: "spring", stiffness: 500 }}
             >
@@ -137,10 +137,10 @@ export default function Header() {
               >
                 <Input 
                   type="search" 
-                  placeholder="Search..."
+                  placeholder="جستجو..."
                   className="bg-primary/40 border-white/30 text-white placeholder:text-white/70 focus-visible:ring-white/30"
                 />
-                <Search className="absolute right-3 top-2.5 h-4 w-4 text-white/70" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-white/70" />
               </motion.div>
             )}
           </AnimatePresence>
@@ -184,20 +184,20 @@ export default function Header() {
                         {userInitials}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="hidden sm:inline-block font-medium">Account</span>
+                    <span className="hidden sm:inline-block font-medium">حساب کاربری</span>
                   </Button>
                 </motion.div>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>حساب کاربری من</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
+                  <Settings className="ml-2 h-4 w-4 rtl-icon" />
+                  <span>تنظیمات</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleLogout} disabled={isLoggingOut}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>{isLoggingOut ? "Logging out..." : "Log out"}</span>
+                  <LogOut className="ml-2 h-4 w-4 rtl-icon" />
+                  <span>{isLoggingOut ? "در حال خروج..." : "خروج"}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -240,8 +240,8 @@ export default function Header() {
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-primary flex items-center">
-                  <Heart className="h-5 w-5 mr-2" fill="currentColor" />
-                  WarfarinTracker
+                  <Heart className="h-5 w-5 ml-2" fill="currentColor" />
+                  پایشگر وارفارین
                 </h2>
                 <Button 
                   variant="ghost" 
@@ -261,7 +261,7 @@ export default function Header() {
                   </Avatar>
                   <div>
                     <p className="font-medium">{userData?.email}</p>
-                    <p className="text-sm text-muted-foreground">Account Settings</p>
+                    <p className="text-sm text-muted-foreground">تنظیمات حساب کاربری</p>
                   </div>
                 </div>
                 <Separator className="my-4" />
@@ -271,12 +271,12 @@ export default function Header() {
                   onClick={handleLogout}
                   disabled={isLoggingOut}
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  {isLoggingOut ? "Logging out..." : "Log out"}
+                  <LogOut className="ml-2 h-4 w-4 rtl-icon" />
+                  {isLoggingOut ? "در حال خروج..." : "خروج"}
                 </Button>
               </div>
               <div className="mt-auto pt-4 text-xs text-center text-muted-foreground">
-                WarfarinTracker v1.0.0
+                پایشگر وارفارین نسخه ۱.۰.۰
               </div>
             </motion.div>
           </>
