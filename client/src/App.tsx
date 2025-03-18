@@ -52,8 +52,7 @@ function PrivateRouter() {
   return (
     <>
       <Header />
-      <Navigation activeTab={location.split('/')[1] || 'dashboard'} />
-      <main className="flex-1 container mx-auto px-4 py-6">
+      <main className="flex-1 container mx-auto px-4 py-6 pb-28">
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
@@ -64,6 +63,7 @@ function PrivateRouter() {
           <Route component={NotFound} />
         </Switch>
       </main>
+      <Navigation activeTab={location.split('/')[1] || 'dashboard'} />
     </>
   );
 }
