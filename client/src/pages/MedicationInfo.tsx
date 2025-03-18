@@ -211,14 +211,17 @@ export default function MedicationInfo() {
       {/* Information Sections */}
       <div className="space-y-4">
         <Accordion type="single" collapsible defaultValue="what-is-warfarin">
-          {sections.map((section) => (
-            <InfoSection 
-              key={section.id} 
-              id={section.id} 
-              title={section.title} 
-              content={section.content}
-            />
-          )).filter(section => !section.title.includes('Emergency Contact Information'))}
+          {sections
+            .filter(section => section.title !== 'Emergency Information')
+            .map((section) => (
+              <InfoSection 
+                key={section.id} 
+                id={section.id} 
+                title={section.title} 
+                content={section.content}
+              />
+            ))
+          }
         </Accordion>
       </div>
     </div>
