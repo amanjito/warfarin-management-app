@@ -63,8 +63,8 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onSubmit', // Only validate on form submit
-    reValidateMode: 'onSubmit', // Only re-validate on submit
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -74,8 +74,8 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onSubmit', // Only validate on form submit
-    reValidateMode: 'onSubmit', // Only re-validate on submit
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   useEffect(() => {
@@ -115,12 +115,12 @@ export default function Auth() {
       signupForm.reset();
     }
   }, [tab, loginForm, signupForm]);
-  
+
   // We're validating on submit, so don't need separate handlers
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
-    
+
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -153,7 +153,7 @@ export default function Auth() {
 
   async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
     setAuthLoading(true);
-    
+
     try {
       // Important: Set autoconfirm to true to bypass email verification
       const { error } = await supabase.auth.signUp({
@@ -178,11 +178,11 @@ export default function Auth() {
           title: 'Account created',
           description: 'Please sign in with your new account',
         });
-        
+
         // Reset the signup form and switch to login tab
         signupForm.reset();
         setTab('login');
-        
+
         // Pre-fill login form with signup email
         loginForm.setValue('email', values.email);
       }
@@ -196,13 +196,13 @@ export default function Auth() {
       setAuthLoading(false);
     }
   }
-  
+
   const [googleAuthError, setGoogleAuthError] = useState(false);
-  
+
   async function signInWithGoogle() {
     setAuthLoading(true);
     setGoogleAuthError(false);
-    
+
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -210,7 +210,7 @@ export default function Auth() {
           redirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      
+
       if (error) {
         console.error('Google OAuth error:', error);
         setGoogleAuthError(true);
@@ -276,7 +276,7 @@ export default function Auth() {
                 </AlertDescription>
               </Alert>
             )}
-          
+
             {tab === 'login' ? (
               <Form {...loginForm}>
                 <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
@@ -325,7 +325,7 @@ export default function Auth() {
                     {authLoading ? 'Signing In...' : 'Sign In'}
                     <LogIn className="ml-2 h-5 w-5" />
                   </Button>
-                  
+
                   <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <Separator className="w-full" />
@@ -336,7 +336,7 @@ export default function Auth() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -418,7 +418,7 @@ export default function Auth() {
                     {authLoading ? 'Creating Account...' : 'Create Account'}
                     <UserPlus className="ml-2 h-5 w-5" />
                   </Button>
-                  
+
                   <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <Separator className="w-full" />
@@ -429,7 +429,7 @@ export default function Auth() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <Button 
                     type="button" 
                     variant="outline" 
