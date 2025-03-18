@@ -4,7 +4,8 @@ import {
   Medication, InsertMedication, 
   Reminder, InsertReminder,
   MedicationLog, InsertMedicationLog,
-  AssistantMessage, InsertAssistantMessage 
+  AssistantMessage, InsertAssistantMessage,
+  PushSubscription, InsertPushSubscription
 } from "@shared/schema";
 
 // Interface for all storage operations
@@ -41,6 +42,13 @@ export interface IStorage {
   // Assistant message operations
   getAssistantMessages(userId: number): Promise<AssistantMessage[]>;
   createAssistantMessage(message: InsertAssistantMessage): Promise<AssistantMessage>;
+  
+  // Push notification operations
+  getPushSubscriptions(userId: number): Promise<PushSubscription[]>;
+  getPushSubscription(id: number): Promise<PushSubscription | undefined>;
+  getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscription | undefined>;
+  createPushSubscription(subscription: InsertPushSubscription): Promise<PushSubscription>;
+  deletePushSubscription(id: number): Promise<boolean>;
 }
 
 // In-memory storage implementation
@@ -51,6 +59,7 @@ export class MemStorage implements IStorage {
   private reminders: Map<number, Reminder>;
   private medicationLogs: Map<number, MedicationLog>;
   private assistantMessages: Map<number, AssistantMessage>;
+  private pushSubscriptions: Map<number, PushSubscription>;
   
   private userId: number;
   private ptTestId: number;
@@ -58,6 +67,7 @@ export class MemStorage implements IStorage {
   private reminderId: number;
   private medicationLogId: number;
   private assistantMessageId: number;
+  private pushSubscriptionId: number;
   
   constructor() {
     this.users = new Map();
@@ -66,6 +76,7 @@ export class MemStorage implements IStorage {
     this.reminders = new Map();
     this.medicationLogs = new Map();
     this.assistantMessages = new Map();
+    this.pushSubscriptions = new Map();
     
     this.userId = 1;
     this.ptTestId = 1;
@@ -73,6 +84,7 @@ export class MemStorage implements IStorage {
     this.reminderId = 1;
     this.medicationLogId = 1;
     this.assistantMessageId = 1;
+    this.pushSubscriptionId = 1;
     
     // Initialize with some sample data
     this.initializeSampleData();
@@ -348,6 +360,36 @@ export class MemStorage implements IStorage {
     };
     this.assistantMessages.set(id, newMessage);
     return newMessage;
+  }
+  
+  // Push subscription methods
+  async getPushSubscriptions(userId: number): Promise<PushSubscription[]> {
+    return Array.from(this.pushSubscriptions.values())
+      .filter(sub => sub.userId === userId);
+  }
+  
+  async getPushSubscription(id: number): Promise<PushSubscription | undefined> {
+    return this.pushSubscriptions.get(id);
+  }
+  
+  async getPushSubscriptionByEndpoint(endpoint: string): Promise<PushSubscription | undefined> {
+    return Array.from(this.pushSubscriptions.values())
+      .find(sub => sub.endpoint === endpoint);
+  }
+  
+  async createPushSubscription(subscription: InsertPushSubscription): Promise<PushSubscription> {
+    const id = this.pushSubscriptionId++;
+    const newSubscription: PushSubscription = {
+      ...subscription,
+      id,
+      createdAt: new Date()
+    };
+    this.pushSubscriptions.set(id, newSubscription);
+    return newSubscription;
+  }
+  
+  async deletePushSubscription(id: number): Promise<boolean> {
+    return this.pushSubscriptions.delete(id);
   }
 }
 
