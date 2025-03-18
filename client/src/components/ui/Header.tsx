@@ -61,14 +61,14 @@ export default function Header() {
       setIsLoggingOut(true);
       await supabase.auth.signOut();
       toast({
-        title: "Logged out successfully",
-        description: "You have been signed out of your account",
+        title: "خروج موفقیت‌آمیز",
+        description: "از حساب کاربری خود خارج شدید",
       });
       setLocation('/auth');
     } catch (error) {
       toast({
-        title: "Error logging out",
-        description: "There was a problem signing you out",
+        title: "خطا در خروج",
+        description: "مشکلی در خروج از حساب کاربری وجود داشت",
         variant: "destructive",
       });
     } finally {

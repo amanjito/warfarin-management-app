@@ -17,11 +17,11 @@ export default function Navigation({ activeTab }: NavigationProps) {
   const isMobile = useIsMobile();
   
   const tabs = [
-    { id: "dashboard", label: "Home", icon: Home, path: "/dashboard" },
-    { id: "pt-tracker", label: "PT Tests", icon: Activity, path: "/pt-tracker" },
-    { id: "medication", label: "Meds", icon: Pill, path: "/medication" },
-    { id: "reminders", label: "Reminders", icon: Clock, path: "/reminders" },
-    { id: "assistant", label: "Assistant", icon: MessageSquare, path: "/assistant" },
+    { id: "dashboard", label: "خانه", icon: Home, path: "/dashboard" },
+    { id: "pt-tracker", label: "آزمایش PT", icon: Activity, path: "/pt-tracker" },
+    { id: "medication", label: "داروها", icon: Pill, path: "/medication" },
+    { id: "reminders", label: "یادآورها", icon: Clock, path: "/reminders" },
+    { id: "assistant", label: "دستیار", icon: MessageSquare, path: "/assistant" },
   ];
   
   // Function to update the indicator position
