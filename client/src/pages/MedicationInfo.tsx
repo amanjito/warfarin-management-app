@@ -180,10 +180,10 @@ export default function MedicationInfo() {
               <h3 className="font-medium">Warfarin</h3>
               <p className="text-sm text-gray-500 mb-2">Anticoagulant medication</p>
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-100 shadow-soft transition-all duration-200 px-4 py-1">
                   Current Dose: 5mg
                 </Badge>
-                <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
+                <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-100 shadow-soft transition-all duration-200 px-4 py-1">
                   Target INR: 2.0-3.0
                 </Badge>
               </div>
