@@ -18,7 +18,7 @@ export default function MedicationSummary({ medications }: MedicationSummaryProp
   if (!medications || medications.length === 0) {
     return (
       <div className="text-center py-6 text-gray-500">
-        No medications scheduled for today
+        هیچ دارویی برای امروز زمان‌بندی نشده است
       </div>
     );
   }
@@ -35,13 +35,13 @@ export default function MedicationSummary({ medications }: MedicationSummaryProp
             <div className="text-right">
               {medication.isTaken ? (
                 <>
-                  <p className="text-sm font-medium text-green-600">✓ Taken</p>
+                  <p className="text-sm font-medium text-green-600">✓ مصرف شده</p>
                   <p className="text-xs text-gray-500">{formatTime(medication.time)}</p>
                 </>
               ) : (
                 <>
                   <p className="text-sm font-medium text-primary">{formatTime(medication.time)}</p>
-                  <p className="text-xs text-gray-500">Reminder set</p>
+                  <p className="text-xs text-gray-500">یادآور تنظیم شده</p>
                 </>
               )}
             </div>

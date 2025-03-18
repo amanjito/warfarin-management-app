@@ -7,7 +7,7 @@ import MedicationSummary from "@/components/dashboard/MedicationSummary";
 import PTSummary from "@/components/dashboard/PTSummary";
 import { PtTest, Reminder, Medication, MedicationLog } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatDate, convertToPersianDigits, toPersianDate } from "@/lib/dateUtils";
+import { formatDate, convertToPersianDigits, toPersianDate, formatDateForApi, formatTime } from "@/lib/dateUtils";
 
 export default function Dashboard() {
   const today = formatDate(new Date());
@@ -30,12 +30,12 @@ export default function Dashboard() {
   
   // Fetch today's medication logs
   const { data: medicationLogs, isLoading: logsLoading } = useQuery<MedicationLog[]>({
-    queryKey: ['/api/medication-logs', { date: format(new Date(), 'yyyy-MM-dd') }],
+    queryKey: ['/api/medication-logs', { date: formatDateForApi(new Date()) }],
   });
   
   // Calculate next PT test date (example implementation)
   const calculateNextPTTest = () => {
-    if (!ptTests || ptTests.length === 0) return "Not scheduled";
+    if (!ptTests || ptTests.length === 0) return "زمان‌بندی نشده";
     
     // Sort tests by date, most recent first
     const sortedTests = [...ptTests].sort((a, b) => 
@@ -55,10 +55,10 @@ export default function Dashboard() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     
     if (nextTestDate.toDateString() === tomorrow.toDateString()) {
-      return "Due Tomorrow";
+      return "فردا";
     }
     
-    return format(nextTestDate, "MMM dd, yyyy");
+    return formatDate(nextTestDate);
   };
   
   // Get medications for today with status
@@ -106,7 +106,7 @@ export default function Dashboard() {
     : null;
   
   if (ptLoading || remindersLoading || medicationsLoading || logsLoading) {
-    return <div className="p-8 text-center">Loading dashboard data...</div>;
+    return <div className="p-8 text-center">در حال بارگذاری داده‌ها...</div>;
   }
   
   return (
@@ -124,17 +124,17 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <StatusCard 
               title="دوز بعدی وارفارین"
-              value={medications?.find(m => m.name === "Warfarin")?.dosage || "Not set"}
+              value={medications?.find(m => m.name === "Warfarin")?.dosage || "تنظیم نشده"}
               subtitle={medications?.find(m => m.name === "Warfarin") 
-                ? "8:00 PM Today" 
-                : "No warfarin scheduled"}
+                ? `${formatTime("20:00")} امروز` 
+                : "داروی وارفارین زمان‌بندی نشده"}
               color="primary"
             />
             
             <StatusCard 
               title="آزمایش PT بعدی"
               value={nextTestDate}
-              subtitle={nextTestDate === "Due Tomorrow" ? "Lab appointment: 10:30 AM" : ""}
+              subtitle={nextTestDate === "فردا" ? `وقت آزمایشگاه: ${formatTime("10:30")}` : ""}
               color="warning"
             />
           </div>
