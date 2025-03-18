@@ -96,11 +96,7 @@ export class MemStorage implements IStorage {
       id: 1,
       username: "sarah",
       password: "password123",
-      name: "Sarah Johnson",
-      firstName: "Sarah",
-      lastName: "Johnson",
-      gender: "female",
-      birthDate: "1985-06-15",
+      name: "Sarah",
       targetInrMin: 2.0,
       targetInrMax: 3.0,
     };
@@ -125,7 +121,7 @@ export class MemStorage implements IStorage {
       const test: PtTest = {
         id: i + 1,
         userId: user.id,
-        testDate: ptTestDates[i],
+        testDate: new Date(ptTestDates[i]),
         inrValue: ptTestValues[i],
         notes: ptTestNotes[i],
         createdAt: new Date(),
@@ -248,7 +244,7 @@ export class MemStorage implements IStorage {
     const newTest: PtTest = { 
       ...test, 
       id, 
-      testDate: test.testDate,
+      testDate: new Date(test.testDate),
       createdAt: new Date()
     };
     this.ptTests.set(id, newTest);
@@ -323,12 +319,7 @@ export class MemStorage implements IStorage {
   async getMedicationLogs(userId: number): Promise<MedicationLog[]> {
     return Array.from(this.medicationLogs.values())
       .filter(log => log.userId === userId)
-      .sort((a, b) => {
-        if (a.takenAt && b.takenAt) {
-          return b.takenAt.getTime() - a.takenAt.getTime();
-        }
-        return 0;
-      });
+      .sort((a, b) => b.takenAt.getTime() - a.takenAt.getTime());
   }
   
   async createMedicationLog(log: InsertMedicationLog): Promise<MedicationLog> {
@@ -346,7 +337,6 @@ export class MemStorage implements IStorage {
     
     return Array.from(this.medicationLogs.values())
       .filter(log => {
-        if (!log.takenAt) return false;
         const logDate = new Date(log.takenAt);
         return log.userId === userId && 
                logDate >= targetDate && 
@@ -358,12 +348,7 @@ export class MemStorage implements IStorage {
   async getAssistantMessages(userId: number): Promise<AssistantMessage[]> {
     return Array.from(this.assistantMessages.values())
       .filter(msg => msg.userId === userId)
-      .sort((a, b) => {
-        if (a.timestamp && b.timestamp) {
-          return a.timestamp.getTime() - b.timestamp.getTime();
-        }
-        return 0;
-      });
+      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
   }
   
   async createAssistantMessage(message: InsertAssistantMessage): Promise<AssistantMessage> {

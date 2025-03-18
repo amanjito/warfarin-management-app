@@ -4,14 +4,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { useLocation } from 'wouter';
-import { HeartPulse, Mail, Lock, UserPlus, LogIn, AlertCircle } from 'lucide-react';
-import { SiGoogle } from 'react-icons/si';
+import { HeartPulse, Mail, Lock, UserPlus, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import {
   Form,
@@ -23,8 +20,8 @@ import {
 } from '@/components/ui/form';
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 const signupSchema = z.object({
@@ -52,7 +49,6 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onSubmit', // Only validate on submit
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -62,7 +58,6 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onSubmit', // Only validate on submit
   });
 
   useEffect(() => {
@@ -93,15 +88,6 @@ export default function Auth() {
       subscription.unsubscribe();
     };
   }, [setLocation]);
-
-  // Reset form errors when switching tabs
-  useEffect(() => {
-    if (tab === 'login') {
-      loginForm.clearErrors();
-    } else {
-      signupForm.clearErrors();
-    }
-  }, [tab, loginForm, signupForm]);
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
@@ -181,43 +167,6 @@ export default function Auth() {
       setAuthLoading(false);
     }
   }
-  
-  const [googleAuthError, setGoogleAuthError] = useState(false);
-  
-  async function signInWithGoogle() {
-    setAuthLoading(true);
-    setGoogleAuthError(false);
-    
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/dashboard`,
-        },
-      });
-      
-      if (error) {
-        console.error('Google OAuth error:', error);
-        setGoogleAuthError(true);
-        toast({
-          title: 'Google sign in failed',
-          description: 'Google authentication is not available at this time. Please use email sign in.',
-          variant: 'destructive',
-        });
-      }
-      // Success will be handled by the redirect
-    } catch (error) {
-      console.error('Unexpected OAuth error:', error);
-      setGoogleAuthError(true);
-      toast({
-        title: 'Google sign in error',
-        description: 'Google authentication is not available at this time. Please use email sign in.',
-        variant: 'destructive',
-      });
-    } finally {
-      setAuthLoading(false);
-    }
-  }
 
   if (loading) {
     return (
@@ -252,16 +201,6 @@ export default function Auth() {
             </Tabs>
           </CardHeader>
           <CardContent className="pt-6">
-            {googleAuthError && (
-              <Alert variant="destructive" className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Google Sign In Unavailable</AlertTitle>
-                <AlertDescription>
-                  Google authentication isn't available in this environment. Please use email and password to sign in.
-                </AlertDescription>
-              </Alert>
-            )}
-          
             {tab === 'login' ? (
               <Form {...loginForm}>
                 <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
@@ -300,28 +239,6 @@ export default function Auth() {
                   <Button type="submit" className="w-full" disabled={authLoading}>
                     {authLoading ? 'Signing In...' : 'Sign In'}
                     <LogIn className="ml-2 h-5 w-5" />
-                  </Button>
-                  
-                  <div className="relative my-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <Separator className="w-full" />
-                    </div>
-                    <div className="relative flex justify-center">
-                      <span className="bg-white px-2 text-sm text-gray-500">
-                        Or continue with
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={signInWithGoogle}
-                    disabled={authLoading}
-                  >
-                    <SiGoogle className="mr-2 h-4 w-4" />
-                    {authLoading ? 'Signing In...' : 'Sign in with Google'}
                   </Button>
                 </form>
               </Form>
@@ -379,28 +296,6 @@ export default function Auth() {
                   <Button type="submit" className="w-full" disabled={authLoading}>
                     {authLoading ? 'Creating Account...' : 'Create Account'}
                     <UserPlus className="ml-2 h-5 w-5" />
-                  </Button>
-                  
-                  <div className="relative my-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <Separator className="w-full" />
-                    </div>
-                    <div className="relative flex justify-center">
-                      <span className="bg-white px-2 text-sm text-gray-500">
-                        Or continue with
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    type="button" 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={signInWithGoogle}
-                    disabled={authLoading}
-                  >
-                    <SiGoogle className="mr-2 h-4 w-4" />
-                    {authLoading ? 'Signing In...' : 'Sign up with Google'}
                   </Button>
                 </form>
               </Form>

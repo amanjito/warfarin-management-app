@@ -23,23 +23,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
   });
-  
-  // User Routes
-  app.get("/api/users/:id", async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ message: "Invalid ID" });
-    }
-    
-    const user = await storage.getUser(id);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    
-    // Don't send the password to the client
-    const { password, ...userWithoutPassword } = user;
-    res.json(userWithoutPassword);
-  });
 
   // PT Tests Routes
   app.get("/api/pt-tests", async (req, res) => {

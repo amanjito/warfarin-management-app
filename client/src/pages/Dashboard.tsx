@@ -1,24 +1,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { format, differenceInYears } from "date-fns";
+import { format } from "date-fns";
 import StatusCard from "@/components/dashboard/StatusCard";
 import QuickAction from "@/components/dashboard/QuickAction";
 import MedicationSummary from "@/components/dashboard/MedicationSummary";
 import PTSummary from "@/components/dashboard/PTSummary";
-import { PtTest, Reminder, Medication, MedicationLog, User } from "@shared/schema";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CalendarDays, Heart, User as UserIcon } from "lucide-react";
+import { PtTest, Reminder, Medication, MedicationLog } from "@shared/schema";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function Dashboard() {
   const today = format(new Date(), "MMM dd, yyyy");
   const userId = 1; // In a real app, get from auth context
-  
-  // Fetch user data
-  const { data: user, isLoading: userLoading } = useQuery<User>({
-    queryKey: ['/api/users', userId],
-  });
   
   // Fetch PT tests
   const { data: ptTests, isLoading: ptLoading } = useQuery<PtTest[]>({
@@ -68,21 +61,8 @@ export default function Dashboard() {
     return format(nextTestDate, "MMM dd, yyyy");
   };
   
-  // Define the MedicationWithStatus type
-  interface MedicationWithStatus {
-    id: number;
-    name: string;
-    userId: number;
-    dosage: string;
-    quantity: string;
-    instructions: string | null;
-    time: string;
-    reminderId: number;
-    isTaken: boolean;
-  }
-  
   // Get medications for today with status
-  const getTodaysMedications = (): MedicationWithStatus[] => {
+  const getTodaysMedications = () => {
     if (!medications || !reminders || !medicationLogs) return [];
     
     return reminders.map(reminder => {
@@ -98,7 +78,7 @@ export default function Dashboard() {
         reminderId: reminder.id,
         isTaken
       };
-    }).filter((med): med is MedicationWithStatus => med !== null);
+    }).filter(Boolean);
   };
   
   // Get the most recent INR value
@@ -125,59 +105,13 @@ export default function Dashboard() {
         : "above")
     : null;
   
-  // Calculate age from birthdate
-  const calculateAge = (birthDate: string | null | undefined) => {
-    if (!birthDate) return null;
-    return differenceInYears(new Date(), new Date(birthDate));
-  };
-  
-  if (userLoading || ptLoading || remindersLoading || medicationsLoading || logsLoading) {
+  if (ptLoading || remindersLoading || medicationsLoading || logsLoading) {
     return <div className="p-8 text-center">Loading dashboard data...</div>;
   }
   
-  const userAge = calculateAge(user?.birthDate);
-  
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">Welcome back, {user?.firstName || 'Sarah'}</h2>
-      
-      {/* User Profile */}
-      <Card className="mb-6 overflow-hidden">
-        <div className="bg-gradient-to-r from-primary/20 to-primary/5 p-6">
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-20 w-20 border-4 border-white">
-              <AvatarFallback className="bg-primary text-white text-xl">
-                {user?.firstName?.[0]}{user?.lastName?.[0]}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="text-xl font-semibold">{user?.firstName} {user?.lastName}</h3>
-              <div className="flex flex-col sm:flex-row sm:space-x-4 text-sm text-gray-600 mt-1">
-                {userAge && (
-                  <div className="flex items-center">
-                    <CalendarDays className="mr-1 h-4 w-4" />
-                    <span>{userAge} years old</span>
-                  </div>
-                )}
-                {user?.gender && (
-                  <div className="flex items-center mt-1 sm:mt-0">
-                    <UserIcon className="mr-1 h-4 w-4" />
-                    <span>{user.gender.charAt(0).toUpperCase() + user.gender.slice(1)}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 pt-4 border-t border-gray-200 flex items-center">
-            <Heart className="h-5 w-5 text-red-500 mr-2" />
-            <div>
-              <span className="text-sm text-gray-600">INR Target Range: </span>
-              <span className="font-medium">{user?.targetInrMin || 2.0} - {user?.targetInrMax || 3.0}</span>
-            </div>
-          </div>
-        </div>
-      </Card>
+      <h2 className="text-2xl font-semibold mb-6">Welcome back, Sarah</h2>
       
       {/* Today's Summary */}
       <Card className="mb-6">
