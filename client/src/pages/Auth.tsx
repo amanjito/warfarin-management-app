@@ -341,7 +341,7 @@ export default function Auth() {
                   </div>
                   <div className="relative flex justify-center">
                     <span className="bg-background px-2 text-sm text-muted-foreground">
-                      Or continue with
+                      یا ادامه با
                     </span>
                   </div>
                 </div>
@@ -439,7 +439,7 @@ export default function Auth() {
                   </div>
                   <div className="relative flex justify-center">
                     <span className="bg-background px-2 text-sm text-muted-foreground">
-                      Or continue with
+                      یا ادامه با
                     </span>
                   </div>
                 </div>
@@ -451,10 +451,10 @@ export default function Auth() {
                   onClick={handleGoogleSignIn}
                   disabled={isGoogleLoading || isLoggingIn}
                 >
-                  {isGoogleLoading ? 'Connecting...' : (
+                  {isGoogleLoading ? 'در حال اتصال...' : (
                     <>
                       <FcGoogle className="mr-2 h-5 w-5" />
-                      Sign up with Google
+                      ثبت نام با گوگل
                     </>
                   )}
                 </Button>
@@ -464,8 +464,8 @@ export default function Auth() {
           <CardFooter className="flex justify-center pt-2">
             <p className="text-sm text-gray-500">
               {tab === 'login' 
-                ? "Don't have an account? Click 'Sign Up' above" 
-                : "Already have an account? Click 'Login' above"}
+                ? "حساب کاربری ندارید؟ روی 'ثبت نام' در بالا کلیک کنید" 
+                : "قبلاً حساب کاربری دارید؟ روی 'ورود' در بالا کلیک کنید"}
             </p>
           </CardFooter>
         </Card>
