@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { PtTest } from "@shared/schema";
 import { format } from "date-fns";
+import { ChartJS, createPtChartConfig } from "@/lib/chartUtils";
 
 interface PTSummaryProps {
   ptTests: PtTest[];
@@ -8,7 +9,7 @@ interface PTSummaryProps {
 
 export default function PTSummary({ ptTests }: PTSummaryProps) {
   const chartRef = useRef<HTMLCanvasElement>(null);
-  const chartInstanceRef = useRef<any>(null);
+  const chartInstanceRef = useRef<ChartJS | null>(null);
   
   useEffect(() => {
     if (!ptTests || ptTests.length === 0 || !chartRef.current) return;
@@ -30,81 +31,24 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     const targetRangeMin = Array(labels.length).fill(2.0);
     const targetRangeMax = Array(labels.length).fill(3.0);
     
-    // Import Chart.js using dynamic import
-    import('chart.js').then((ChartModule) => {
-      const { Chart, LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip } = ChartModule;
-      
-      // Register required components
-      Chart.register(LineElement, PointElement, LinearScale, CategoryScale, Legend, Tooltip);
-      
-      // Destroy previous chart if it exists
-      if (chartInstanceRef.current) {
-        chartInstanceRef.current.destroy();
-      }
-      
-      // Create chart
-      chartInstanceRef.current = new Chart(ctx, {
+    // Destroy previous chart if it exists
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
+    
+    // Use our shared chart configuration utility
+    const { data, options } = createPtChartConfig(labels, inrValues, targetRangeMin, targetRangeMax);
+    
+    try {
+      // Create new chart instance
+      chartInstanceRef.current = new ChartJS(ctx, {
         type: 'line',
-        data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'INR Value',
-              data: inrValues,
-              borderColor: '#2196F3',
-              backgroundColor: 'rgba(33, 150, 243, 0.1)',
-              fill: true,
-              tension: 0.3,
-              pointRadius: 4,
-              pointHoverRadius: 6
-            },
-            {
-              label: 'Target Range Min',
-              data: targetRangeMin,
-              borderColor: 'rgba(76, 175, 80, 0.5)',
-              borderDash: [5, 5],
-              pointRadius: 0,
-              fill: false
-            },
-            {
-              label: 'Target Range Max',
-              data: targetRangeMax,
-              borderColor: 'rgba(76, 175, 80, 0.5)',
-              borderDash: [5, 5],
-              pointRadius: 0,
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              mode: 'index',
-              intersect: false
-            }
-          },
-          scales: {
-            y: {
-              min: 1,
-              max: 4,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.05)'
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              }
-            }
-          }
-        }
+        data,
+        options
       });
-    });
+    } catch (error) {
+      console.error("Chart creation error:", error);
+    }
     
     // Cleanup function
     return () => {

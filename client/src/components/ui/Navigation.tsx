@@ -20,18 +20,24 @@ export default function Navigation({ activeTab }: NavigationProps) {
         <div className="flex overflow-x-auto">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
+            const Icon = tab.icon;
             
             return (
-              <Link key={tab.id} href={tab.path}>
-                <a className={`flex-1 py-4 px-2 text-center font-medium flex flex-col items-center ${
-                  isActive 
-                    ? "text-primary border-b-2 border-primary" 
-                    : "text-gray-500"
-                }`}>
-                  <tab.icon className="mb-1" />
-                  <span>{tab.label}</span>
-                </a>
-              </Link>
+              <div key={tab.id} className="flex-1">
+                <Link 
+                  href={tab.path} 
+                  className={`block py-4 px-2 text-center font-medium flex flex-col items-center ${
+                    isActive 
+                      ? "text-primary border-b-2 border-primary" 
+                      : "text-gray-500"
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center w-full">
+                    <Icon className="mb-1" />
+                    <span>{tab.label}</span>
+                  </div>
+                </Link>
+              </div>
             );
           })}
         </div>
