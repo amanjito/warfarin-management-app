@@ -1,139 +1,114 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../ui/button';
-import { Switch } from '../ui/switch';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Bell, BellOff } from 'lucide-react';
 import { 
   isPushNotificationSupported, 
-  requestNotificationPermission,
+  initializePushNotifications, 
+  requestNotificationPermission, 
   subscribeToPushNotifications,
   unsubscribeFromPushNotifications,
-  getCurrentPushSubscription,
-  sendTestNotification
+  sendTestNotification,
+  getCurrentPushSubscription
 } from '@/lib/pushNotifications';
 
 export default function NotificationManager() {
-  const { toast } = useToast();
-  const [notificationsSupported, setNotificationsSupported] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [testingNotification, setTestingNotification] = useState(false);
+  const [isSupported, setIsSupported] = useState<boolean>(false);
+  const [permissionStatus, setPermissionStatus] = useState<NotificationPermission | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [testSent, setTestSent] = useState<boolean>(false);
 
+  // Check if push notifications are supported and initialize
   useEffect(() => {
-    const checkSupport = async () => {
-      const supported = isPushNotificationSupported();
-      setNotificationsSupported(supported);
+    const supported = isPushNotificationSupported();
+    setIsSupported(supported);
+
+    if (supported) {
+      // Get current permission status
+      setPermissionStatus(Notification.permission);
       
-      if (supported) {
-        const subscription = await getCurrentPushSubscription();
-        setNotificationsEnabled(!!subscription);
-      }
-    };
-    
-    checkSupport();
+      // Initialize push notifications
+      initializePushNotifications().catch(console.error);
+      
+      // Check if already subscribed
+      getCurrentPushSubscription().then(subscription => {
+        setIsSubscribed(!!subscription);
+      }).catch(console.error);
+    }
   }, []);
 
-  const handleToggleNotifications = async (enabled: boolean) => {
+  // Request permission and subscribe
+  const handleEnableNotifications = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
+      const permission = await requestNotificationPermission();
+      setPermissionStatus(Notification.permission);
       
-      if (enabled) {
-        const permission = await requestNotificationPermission();
-        
-        if (!permission) {
-          toast({
-            title: 'Permission Denied',
-            description: 'Please enable notifications in your browser settings to receive medication reminders.',
-            variant: 'destructive'
-          });
-          setNotificationsEnabled(false);
-          return;
-        }
-        
-        const success = await subscribeToPushNotifications();
-        
-        if (success) {
-          toast({
-            title: 'Notifications Enabled',
-            description: 'You will now receive medication reminders as notifications.',
-          });
-          setNotificationsEnabled(true);
-        } else {
-          toast({
-            title: 'Error',
-            description: 'Failed to enable notifications. Please try again.',
-            variant: 'destructive'
-          });
-          setNotificationsEnabled(false);
-        }
-      } else {
-        const success = await unsubscribeFromPushNotifications();
-        
-        if (success) {
-          toast({
-            title: 'Notifications Disabled',
-            description: 'You will no longer receive medication reminders as notifications.',
-          });
-          setNotificationsEnabled(false);
-        } else {
-          toast({
-            title: 'Error',
-            description: 'Failed to disable notifications. Please try again.',
-            variant: 'destructive'
-          });
-        }
+      if (permission) {
+        const subscribed = await subscribeToPushNotifications();
+        setIsSubscribed(subscribed);
       }
     } catch (error) {
-      console.error('Error toggling notifications:', error);
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive'
-      });
+      console.error('Error enabling notifications:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleTestNotification = async () => {
+  // Unsubscribe from notifications
+  const handleDisableNotifications = async () => {
+    setIsLoading(true);
     try {
-      setTestingNotification(true);
-      
-      const success = await sendTestNotification();
-      
-      if (success) {
-        toast({
-          title: 'Test Notification Sent',
-          description: 'Check your notifications to see if it arrived.',
-        });
-      } else {
-        toast({
-          title: 'Error',
-          description: 'Failed to send test notification. Please make sure notifications are enabled.',
-          variant: 'destructive'
-        });
+      const unsubscribed = await unsubscribeFromPushNotifications();
+      if (unsubscribed) {
+        setIsSubscribed(false);
       }
     } catch (error) {
-      console.error('Error sending test notification:', error);
-      toast({
-        title: 'Error',
-        description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive'
-      });
+      console.error('Error disabling notifications:', error);
     } finally {
-      setTestingNotification(false);
+      setIsLoading(false);
     }
   };
 
-  if (!notificationsSupported) {
+  // Send a test notification
+  const handleSendTestNotification = async () => {
+    setIsLoading(true);
+    try {
+      const sent = await sendTestNotification();
+      setTestSent(sent);
+      
+      // Reset the test sent status after 3 seconds
+      setTimeout(() => {
+        setTestSent(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (!isSupported) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Push Notifications</CardTitle>
-          <CardDescription>
-            Push notifications are not supported in your browser. Please use a modern browser like Chrome, Firefox, or Edge to receive medication reminders.
-          </CardDescription>
+          <CardTitle className="flex items-center gap-2">
+            <BellOff className="h-5 w-5 text-muted-foreground" />
+            Notifications
+          </CardTitle>
         </CardHeader>
+        <CardContent>
+          <Alert variant="destructive" className="mb-4">
+            <AlertTitle>Not Supported</AlertTitle>
+            <AlertDescription>
+              Push notifications are not supported in your browser. Please use a modern browser like Chrome, Firefox, or Edge.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
       </Card>
     );
   }
@@ -141,34 +116,54 @@ export default function NotificationManager() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Push Notifications</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="h-5 w-5 text-primary" />
+          Notifications
+        </CardTitle>
         <CardDescription>
-          Receive reminders when it's time to take your medication, even when the app is closed.
+          Receive reminders when it's time to take your medication
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <div className="font-medium">Enable Notifications</div>
-            <div className="text-sm text-muted-foreground">
-              Allow medication reminders to appear on your device
-            </div>
+            <Label htmlFor="notifications">Enable Notifications</Label>
+            <p className="text-sm text-muted-foreground">
+              {isSubscribed
+                ? "Notifications are enabled"
+                : permissionStatus === "denied"
+                ? "Notifications are blocked in your browser settings"
+                : "Enable notifications to get medication reminders"}
+            </p>
           </div>
           <Switch
-            checked={notificationsEnabled}
-            onCheckedChange={handleToggleNotifications}
-            disabled={isLoading}
+            id="notifications"
+            checked={isSubscribed}
+            onCheckedChange={isSubscribed ? handleDisableNotifications : handleEnableNotifications}
+            disabled={isLoading || permissionStatus === "denied"}
           />
         </div>
-        
-        {notificationsEnabled && (
-          <Button 
-            variant="outline" 
-            onClick={handleTestNotification}
-            disabled={testingNotification || isLoading}
-          >
-            {testingNotification ? 'Sending...' : 'Send Test Notification'}
-          </Button>
+
+        {permissionStatus === "denied" && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertTitle>Permission Denied</AlertTitle>
+            <AlertDescription>
+              You've blocked notifications for this site. Please update your browser settings to enable notifications.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {isSubscribed && (
+          <div className="pt-4">
+            <Button 
+              variant="outline" 
+              onClick={handleSendTestNotification} 
+              disabled={isLoading}
+              className="w-full"
+            >
+              {testSent ? "Test Notification Sent!" : "Send Test Notification"}
+            </Button>
+          </div>
         )}
       </CardContent>
     </Card>
