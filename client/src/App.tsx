@@ -52,7 +52,7 @@ function PrivateRouter() {
   return (
     <>
       <Header />
-      <main className="flex-1 container mx-auto px-4 py-6 pb-32">
+      <main className="flex-1 container mx-auto px-4 py-6 pb-28">
         <Switch>
           <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />

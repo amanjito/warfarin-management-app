@@ -49,35 +49,21 @@ export default function Navigation({ activeTab }: NavigationProps) {
   
   return (
     <motion.nav 
-      className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)] border border-white/20 rounded-full overflow-hidden max-w-md w-11/12"
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] rounded-t-2xl overflow-hidden"
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {/* Curved shape for the top edge */}
-      <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-b from-white/50 to-transparent"></div>
-      
-      <div className="w-full px-2">
+      <div className="container mx-auto px-2">
         <div className="flex relative py-2" ref={navigationRef}>
-          {/* Animated indicator background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10 opacity-50"></div>
-          
           {/* Animated indicator */}
           {mounted && (
-            <>
-              <motion.div 
-                className="absolute bottom-0 h-1.5 bg-gradient-to-r from-primary/90 to-primary rounded-full"
-                initial={false}
-                animate={{ width: dimensions.width, x: dimensions.left }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-              <motion.div 
-                className="absolute bottom-0 h-1.5 bg-white/30 blur-sm rounded-full"
-                initial={false}
-                animate={{ width: dimensions.width * 1.2, x: dimensions.left - dimensions.width * 0.1 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-            </>
+            <motion.div 
+              className="absolute bottom-0 h-1 bg-primary rounded-full"
+              initial={false}
+              animate={{ width: dimensions.width, x: dimensions.left }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            />
           )}
           
           {tabs.map((tab) => {
@@ -110,7 +96,7 @@ export default function Navigation({ activeTab }: NavigationProps) {
                         <AnimatePresence>
                           {isActive && (
                             <motion.div
-                              className="absolute -inset-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full -z-10"
+                              className="absolute -inset-1.5 bg-primary/10 rounded-full -z-10"
                               initial={{ opacity: 0, scale: 0.8 }}
                               animate={{ opacity: 1, scale: 1 }}
                               exit={{ opacity: 0, scale: 0.8 }}
@@ -119,23 +105,7 @@ export default function Navigation({ activeTab }: NavigationProps) {
                             />
                           )}
                         </AnimatePresence>
-                        <motion.div
-                          className="relative w-6 h-6 flex items-center justify-center"
-                          animate={isActive 
-                            ? { filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.1))" } 
-                            : { filter: "none" }
-                          }
-                        >
-                          <Icon className="w-5 h-5" />
-                          {isActive && (
-                            <motion.div 
-                              className="absolute inset-0 bg-primary opacity-10 blur-md rounded-full"
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1.5 }}
-                              exit={{ scale: 0 }}
-                            />
-                          )}
-                        </motion.div>
+                        <Icon className="h-5 w-5" />
                       </motion.div>
                       <motion.span 
                         className="text-xs font-medium"
