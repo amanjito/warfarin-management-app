@@ -4,10 +4,14 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { supabase } from '@/lib/supabase';
 import { useLocation } from 'wouter';
 import { HeartPulse } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 export default function Auth() {
   const [, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
+  const [skipLoading, setSkipLoading] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Check if the user is already authenticated
@@ -37,6 +41,20 @@ export default function Auth() {
       subscription.unsubscribe();
     };
   }, [setLocation]);
+
+  // Function to skip authentication for testing purposes
+  const handleSkipAuth = () => {
+    setSkipLoading(true);
+    // Simulate a delay for visual feedback
+    setTimeout(() => {
+      localStorage.setItem('skipAuth', 'true');
+      toast({
+        title: "Skipped authentication",
+        description: "Using demo mode for testing",
+      });
+      setLocation('/dashboard');
+    }, 1000);
+  };
 
   if (loading) {
     return (
@@ -80,8 +98,21 @@ export default function Auth() {
               },
             }}
             providers={['google']}
+            view="magic_link"
             redirectTo={window.location.origin + '/dashboard'}
           />
+          
+          <div className="mt-8 pt-6 border-t border-gray-200">
+            <p className="text-center text-gray-500 mb-4">For demo purposes:</p>
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={handleSkipAuth}
+              disabled={skipLoading}
+            >
+              {skipLoading ? "Entering demo mode..." : "Skip Authentication (Demo Mode)"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

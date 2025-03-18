@@ -27,6 +27,17 @@ const setSeenIntro = () => {
 };
 
 function PublicRouter() {
+  const [, setLocation] = useLocation();
+  
+  // Check if user has logged out of demo mode and needs to go directly to auth
+  useEffect(() => {
+    const fromDemo = sessionStorage.getItem('fromDemo') === 'true';
+    if (fromDemo) {
+      sessionStorage.removeItem('fromDemo');
+      setLocation('/auth');
+    }
+  }, [setLocation]);
+  
   return (
     <Switch>
       <Route path="/" component={() => {
@@ -72,10 +83,23 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
-    // Check current auth status
+    // Check for demo mode
+    const isSkipAuth = localStorage.getItem('skipAuth') === 'true';
+    
+    if (isSkipAuth) {
+      setIsAuthenticated(true);
+      return;
+    }
+    
+    // Check current auth status from Supabase
     const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      setIsAuthenticated(!!data.session);
+      try {
+        const { data } = await supabase.auth.getSession();
+        setIsAuthenticated(!!data.session);
+      } catch (error) {
+        console.error('Error checking auth:', error);
+        setIsAuthenticated(false);
+      }
     };
     
     checkAuth();
