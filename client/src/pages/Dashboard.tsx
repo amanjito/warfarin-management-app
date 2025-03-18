@@ -113,7 +113,7 @@ export default function Dashboard() {
     : null;
   
   // Calculate age from birthdate
-  const calculateAge = (birthDate: Date | null | undefined) => {
+  const calculateAge = (birthDate: string | null | undefined) => {
     if (!birthDate) return null;
     return differenceInYears(new Date(), new Date(birthDate));
   };

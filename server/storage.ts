@@ -100,7 +100,7 @@ export class MemStorage implements IStorage {
       firstName: "Sarah",
       lastName: "Johnson",
       gender: "female",
-      birthDate: new Date("1985-06-15"),
+      birthDate: "1985-06-15",
       targetInrMin: 2.0,
       targetInrMax: 3.0,
     };
@@ -125,7 +125,7 @@ export class MemStorage implements IStorage {
       const test: PtTest = {
         id: i + 1,
         userId: user.id,
-        testDate: new Date(ptTestDates[i]),
+        testDate: ptTestDates[i],
         inrValue: ptTestValues[i],
         notes: ptTestNotes[i],
         createdAt: new Date(),
@@ -248,7 +248,7 @@ export class MemStorage implements IStorage {
     const newTest: PtTest = { 
       ...test, 
       id, 
-      testDate: new Date(test.testDate),
+      testDate: test.testDate,
       createdAt: new Date()
     };
     this.ptTests.set(id, newTest);
@@ -323,7 +323,12 @@ export class MemStorage implements IStorage {
   async getMedicationLogs(userId: number): Promise<MedicationLog[]> {
     return Array.from(this.medicationLogs.values())
       .filter(log => log.userId === userId)
-      .sort((a, b) => b.takenAt.getTime() - a.takenAt.getTime());
+      .sort((a, b) => {
+        if (a.takenAt && b.takenAt) {
+          return b.takenAt.getTime() - a.takenAt.getTime();
+        }
+        return 0;
+      });
   }
   
   async createMedicationLog(log: InsertMedicationLog): Promise<MedicationLog> {
@@ -352,7 +357,12 @@ export class MemStorage implements IStorage {
   async getAssistantMessages(userId: number): Promise<AssistantMessage[]> {
     return Array.from(this.assistantMessages.values())
       .filter(msg => msg.userId === userId)
-      .sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+      .sort((a, b) => {
+        if (a.timestamp && b.timestamp) {
+          return a.timestamp.getTime() - b.timestamp.getTime();
+        }
+        return 0;
+      });
   }
   
   async createAssistantMessage(message: InsertAssistantMessage): Promise<AssistantMessage> {

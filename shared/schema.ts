@@ -11,7 +11,7 @@ export const users = pgTable("users", {
   firstName: text("first_name"),
   lastName: text("last_name"),
   gender: text("gender"),
-  birthDate: date("birth_date"),
+  birthDate: text("birth_date"),
   targetInrMin: real("target_inr_min").default(2.0),
   targetInrMax: real("target_inr_max").default(3.0),
 });
@@ -32,7 +32,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const ptTests = pgTable("pt_tests", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
-  testDate: date("test_date").notNull(),
+  testDate: text("test_date").notNull(),
   inrValue: real("inr_value").notNull(),
   notes: text("notes"),
   createdAt: timestamp("created_at").defaultNow(),
