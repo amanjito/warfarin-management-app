@@ -31,19 +31,20 @@ export default function ChatInput({
 
   return (
     <div className="px-4 py-3 border-t">
-      <div className="flex">
+      <div className="flex flex-row-reverse">
         <Input
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="سوال خود را اینجا بنویسید..."
-          className="flex-1 px-4 py-2 focus-visible:ring-[#E91E63]"
+          className="flex-1 px-4 py-2 focus-visible:ring-[#E91E63] text-right"
+          dir="rtl"
           disabled={disabled || isPending}
         />
         <Button
           onClick={onSend}
           disabled={!value.trim() || disabled || isPending}
-          className="ml-2 bg-[#E91E63] hover:bg-[#C2185B]"
+          className="mr-2 bg-[#E91E63] hover:bg-[#C2185B]"
         >
           <Send className="h-4 w-4" />
         </Button>

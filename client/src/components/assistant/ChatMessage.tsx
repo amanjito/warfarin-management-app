@@ -11,11 +11,11 @@ export default function ChatMessage({ message, isUser }: ChatMessageProps) {
       className={cn(
         "chat-message rounded-lg px-4 py-3 mb-3 max-w-[80%]",
         isUser
-          ? "user-message bg-blue-50 ml-auto rounded-tr-sm"
-          : "ai-message bg-white mr-auto rounded-tl-sm"
+          ? "user-message bg-blue-50 mr-auto rounded-tl-sm"
+          : "ai-message bg-white ml-auto rounded-tr-sm"
       )}
     >
-      <p className="whitespace-pre-line">{message}</p>
+      <p className="whitespace-pre-line text-right" dir="rtl">{message}</p>
     </div>
   );
 }

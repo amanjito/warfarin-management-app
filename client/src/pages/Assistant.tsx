@@ -4,7 +4,7 @@ import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import ChatMessage from "@/components/assistant/ChatMessage";
 import ChatInput from "@/components/assistant/ChatInput";
 import { AssistantMessage } from "@shared/schema";
@@ -57,14 +57,14 @@ export default function Assistant() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">دستیار هوشمند</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right">دستیار هوشمند</h2>
       
       {/* AI Chat Interface */}
       <Card className="mb-6 flex flex-col h-[calc(100vh-250px)]">
         {/* Chat Header */}
         <div className="px-4 py-3 border-b">
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-[#E91E63] rounded-full flex items-center justify-center mr-3">
+          <div className="flex items-center flex-row-reverse">
+            <div className="w-10 h-10 bg-[#E91E63] rounded-full flex items-center justify-center ml-3">
               <svg
                 className="h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +82,7 @@ export default function Assistant() {
                 <line x1="16" y1="16" x2="16" y2="16" />
               </svg>
             </div>
-            <div>
+            <div className="text-right">
               <h3 className="font-medium">دستیار وارفارین</h3>
               <p className="text-xs text-gray-500">سوالات دارویی خود را بپرسید</p>
             </div>
@@ -127,12 +127,12 @@ export default function Assistant() {
               <li key={index} className="py-3">
                 <Button
                   variant="ghost"
-                  className="w-full text-left justify-between font-normal hover:bg-gray-50"
+                  className="w-full text-right justify-between font-normal hover:bg-gray-50 flex-row-reverse"
                   onClick={() => handleQuickQuestion(question)}
                   disabled={sendMessageMutation.isPending}
                 >
                   <span className="font-medium">{question}</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
+                  <ChevronLeft className="h-5 w-5 text-gray-400" />
                 </Button>
               </li>
             ))}
