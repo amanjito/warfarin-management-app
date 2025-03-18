@@ -24,6 +24,8 @@ import {
 export default function Reminders() {
   const today = format(new Date(), "MMM dd, yyyy");
   const [isEditMode, setIsEditMode] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [medicationToDelete, setMedicationToDelete] = useState<number | null>(null);
   
   // Fetch medications
   const { data: medications, isLoading: medicationsLoading } = useQuery<Medication[]>({
@@ -133,9 +135,27 @@ export default function Reminders() {
   };
   
   const handleDeleteMedication = (medicationId: number) => {
-    if (confirm("Are you sure you want to delete this medication? This will also delete all associated reminders.")) {
-      deleteMedicationMutation.mutate(medicationId);
+    setMedicationToDelete(medicationId);
+    setConfirmOpen(true);
+  };
+  
+  const getMedicationName = (medicationId: number | null): string => {
+    if (!medicationId || !medications) return "";
+    const medication = medications.find(med => med.id === medicationId);
+    return medication ? medication.name : "";
+  };
+  
+  const confirmDelete = () => {
+    if (medicationToDelete) {
+      deleteMedicationMutation.mutate(medicationToDelete);
     }
+    setConfirmOpen(false);
+    setMedicationToDelete(null);
+  };
+  
+  const cancelDelete = () => {
+    setConfirmOpen(false);
+    setMedicationToDelete(null);
   };
   
   const todaysReminders = getTodaysReminders();
@@ -290,6 +310,28 @@ export default function Reminders() {
           </ul>
         </CardContent>
       </Card>
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {getMedicationName(medicationToDelete)}</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action will permanently remove <strong>{getMedicationName(medicationToDelete)}</strong> and all associated reminders.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmDelete}
+              className="bg-red-500 hover:bg-red-600"
+              disabled={deleteMedicationMutation.isPending}
+            >
+              {deleteMedicationMutation.isPending ? "Deleting..." : "Delete Medication"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
