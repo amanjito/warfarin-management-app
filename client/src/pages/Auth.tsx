@@ -5,10 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { useLocation } from 'wouter';
 import { HeartPulse, Mail, Lock, UserPlus, LogIn } from 'lucide-react';
+import { SiGoogle } from 'react-icons/si';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import {
   Form,
@@ -178,6 +180,36 @@ export default function Auth() {
       setAuthLoading(false);
     }
   }
+  
+  async function signInWithGoogle() {
+    setAuthLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+      
+      if (error) {
+        toast({
+          title: 'Google sign in failed',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+      // Success will be handled by the redirect
+    } catch (error) {
+      toast({
+        title: 'Google sign in error',
+        description: 'An unexpected error occurred. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setAuthLoading(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -251,6 +283,28 @@ export default function Auth() {
                     {authLoading ? 'Signing In...' : 'Sign In'}
                     <LogIn className="ml-2 h-5 w-5" />
                   </Button>
+                  
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-2 text-sm text-gray-500">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={signInWithGoogle}
+                    disabled={authLoading}
+                  >
+                    <SiGoogle className="mr-2 h-4 w-4" />
+                    {authLoading ? 'Signing In...' : 'Sign in with Google'}
+                  </Button>
                 </form>
               </Form>
             ) : (
@@ -307,6 +361,28 @@ export default function Auth() {
                   <Button type="submit" className="w-full" disabled={authLoading}>
                     {authLoading ? 'Creating Account...' : 'Create Account'}
                     <UserPlus className="ml-2 h-5 w-5" />
+                  </Button>
+                  
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator className="w-full" />
+                    </div>
+                    <div className="relative flex justify-center">
+                      <span className="bg-white px-2 text-sm text-gray-500">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={signInWithGoogle}
+                    disabled={authLoading}
+                  >
+                    <SiGoogle className="mr-2 h-4 w-4" />
+                    {authLoading ? 'Signing In...' : 'Sign up with Google'}
                   </Button>
                 </form>
               </Form>
