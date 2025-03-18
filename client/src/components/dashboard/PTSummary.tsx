@@ -1,5 +1,5 @@
 import { PtTest } from "@shared/schema";
-import { format } from "date-fns";
+import { formatDate, convertToPersianDigits } from "@/lib/dateUtils";
 import { Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -35,7 +35,7 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
   if (!ptTests || ptTests.length === 0) {
     return (
       <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">No PT test data available</p>
+        <p className="text-gray-500">داده آزمایش PT موجود نیست</p>
       </div>
     );
   }
@@ -47,7 +47,7 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     .reverse();
   
   // Prepare data for chart
-  const labels = recentTests.map(test => format(new Date(test.testDate), "MMM d"));
+  const labels = recentTests.map(test => formatDate(new Date(test.testDate)));
   const inrValues = recentTests.map(test => test.inrValue);
   
   // Create a target range dataset (constant values for min and max)
@@ -59,7 +59,7 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     labels,
     datasets: [
       {
-        label: 'INR Value',
+        label: 'مقدار INR',
         data: inrValues,
         borderColor: '#2196F3',
         backgroundColor: 'rgba(33, 150, 243, 0.1)',
@@ -69,7 +69,7 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
         pointHoverRadius: 6
       },
       {
-        label: 'Target Range Min',
+        label: 'حداقل محدوده هدف',
         data: targetRangeMin,
         borderColor: 'rgba(76, 175, 80, 0.5)',
         borderDash: [5, 5],
@@ -77,7 +77,7 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
         fill: false
       },
       {
-        label: 'Target Range Max',
+        label: 'حداکثر محدوده هدف',
         data: targetRangeMax,
         borderColor: 'rgba(76, 175, 80, 0.5)',
         borderDash: [5, 5],
@@ -97,7 +97,19 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
       },
       tooltip: {
         mode: 'index' as const,
-        intersect: false
+        intersect: false,
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += convertToPersianDigits(context.parsed.y.toFixed(1));
+            }
+            return label;
+          }
+        }
       }
     },
     scales: {
@@ -106,11 +118,30 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
         max: 4,
         grid: {
           color: 'rgba(0, 0, 0, 0.05)'
+        },
+        title: {
+          display: true,
+          text: 'مقدار INR',
+          font: {
+            family: 'Vazirmatn'
+          }
+        },
+        ticks: {
+          callback: function(value) {
+            return convertToPersianDigits(value.toString());
+          }
         }
       },
       x: {
         grid: {
           display: false
+        },
+        title: {
+          display: true,
+          text: 'تاریخ',
+          font: {
+            family: 'Vazirmatn'
+          }
         }
       }
     }
