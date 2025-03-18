@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search } from "lucide-react";
+import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useLocation } from "wouter";
@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import MedicalHeart from "./icons/MedicalHeart";
 
 export default function Header() {
   const [, setLocation] = useLocation();
@@ -101,7 +102,7 @@ export default function Header() {
               whileHover={{ rotate: 15 }}
               transition={{ type: "spring", stiffness: 500 }}
             >
-              <Heart className="h-5 w-5" fill="white" />
+              <MedicalHeart className="h-5 w-5" fill="white" />
             </motion.div>
             <h1 className="text-xl font-bold hidden sm:block">پایشگر وارفارین</h1>
           </motion.div>
@@ -240,7 +241,7 @@ export default function Header() {
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-primary flex items-center">
-                  <Heart className="h-5 w-5 ml-2" fill="currentColor" />
+                  <MedicalHeart className="h-5 w-5 ml-2" fill="currentColor" />
                   پایشگر وارفارین
                 </h2>
                 <Button 

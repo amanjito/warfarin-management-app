@@ -20,8 +20,8 @@ export default function Navigation({ activeTab }: NavigationProps) {
   
   const tabs = [
     { id: "dashboard", label: "خانه", icon: Home, path: "/dashboard" },
-    { id: "pt-tracker", label: "آزمایش PT", icon: Activity, path: "/pt-tracker" },
-    { id: "medication", label: "داروها", icon: Pill, path: "/medication" },
+    { id: "pt-tracker", label: "آزمایش PT", icon: BloodDrop, path: "/pt-tracker" },
+    { id: "medication", label: "داروها", icon: MedicalHeart, path: "/medication" },
     { id: "reminders", label: "یادآورها", icon: Clock, path: "/reminders" },
     { id: "assistant", label: "دستیار", icon: MessageSquare, path: "/assistant" },
   ];
