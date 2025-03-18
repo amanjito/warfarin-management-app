@@ -14,7 +14,6 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, userData: Partial<InsertUser>): Promise<User>;
   
   // PT test operations
   getPtTests(userId: number): Promise<PtTest[]>;
@@ -104,15 +103,6 @@ export class MemStorage implements IStorage {
       birthDate: "1985-06-15",
       targetInrMin: 2.0,
       targetInrMax: 3.0,
-      medicalConditions: "Atrial fibrillation, Hypertension",
-      allergies: "Penicillin",
-      primaryPhysician: "Dr. Michael Chen",
-      emergencyContact: "John Johnson (Husband), 555-123-4567",
-      anticoagulantIndicationReason: "Atrial fibrillation",
-      dateStartedWarfarin: "2022-08-15",
-      lastInrDate: "2023-05-12",
-      lastInrValue: 2.4,
-      hasCompletedSetup: true,
     };
     this.users.set(user.id, user);
     
@@ -237,60 +227,9 @@ export class MemStorage implements IStorage {
   
   async createUser(user: InsertUser): Promise<User> {
     const id = this.userId++;
-    const newUser: User = { 
-      id,
-      username: user.username,
-      password: user.password,
-      name: user.name || null,
-      firstName: user.firstName || null,
-      lastName: user.lastName || null,
-      gender: user.gender || null,
-      birthDate: user.birthDate || null,
-      targetInrMin: user.targetInrMin || null,
-      targetInrMax: user.targetInrMax || null,
-      medicalConditions: user.medicalConditions || null,
-      allergies: user.allergies || null,
-      primaryPhysician: user.primaryPhysician || null,
-      emergencyContact: user.emergencyContact || null,
-      anticoagulantIndicationReason: user.anticoagulantIndicationReason || null,
-      dateStartedWarfarin: user.dateStartedWarfarin || null,
-      lastInrDate: user.lastInrDate || null,
-      lastInrValue: user.lastInrValue || null,
-      hasCompletedSetup: user.hasCompletedSetup || false
-    };
+    const newUser: User = { ...user, id };
     this.users.set(id, newUser);
     return newUser;
-  }
-  
-  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User> {
-    const existing = this.users.get(id);
-    if (!existing) {
-      throw new Error("User not found");
-    }
-    
-    // Create updated user, ensuring type safety
-    const updated: User = {
-      ...existing,
-      name: userData.name !== undefined ? userData.name : existing.name,
-      firstName: userData.firstName !== undefined ? userData.firstName : existing.firstName,
-      lastName: userData.lastName !== undefined ? userData.lastName : existing.lastName,
-      gender: userData.gender !== undefined ? userData.gender : existing.gender,
-      birthDate: userData.birthDate !== undefined ? userData.birthDate : existing.birthDate,
-      targetInrMin: userData.targetInrMin !== undefined ? userData.targetInrMin : existing.targetInrMin,
-      targetInrMax: userData.targetInrMax !== undefined ? userData.targetInrMax : existing.targetInrMax,
-      medicalConditions: userData.medicalConditions !== undefined ? userData.medicalConditions : existing.medicalConditions,
-      allergies: userData.allergies !== undefined ? userData.allergies : existing.allergies,
-      primaryPhysician: userData.primaryPhysician !== undefined ? userData.primaryPhysician : existing.primaryPhysician,
-      emergencyContact: userData.emergencyContact !== undefined ? userData.emergencyContact : existing.emergencyContact,
-      anticoagulantIndicationReason: userData.anticoagulantIndicationReason !== undefined ? userData.anticoagulantIndicationReason : existing.anticoagulantIndicationReason,
-      dateStartedWarfarin: userData.dateStartedWarfarin !== undefined ? userData.dateStartedWarfarin : existing.dateStartedWarfarin,
-      lastInrDate: userData.lastInrDate !== undefined ? userData.lastInrDate : existing.lastInrDate,
-      lastInrValue: userData.lastInrValue !== undefined ? userData.lastInrValue : existing.lastInrValue,
-      hasCompletedSetup: userData.hasCompletedSetup !== undefined ? userData.hasCompletedSetup : existing.hasCompletedSetup
-    };
-    
-    this.users.set(id, updated);
-    return updated;
   }
   
   // PT test methods
@@ -307,11 +246,9 @@ export class MemStorage implements IStorage {
   async createPtTest(test: InsertPtTest): Promise<PtTest> {
     const id = this.ptTestId++;
     const newTest: PtTest = { 
-      id,
-      userId: test.userId,
+      ...test, 
+      id, 
       testDate: test.testDate,
-      inrValue: test.inrValue,
-      notes: test.notes || null,
       createdAt: new Date()
     };
     this.ptTests.set(id, newTest);
@@ -330,14 +267,7 @@ export class MemStorage implements IStorage {
   
   async createMedication(medication: InsertMedication): Promise<Medication> {
     const id = this.medicationId++;
-    const newMedication: Medication = { 
-      id,
-      userId: medication.userId,
-      name: medication.name,
-      dosage: medication.dosage,
-      quantity: medication.quantity,
-      instructions: medication.instructions || null
-    };
+    const newMedication: Medication = { ...medication, id };
     this.medications.set(id, newMedication);
     return newMedication;
   }
@@ -369,15 +299,7 @@ export class MemStorage implements IStorage {
   
   async createReminder(reminder: InsertReminder): Promise<Reminder> {
     const id = this.reminderId++;
-    const newReminder: Reminder = { 
-      id,
-      userId: reminder.userId,
-      medicationId: reminder.medicationId,
-      time: reminder.time,
-      days: reminder.days,
-      active: reminder.active || null,
-      notifyBefore: reminder.notifyBefore || null
-    };
+    const newReminder: Reminder = { ...reminder, id };
     this.reminders.set(id, newReminder);
     return newReminder;
   }
@@ -411,14 +333,7 @@ export class MemStorage implements IStorage {
   
   async createMedicationLog(log: InsertMedicationLog): Promise<MedicationLog> {
     const id = this.medicationLogId++;
-    const newLog: MedicationLog = { 
-      id,
-      userId: log.userId,
-      reminderId: log.reminderId,
-      scheduled: log.scheduled,
-      taken: log.taken || null,
-      takenAt: new Date()
-    };
+    const newLog: MedicationLog = { ...log, id, takenAt: new Date() };
     this.medicationLogs.set(id, newLog);
     return newLog;
   }

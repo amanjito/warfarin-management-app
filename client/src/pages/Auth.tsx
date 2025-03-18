@@ -23,25 +23,20 @@ import {
 } from '@/components/ui/form';
 
 const loginSchema = z.object({
-  email: z.string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
-  password: z.string()
-    .min(1, 'Password is required'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 const signupSchema = z.object({
-  email: z.string()
-    .min(1, 'Email is required')
-    .email('Please enter a valid email address'),
-  password: z.string()
+  email: z.string().email('Please enter a valid email address'),
+  password: z
+    .string()
     .min(6, 'Password must be at least 6 characters')
     .max(72, 'Password must be less than 72 characters'),
-  confirmPassword: z.string()
-    .min(1, 'Please confirm your password'),
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ["confirmPassword"],
+  path: ['confirmPassword'],
 });
 
 export default function Auth() {
@@ -57,8 +52,7 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit', // Only validate on submit
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -68,8 +62,7 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit', // Only validate on submit
   });
 
   useEffect(() => {
@@ -101,20 +94,18 @@ export default function Auth() {
     };
   }, [setLocation]);
 
-  // Reset form when switching tabs
+  // Reset form errors when switching tabs
   useEffect(() => {
     if (tab === 'login') {
-      loginForm.reset();
+      loginForm.clearErrors();
     } else {
-      signupForm.reset();
+      signupForm.clearErrors();
     }
   }, [tab, loginForm, signupForm]);
 
-  // We're validating on submit, so don't need separate handlers
-
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
-
+    
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -147,7 +138,7 @@ export default function Auth() {
 
   async function onSignupSubmit(values: z.infer<typeof signupSchema>) {
     setAuthLoading(true);
-
+    
     try {
       // Important: Set autoconfirm to true to bypass email verification
       const { error } = await supabase.auth.signUp({
@@ -172,11 +163,11 @@ export default function Auth() {
           title: 'Account created',
           description: 'Please sign in with your new account',
         });
-
+        
         // Reset the signup form and switch to login tab
         signupForm.reset();
         setTab('login');
-
+        
         // Pre-fill login form with signup email
         loginForm.setValue('email', values.email);
       }
@@ -190,13 +181,13 @@ export default function Auth() {
       setAuthLoading(false);
     }
   }
-
+  
   const [googleAuthError, setGoogleAuthError] = useState(false);
-
+  
   async function signInWithGoogle() {
     setAuthLoading(true);
     setGoogleAuthError(false);
-
+    
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -204,7 +195,7 @@ export default function Auth() {
           redirectTo: `${window.location.origin}/dashboard`,
         },
       });
-
+      
       if (error) {
         console.error('Google OAuth error:', error);
         setGoogleAuthError(true);
@@ -270,7 +261,7 @@ export default function Auth() {
                 </AlertDescription>
               </Alert>
             )}
-
+          
             {tab === 'login' ? (
               <Form {...loginForm}>
                 <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
@@ -283,11 +274,7 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input 
-                              placeholder="your.email@example.com" 
-                              className="pl-10" 
-                              {...field}
-                            />
+                            <Input placeholder="your.email@example.com" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -303,12 +290,7 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input 
-                              type="password" 
-                              placeholder="••••••••" 
-                              className="pl-10" 
-                              {...field}
-                            />
+                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -319,7 +301,7 @@ export default function Auth() {
                     {authLoading ? 'Signing In...' : 'Sign In'}
                     <LogIn className="ml-2 h-5 w-5" />
                   </Button>
-
+                  
                   <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <Separator className="w-full" />
@@ -330,7 +312,7 @@ export default function Auth() {
                       </span>
                     </div>
                   </div>
-
+                  
                   <Button 
                     type="button" 
                     variant="outline" 
@@ -355,11 +337,7 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input 
-                              placeholder="your.email@example.com" 
-                              className="pl-10" 
-                              {...field}
-                            />
+                            <Input placeholder="your.email@example.com" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -375,12 +353,7 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input 
-                              type="password" 
-                              placeholder="••••••••" 
-                              className="pl-10" 
-                              {...field}
-                            />
+                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -396,12 +369,7 @@ export default function Auth() {
                         <FormControl>
                           <div className="relative">
                             <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                            <Input 
-                              type="password" 
-                              placeholder="••••••••" 
-                              className="pl-10" 
-                              {...field}
-                            />
+                            <Input type="password" placeholder="••••••••" className="pl-10" {...field} />
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -412,7 +380,7 @@ export default function Auth() {
                     {authLoading ? 'Creating Account...' : 'Create Account'}
                     <UserPlus className="ml-2 h-5 w-5" />
                   </Button>
-
+                  
                   <div className="relative my-4">
                     <div className="absolute inset-0 flex items-center">
                       <Separator className="w-full" />
@@ -423,7 +391,7 @@ export default function Auth() {
                       </span>
                     </div>
                   </div>
-
+                  
                   <Button 
                     type="button" 
                     variant="outline" 
