@@ -2,9 +2,38 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter
+} from "@/components/ui/dialog";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { 
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import ReminderForm from "@/components/reminders/ReminderForm";
 import ReminderItem from "@/components/reminders/ReminderItem";
 import NotificationManager from "@/components/reminders/NotificationManager";
@@ -21,11 +50,29 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
+// Form validation schema for editing alarm time
+const editReminderSchema = z.object({
+  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: "Time must be in the format HH:MM (24-hour)",
+  }),
+  notifyBefore: z.string().transform(val => parseInt(val)),
+  days: z.array(z.string()).min(1, {
+    message: "Select at least one day",
+  }),
+});
+
+type EditReminderFormValues = z.infer<typeof editReminderSchema>;
+
 export default function Reminders() {
   const today = format(new Date(), "MMM dd, yyyy");
   const [isEditMode, setIsEditMode] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [medicationToDelete, setMedicationToDelete] = useState<number | null>(null);
+  // Define type for medication with reminders
+  type MedicationWithReminders = Medication & { reminders: Reminder[] };
+  
+  const [selectedMedication, setSelectedMedication] = useState<MedicationWithReminders | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   
   // Fetch medications
   const { data: medications, isLoading: medicationsLoading } = useQuery<Medication[]>({
@@ -73,6 +120,18 @@ export default function Reminders() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/medications'] });
       queryClient.invalidateQueries({ queryKey: ['/api/reminders'] });
+    },
+  });
+  
+  // Create mutation for updating a reminder
+  const updateReminderMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: number, data: Partial<Reminder> }) => {
+      const response = await apiRequest('PUT', `/api/reminders/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/reminders'] });
+      setEditModalOpen(false);
     },
   });
   
@@ -156,6 +215,62 @@ export default function Reminders() {
   const cancelDelete = () => {
     setConfirmOpen(false);
     setMedicationToDelete(null);
+  };
+  
+  // Handle opening the edit dialog for a medication
+  const handleEditMedication = (medication: MedicationWithReminders) => {
+    setSelectedMedication(medication);
+    setEditModalOpen(true);
+  };
+  
+  // Get default values for the edit form
+  const getEditFormDefaultValues = (): EditReminderFormValues => {
+    if (!selectedMedication || selectedMedication.reminders.length === 0) {
+      return {
+        time: "08:00",
+        notifyBefore: "15",
+        days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+      };
+    }
+    
+    const reminder = selectedMedication.reminders[0];
+    return {
+      time: reminder.time,
+      notifyBefore: reminder.notifyBefore.toString(),
+      days: reminder.days.split(',')
+    };
+  };
+  
+  // Handle edit form submission
+  const handleEditFormSubmit = (values: EditReminderFormValues) => {
+    if (!selectedMedication) return;
+    
+    // Convert days array to comma-separated string
+    const daysString = values.days.join(',');
+    
+    if (selectedMedication.reminders.length > 0) {
+      // Update existing reminder
+      const reminderId = selectedMedication.reminders[0].id;
+      updateReminderMutation.mutate({
+        id: reminderId,
+        data: {
+          time: values.time,
+          days: daysString,
+          notifyBefore: values.notifyBefore,
+          active: true
+        }
+      });
+    } else {
+      // Create new reminder for this medication
+      addReminderMutation.mutate({
+        medicationId: selectedMedication.id,
+        time: values.time,
+        days: daysString,
+        active: true,
+        notifyBefore: values.notifyBefore
+      });
+      setEditModalOpen(false);
+    }
   };
   
   const todaysReminders = getTodaysReminders();
