@@ -218,7 +218,7 @@ export default function MedicationInfo() {
               title={section.title} 
               content={section.content}
             />
-          ))}
+          )).filter(section => !section.title.includes('Emergency Contact Information'))}
         </Accordion>
       </div>
     </div>
