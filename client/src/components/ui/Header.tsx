@@ -21,6 +21,9 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { CurvedShape, HeartbeatShape, HeartPulseIcon, WarfarinLogo } from "./svg/CurvedShape";
 import { cn } from "@/lib/utils";
+import { Wave } from "./icons/Wave";
+import { MedicalHeart } from "./icons/MedicalHeart";
+import { BloodDrop } from "./icons/BloodDrop";
 
 export default function Header() {
   const [, setLocation] = useLocation();

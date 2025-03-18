@@ -7,54 +7,29 @@ interface WaveProps {
 }
 
 export function Wave({ 
-  className,
+  className, 
   fill = "currentColor",
-  variant = "header"
+  variant = "divider"
 }: WaveProps) {
-  if (variant === "header") {
-    return (
-      <svg
-        viewBox="0 0 1440 120"
-        className={cn("w-full h-full", className)}
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0,120 C320,40 480,100 720,80 C960,60 1120,0 1440,40 L1440,120 L0,120 Z"
-          fill={fill}
-        />
-      </svg>
-    );
-  }
-  
-  if (variant === "footer") {
-    return (
-      <svg
-        viewBox="0 0 1440 120"
-        className={cn("w-full h-full", className)}
-        preserveAspectRatio="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M0,0 C320,80 480,20 720,40 C960,60 1120,120 1440,80 L1440,0 L0,0 Z"
-          fill={fill}
-        />
-      </svg>
-    );
-  }
-  
-  // Divider variant
+  // Different wave patterns for different contexts
+  const paths = {
+    header: "M0,64L80,80C160,96,320,128,480,138.7C640,149,800,139,960,122.7C1120,107,1280,85,1360,74.7L1440,64L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z",
+    footer: "M0,128L80,112C160,96,320,64,480,69.3C640,75,800,117,960,133.3C1120,149,1280,139,1360,133.3L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z",
+    divider: "M0,160L60,170.7C120,181,240,203,360,192C480,181,600,139,720,144C840,149,960,203,1080,208C1200,213,1320,171,1380,149.3L1440,128L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
+  };
+
   return (
-    <svg
-      viewBox="0 0 1440 60"
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 1440 320"
       className={cn("w-full h-full", className)}
       preserveAspectRatio="none"
-      xmlns="http://www.w3.org/2000/svg"
     >
-      <path
-        d="M0,30 C320,60 480,0 720,30 C960,60 1120,30 1440,0 L1440,60 L0,60 Z"
-        fill={fill}
-      />
+      <path 
+        fill={fill} 
+        fillOpacity="1" 
+        d={paths[variant]}
+      ></path>
     </svg>
   );
 }
