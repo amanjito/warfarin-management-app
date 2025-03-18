@@ -38,13 +38,11 @@ export default function QuickAction({ title, icon, color, path }: QuickActionPro
   };
   
   return (
-    <Link href={path}>
-      <a className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
-        <div className={cn("w-12 h-12 rounded-full flex items-center justify-center mb-2", bgColorClasses[color])}>
-          {getIcon()}
-        </div>
-        <span className="text-sm font-medium">{title}</span>
-      </a>
+    <Link href={path} className="bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center hover:shadow-md transition-shadow">
+      <div className={cn("w-12 h-12 rounded-full flex items-center justify-center mb-2", bgColorClasses[color])}>
+        {getIcon()}
+      </div>
+      <span className="text-sm font-medium">{title}</span>
     </Link>
   );
 }
