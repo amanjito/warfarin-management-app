@@ -14,6 +14,7 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, userData: Partial<InsertUser>): Promise<User>;
   
   // PT test operations
   getPtTests(userId: number): Promise<PtTest[]>;
@@ -259,6 +260,37 @@ export class MemStorage implements IStorage {
     };
     this.users.set(id, newUser);
     return newUser;
+  }
+  
+  async updateUser(id: number, userData: Partial<InsertUser>): Promise<User> {
+    const existing = this.users.get(id);
+    if (!existing) {
+      throw new Error("User not found");
+    }
+    
+    // Create updated user, ensuring type safety
+    const updated: User = {
+      ...existing,
+      name: userData.name !== undefined ? userData.name : existing.name,
+      firstName: userData.firstName !== undefined ? userData.firstName : existing.firstName,
+      lastName: userData.lastName !== undefined ? userData.lastName : existing.lastName,
+      gender: userData.gender !== undefined ? userData.gender : existing.gender,
+      birthDate: userData.birthDate !== undefined ? userData.birthDate : existing.birthDate,
+      targetInrMin: userData.targetInrMin !== undefined ? userData.targetInrMin : existing.targetInrMin,
+      targetInrMax: userData.targetInrMax !== undefined ? userData.targetInrMax : existing.targetInrMax,
+      medicalConditions: userData.medicalConditions !== undefined ? userData.medicalConditions : existing.medicalConditions,
+      allergies: userData.allergies !== undefined ? userData.allergies : existing.allergies,
+      primaryPhysician: userData.primaryPhysician !== undefined ? userData.primaryPhysician : existing.primaryPhysician,
+      emergencyContact: userData.emergencyContact !== undefined ? userData.emergencyContact : existing.emergencyContact,
+      anticoagulantIndicationReason: userData.anticoagulantIndicationReason !== undefined ? userData.anticoagulantIndicationReason : existing.anticoagulantIndicationReason,
+      dateStartedWarfarin: userData.dateStartedWarfarin !== undefined ? userData.dateStartedWarfarin : existing.dateStartedWarfarin,
+      lastInrDate: userData.lastInrDate !== undefined ? userData.lastInrDate : existing.lastInrDate,
+      lastInrValue: userData.lastInrValue !== undefined ? userData.lastInrValue : existing.lastInrValue,
+      hasCompletedSetup: userData.hasCompletedSetup !== undefined ? userData.hasCompletedSetup : existing.hasCompletedSetup
+    };
+    
+    this.users.set(id, updated);
+    return updated;
   }
   
   // PT test methods

@@ -42,6 +42,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(userWithoutPassword);
   });
   
+  // Medical history routes
+  app.post("/api/users/:id/medical-history", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Create a schema for medical history fields
+      const medicalHistorySchema = z.object({
+        medicalConditions: z.string(),
+        allergies: z.string().optional().nullable(),
+        primaryPhysician: z.string(),
+        emergencyContact: z.string(),
+        anticoagulantIndicationReason: z.string(),
+        dateStartedWarfarin: z.string(),
+        lastInrDate: z.string(),
+        lastInrValue: z.number(),
+        targetInrMin: z.number(),
+        targetInrMax: z.number(),
+        hasCompletedSetup: z.boolean().default(true)
+      });
+      
+      const medicalData = medicalHistorySchema.parse(req.body);
+      
+      // Update the user with medical history data
+      const updatedUser = await storage.updateUser(id, medicalData);
+      
+      // Don't send the password to the client
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors });
+      } else {
+        console.error("Error updating medical history:", error);
+        res.status(500).json({ message: "Failed to update medical history" });
+      }
+    }
+  });
+  
+  app.put("/api/users/:id/medical-history", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      const user = await storage.getUser(id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Create a schema for medical history fields (all fields optional for updates)
+      const medicalHistoryUpdateSchema = z.object({
+        medicalConditions: z.string().optional(),
+        allergies: z.string().optional().nullable(),
+        primaryPhysician: z.string().optional(),
+        emergencyContact: z.string().optional(),
+        anticoagulantIndicationReason: z.string().optional(),
+        dateStartedWarfarin: z.string().optional(),
+        lastInrDate: z.string().optional(),
+        lastInrValue: z.number().optional(),
+        targetInrMin: z.number().optional(),
+        targetInrMax: z.number().optional()
+      });
+      
+      const medicalData = medicalHistoryUpdateSchema.parse(req.body);
+      
+      // Update the user with medical history data
+      const updatedUser = await storage.updateUser(id, medicalData);
+      
+      // Don't send the password to the client
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json(userWithoutPassword);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors });
+      } else {
+        console.error("Error updating medical history:", error);
+        res.status(500).json({ message: "Failed to update medical history" });
+      }
+    }
+  });
+  
   // Get the current user
   app.get("/api/users/current", async (req, res) => {
     // In a real app, you'd get userId from the session/auth
@@ -99,42 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Submit medical history form after registration
-  app.post("/api/users/:id/medical-history", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid ID" });
-      }
-      
-      // In a real app, verify user has permission to edit this profile
-      const user = await storage.getUser(id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      
-      // Update the medical history fields
-      const updatedUser = {
-        ...user,
-        ...req.body,
-        hasCompletedSetup: true // Mark setup as complete
-      };
-      
-      // Save the updated user
-      const savedUser = await storage.createUser(updatedUser);
-      
-      // Don't send the password back to the client
-      const { password: _, ...userWithoutPassword } = savedUser;
-      res.json(userWithoutPassword);
-    } catch (error) {
-      console.error("Error updating medical history:", error);
-      if (error instanceof z.ZodError) {
-        res.status(400).json({ message: error.errors });
-      } else {
-        res.status(500).json({ message: "Failed to update medical history" });
-      }
-    }
-  });
+  // This route was duplicated - removed here since we already defined it above
 
   // PT Tests Routes
   app.get("/api/pt-tests", async (req, res) => {
