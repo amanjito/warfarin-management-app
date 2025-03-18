@@ -103,7 +103,7 @@ export default function Header() {
             >
               <Heart className="h-5 w-5" fill="white" />
             </motion.div>
-            <h1 className="text-xl font-bold hidden sm:block">WarfarinTracker</h1>
+            <h1 className="text-xl font-bold hidden sm:block">پایشگر وارفارین</h1>
           </motion.div>
 
           {/* Search bar (expands on mobile) */}
@@ -118,7 +118,7 @@ export default function Header() {
               >
                 <Input 
                   type="search" 
-                  placeholder="Search..."
+                  placeholder="جستجو..."
                   className="bg-primary/40 border-white/30 text-white placeholder:text-white/70 focus-visible:ring-white/30"
                   autoFocus
                 />

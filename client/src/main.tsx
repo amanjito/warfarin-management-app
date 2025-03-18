@@ -2,6 +2,11 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { initializePushNotifications } from "./lib/pushNotifications";
+import { useEffect } from "react";
+
+// Set document direction and language
+document.documentElement.dir = "rtl";
+document.documentElement.lang = "fa";
 
 // Initialize push notifications
 if ('serviceWorker' in navigator) {
