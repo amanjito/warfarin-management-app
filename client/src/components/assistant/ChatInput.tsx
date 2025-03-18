@@ -36,7 +36,7 @@ export default function ChatInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type your question here..."
+          placeholder="سوال خود را اینجا بنویسید..."
           className="flex-1 px-4 py-2 focus-visible:ring-[#E91E63]"
           disabled={disabled || isPending}
         />

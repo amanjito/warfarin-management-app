@@ -41,23 +41,23 @@ export default function Assistant() {
   
   // Frequently asked questions
   const faqs = [
-    "What is the target INR range for most patients?",
-    "Can I drink alcohol while taking Warfarin?",
-    "What over-the-counter medications should I avoid?",
-    "How do I prepare for surgery while on Warfarin?"
+    "محدوده هدف INR برای اکثر بیماران چیست؟",
+    "آیا می‌توانم هنگام مصرف وارفارین الکل بنوشم؟",
+    "از چه داروهای بدون نسخه باید اجتناب کنم؟",
+    "چگونه باید برای جراحی در حین مصرف وارفارین آماده شوم؟"
   ];
   
   // Quick suggestions
   const suggestions = [
-    "Food interactions?",
-    "Side effects?", 
-    "Activity restrictions?", 
-    "When to call doctor?"
+    "تداخلات غذایی؟",
+    "عوارض جانبی؟", 
+    "محدودیت‌های فعالیتی؟", 
+    "چه زمانی با پزشک تماس بگیرم؟"
   ];
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">AI Assistant</h2>
+      <h2 className="text-2xl font-semibold mb-6">دستیار هوشمند</h2>
       
       {/* AI Chat Interface */}
       <Card className="mb-6 flex flex-col h-[calc(100vh-250px)]">
@@ -83,8 +83,8 @@ export default function Assistant() {
               </svg>
             </div>
             <div>
-              <h3 className="font-medium">Warfarin Assistant</h3>
-              <p className="text-xs text-gray-500">Ask questions about your medication</p>
+              <h3 className="font-medium">دستیار وارفارین</h3>
+              <p className="text-xs text-gray-500">سوالات دارویی خود را بپرسید</p>
             </div>
           </div>
         </div>
@@ -92,7 +92,7 @@ export default function Assistant() {
         {/* Chat Messages */}
         <div className="flex-1 p-4 overflow-y-auto">
           {isLoading ? (
-            <p className="text-center text-gray-500">Loading messages...</p>
+            <p className="text-center text-gray-500">در حال بارگذاری پیام‌ها...</p>
           ) : messages && messages.length > 0 ? (
             messages.map((message) => (
               <ChatMessage 
@@ -102,7 +102,7 @@ export default function Assistant() {
               />
             ))
           ) : (
-            <p className="text-center text-gray-500">No messages yet. Ask a question to get started!</p>
+            <p className="text-center text-gray-500">هنوز پیامی وجود ندارد. برای شروع، سوالی بپرسید!</p>
           )}
         </div>
         
@@ -121,7 +121,7 @@ export default function Assistant() {
       {/* Common Questions */}
       <Card>
         <div className="p-4">
-          <h3 className="font-medium mb-4">Frequently Asked Questions</h3>
+          <h3 className="font-medium mb-4">سوالات متداول</h3>
           <ul className="divide-y divide-gray-200">
             {faqs.map((question, index) => (
               <li key={index} className="py-3">
