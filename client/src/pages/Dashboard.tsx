@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
-import { format } from "date-fns";
 import StatusCard from "@/components/dashboard/StatusCard";
 import QuickAction from "@/components/dashboard/QuickAction";
 import MedicationSummary from "@/components/dashboard/MedicationSummary";
 import PTSummary from "@/components/dashboard/PTSummary";
 import { PtTest, Reminder, Medication, MedicationLog } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatDate, convertToPersianDigits, toPersianDate } from "@/lib/dateUtils";
 
 export default function Dashboard() {
-  const today = format(new Date(), "MMM dd, yyyy");
+  const today = formatDate(new Date());
   const userId = 1; // In a real app, get from auth context
   
   // Fetch PT tests
