@@ -1,41 +1,70 @@
-// Service worker for push notifications in Warfarin Manager
+// Service Worker for Warfarin Manager App
 
-/**
- * Handle push notifications received from the server
- */
-self.addEventListener('push', function(event) {
-  console.log('[Service Worker] Push received.');
+const APP_NAME = 'Warfarin Manager';
+const CACHE_NAME = 'warfarin-manager-v1';
 
-  let notificationData = {};
-  if (event.data) {
-    try {
-      notificationData = event.data.json();
-    } catch (e) {
-      console.error('Could not parse notification data', e);
-      notificationData = {
-        notification: {
-          title: 'Warfarin Manager',
-          body: 'You have a new notification',
-          icon: '/icons/medicine-icon-192.png',
-          badge: '/icons/badge-72.png',
-        }
-      };
-    }
-  }
-
-  const notification = notificationData.notification;
+// Cache assets for offline use
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
   
-  // Keep the service worker alive until the notification is displayed
   event.waitUntil(
-    self.registration.showNotification(notification.title, {
-      body: notification.body,
-      icon: notification.icon,
-      badge: notification.badge,
-      tag: notification.tag,
-      data: notification.data,
-      actions: notification.actions,
-      vibrate: [100, 50, 100],
-      requireInteraction: notification.requireInteraction || false,
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/manifest.json',
+        '/icons/medicine-icon-192.svg',
+        '/icons/medicine-icon-192.png',
+        '/icons/badge-72.svg',
+        '/icons/badge-72.png'
+      ]);
+    })
+  );
+});
+
+// Clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.filter((name) => {
+          return name !== CACHE_NAME;
+        }).map((name) => {
+          return caches.delete(name);
+        })
+      );
+    })
+  );
+});
+
+// Handle fetch requests - offline support
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  
+  // Skip API requests
+  if (event.request.url.includes('/api/')) return;
+  
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      
+      return fetch(event.request).then((response) => {
+        // Don't cache non-successful responses
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response;
+        }
+        
+        // Clone the response since it can only be consumed once
+        const responseToCache = response.clone();
+        
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+        
+        return response;
+      });
     })
   );
 });
@@ -43,44 +72,83 @@ self.addEventListener('push', function(event) {
 /**
  * Handle notification click events
  */
-self.addEventListener('notificationclick', function(event) {
-  console.log('[Service Worker] Notification click received.');
-
-  // Close the notification
-  event.notification.close();
-
-  // Handle notification click based on action (if any)
-  if (event.action) {
-    console.log(`User clicked on action "${event.action}"`);
-    // Handle different actions here if needed
-  } else {
-    console.log('User clicked on the notification body');
+self.addEventListener('push', (event) => {
+  let data = {};
+  
+  try {
+    data = event.data.json();
+  } catch (e) {
+    data = {
+      title: APP_NAME,
+      body: event.data ? event.data.text() : 'Medication reminder',
+      icon: '/icons/medicine-icon-192.png',
+      badge: '/icons/badge-72.png'
+    };
   }
-
-  // Get the URL from notification data if available, or default to reminders page
-  const urlToOpen = (event.notification.data && event.notification.data.url) || '/reminders';
-
-  // Navigate to the desired URL
+  
+  const options = {
+    body: data.body || 'Time to take your medication!',
+    icon: data.icon || '/icons/medicine-icon-192.png',
+    badge: data.badge || '/icons/badge-72.png',
+    vibrate: [100, 50, 100],
+    data: {
+      url: data.url || '/'
+    },
+    actions: [
+      {
+        action: 'taken',
+        title: 'Mark as Taken'
+      },
+      {
+        action: 'snooze',
+        title: 'Snooze'
+      }
+    ]
+  };
+  
   event.waitUntil(
-    clients.matchAll({
-      type: 'window',
-      includeUncontrolled: true
-    })
-    .then(function(clientList) {
-      // Check if there's already a window open
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          // If a window is already open, focus it and navigate to the desired URL
-          return client.focus().then(function(client) {
-            return client.navigate(urlToOpen);
-          });
-        }
-      }
-      
-      // If no window is open, open a new one
-      if (clients.openWindow) {
-        return clients.openWindow(urlToOpen);
-      }
-    })
+    self.registration.showNotification(data.title || APP_NAME, options)
   );
+});
+
+// Handle notification click
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  
+  if (event.action === 'taken') {
+    // Handle "Mark as Taken" action
+    event.waitUntil(
+      clients.openWindow('/api/reminders/taken?id=' + (event.notification.data.reminderId || ''))
+    );
+  } else if (event.action === 'snooze') {
+    // Handle "Snooze" action (reschedule for 15 minutes later)
+    event.waitUntil(
+      clients.openWindow('/api/reminders/snooze?id=' + (event.notification.data.reminderId || ''))
+    );
+  } else {
+    // Default action - open the app
+    event.waitUntil(
+      clients.matchAll({ type: 'window' }).then((clientList) => {
+        // If a window is already open, focus it
+        if (clientList.length > 0) {
+          let client = clientList[0];
+          for (let i = 0; i < clientList.length; i++) {
+            if (clientList[i].focused) {
+              client = clientList[i];
+              break;
+            }
+          }
+          return client.focus();
+        }
+        
+        // Otherwise open a new window
+        return clients.openWindow(event.notification.data.url || '/');
+      })
+    );
+  }
+});
+
+// Handle notification close
+self.addEventListener('notificationclose', (event) => {
+  console.log('Notification was closed', event);
 });
