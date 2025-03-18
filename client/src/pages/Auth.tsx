@@ -103,22 +103,22 @@ export default function Auth() {
       if (error) {
         setLoginError(error.message);
         toast({
-          title: 'Login failed',
+          title: 'ورود ناموفق',
           description: error.message,
           variant: 'destructive',
         });
       } else {
         // Successful login will be handled by the auth state change listener
         toast({
-          title: 'Login successful',
-          description: 'Welcome back to WarfarinTracker!',
+          title: 'ورود موفقیت‌آمیز',
+          description: 'به پایشگر وارفارین خوش آمدید!',
         });
       }
     } catch (error) {
-      setLoginError('An unexpected error occurred');
+      setLoginError('خطای غیر منتظره رخ داد');
       toast({
-        title: 'Login error',
-        description: 'An unexpected error occurred. Please try again.',
+        title: 'خطای ورود',
+        description: 'خطای غیر منتظره رخ داد. لطفا دوباره تلاش کنید.',
         variant: 'destructive',
       });
     } finally {
@@ -136,28 +136,28 @@ export default function Auth() {
 
     // Email validation
     if (!signupEmail) {
-      errors.email = 'Email is required';
+      errors.email = 'ایمیل الزامی است';
       isValid = false;
     } else if (!signupEmail.includes('@')) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = 'لطفا یک آدرس ایمیل معتبر وارد کنید';
       isValid = false;
     }
 
     // Password validation
     if (!signupPassword) {
-      errors.password = 'Password is required';
+      errors.password = 'رمز عبور الزامی است';
       isValid = false;
     } else if (signupPassword.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = 'رمز عبور باید حداقل ۶ کاراکتر باشد';
       isValid = false;
     }
 
     // Confirm password validation
     if (!confirmPassword) {
-      errors.confirmPassword = 'Please confirm your password';
+      errors.confirmPassword = 'لطفا رمز عبور خود را تأیید کنید';
       isValid = false;
     } else if (confirmPassword !== signupPassword) {
-      errors.confirmPassword = "Passwords don't match";
+      errors.confirmPassword = "رمزهای عبور مطابقت ندارند";
       isValid = false;
     }
 
@@ -191,14 +191,14 @@ export default function Auth() {
       if (error) {
         console.error("Supabase signup error:", error);
         toast({
-          title: 'Signup failed',
+          title: 'ثبت نام ناموفق',
           description: error.message,
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Account created',
-          description: 'Please sign in with your new account',
+          title: 'حساب کاربری ایجاد شد',
+          description: 'لطفا با حساب کاربری جدید خود وارد شوید',
         });
         
         // Reset forms and switch to login tab
@@ -212,8 +212,8 @@ export default function Auth() {
     } catch (error) {
       console.error("Signup error:", error);
       toast({
-        title: 'Signup error',
-        description: 'An unexpected error occurred. Please try again.',
+        title: 'خطای ثبت نام',
+        description: 'خطای غیر منتظره رخ داد. لطفا دوباره تلاش کنید.',
         variant: 'destructive',
       });
     } finally {
@@ -237,7 +237,7 @@ export default function Auth() {
       if (error) {
         console.error("Google sign-in error:", error);
         toast({
-          title: 'Google sign-in failed',
+          title: 'ورود با گوگل ناموفق',
           description: error.message,
           variant: 'destructive',
         });
@@ -246,8 +246,8 @@ export default function Auth() {
     } catch (error) {
       console.error("Google sign-in error:", error);
       toast({
-        title: 'Google sign-in error',
-        description: 'An unexpected error occurred. Please try again.',
+        title: 'خطای ورود با گوگل',
+        description: 'خطای غیر منتظره رخ داد. لطفا دوباره تلاش کنید.',
         variant: 'destructive',
       });
     } finally {
@@ -273,8 +273,8 @@ export default function Auth() {
             <HeartPulse className="h-10 w-10 text-primary" />
           </div>
         </div>
-        <h1 className="text-2xl font-semibold">Welcome to WarfarinTracker</h1>
-        <p className="text-gray-600 mt-2">Sign in or create a new account to continue</p>
+        <h1 className="text-2xl font-semibold">به پایشگر وارفارین خوش آمدید</h1>
+        <p className="text-gray-600 mt-2">برای ادامه وارد شوید یا یک حساب کاربری جدید ایجاد کنید</p>
       </div>
 
       <div className="flex-1 px-6 pb-6">
@@ -282,8 +282,8 @@ export default function Auth() {
           <CardHeader className="pb-0">
             <Tabs value={tab} onValueChange={(value) => setTab(value as 'login' | 'signup')} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                <TabsTrigger value="login">ورود</TabsTrigger>
+                <TabsTrigger value="signup">ثبت نام</TabsTrigger>
               </TabsList>
             </Tabs>
           </CardHeader>
