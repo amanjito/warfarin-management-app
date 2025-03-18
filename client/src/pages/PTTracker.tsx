@@ -50,15 +50,28 @@ export default function PTTracker() {
   
   // Filter tests based on time range (in months)
   const getFilteredTests = () => {
-    if (!ptTests) return [];
+    if (!ptTests) {
+      console.log("getFilteredTests: ptTests is undefined or null");
+      return [];
+    }
     
-    if (timeRange === "all") return ptTests;
+    console.log("getFilteredTests: Initial ptTests:", ptTests);
+    
+    if (timeRange === "all") {
+      console.log("getFilteredTests: Returning all tests");
+      return ptTests;
+    }
     
     const months = parseInt(timeRange);
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - months);
     
-    return ptTests.filter(test => new Date(test.testDate) >= cutoffDate);
+    console.log(`getFilteredTests: Filtering by ${months} months, cutoff date:`, cutoffDate);
+    
+    const filtered = ptTests.filter(test => new Date(test.testDate) >= cutoffDate);
+    console.log("getFilteredTests: Filtered tests:", filtered);
+    
+    return filtered;
   };
   
   const latestTest = getLatestPTTest();
@@ -66,7 +79,7 @@ export default function PTTracker() {
   
   const handleSubmit = (data: any) => {
     addPtTestMutation.mutate({
-      testDate: new Date(data.testDate),
+      testDate: format(new Date(data.testDate), 'yyyy-MM-dd'),
       inrValue: parseFloat(data.inrValue),
       notes: data.notes
     });

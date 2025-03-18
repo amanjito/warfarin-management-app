@@ -33,7 +33,10 @@ interface PTChartProps {
 }
 
 export default function PTChart({ ptTests }: PTChartProps) {
+  console.log("PTChart received ptTests:", ptTests);
+  
   if (!ptTests || ptTests.length === 0) {
+    console.log("No PT tests available to render");
     return (
       <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded-lg">
         <p className="text-gray-500">No PT test data available</p>
@@ -45,6 +48,8 @@ export default function PTChart({ ptTests }: PTChartProps) {
   const sortedTests = [...ptTests].sort((a, b) => 
     new Date(a.testDate).getTime() - new Date(b.testDate).getTime()
   );
+  
+  console.log("PTChart sortedTests:", sortedTests);
   
   // Prepare data for chart
   const labels = sortedTests.map(test => format(new Date(test.testDate), "MMM d"));
