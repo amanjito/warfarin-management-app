@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import MedicalHeart from "./icons/MedicalHeart";
+import BloodDrop from "./icons/BloodDrop";
 
 interface NavigationProps {
   activeTab: string;
