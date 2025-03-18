@@ -96,7 +96,11 @@ export class MemStorage implements IStorage {
       id: 1,
       username: "sarah",
       password: "password123",
-      name: "Sarah",
+      name: "Sarah Johnson",
+      firstName: "Sarah",
+      lastName: "Johnson",
+      gender: "female",
+      birthDate: new Date("1985-06-15"),
       targetInrMin: 2.0,
       targetInrMax: 3.0,
     };

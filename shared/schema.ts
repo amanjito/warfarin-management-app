@@ -8,6 +8,10 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   name: text("name"),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  gender: text("gender"),
+  birthDate: date("birth_date"),
   targetInrMin: real("target_inr_min").default(2.0),
   targetInrMax: real("target_inr_max").default(3.0),
 });
@@ -16,6 +20,10 @@ export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
   name: true,
+  firstName: true,
+  lastName: true,
+  gender: true,
+  birthDate: true,
   targetInrMin: true,
   targetInrMax: true,
 });
