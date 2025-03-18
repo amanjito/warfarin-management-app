@@ -39,11 +39,11 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-primary text-white shadow-md">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold flex items-center">
+    <header className="bg-primary text-white shadow-lg">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <h1 className="text-2xl font-bold flex items-center tracking-tight">
           <svg 
-            className="mr-2 h-5 w-5" 
+            className="mr-3 h-6 w-6" 
             xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 24 24" 
             fill="none" 
@@ -56,13 +56,27 @@ export default function Header() {
           </svg>
           WarfarinTracker
         </h1>
-        <div className="flex items-center">
-          <Button variant="ghost" size="icon" className="hover:bg-blue-600 mr-2 text-white">
+        <nav className="hidden md:flex space-x-6 text-sm font-medium">
+          <a href="/dashboard" className="hover:text-blue-100 transition-colors flex items-center space-x-2">
+            <span>Dashboard</span>
+          </a>
+          <a href="/pt-tracker" className="hover:text-blue-100 transition-colors flex items-center space-x-2">
+            <span>PT Tracker</span>
+          </a>
+          <a href="/medication" className="hover:text-blue-100 transition-colors flex items-center space-x-2">
+            <span>Medication</span>
+          </a>
+          <a href="/reminders" className="hover:text-blue-100 transition-colors flex items-center space-x-2">
+            <span>Reminders</span>
+          </a>
+        </nav>
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon" className="hover:bg-blue-600/50 transition-colors text-white">
             <Bell className="h-5 w-5" />
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="hover:bg-blue-600 text-white">
+              <Button variant="ghost" size="icon" className="hover:bg-blue-600/50 transition-colors text-white">
                 <UserCircle className="h-6 w-6" />
               </Button>
             </DropdownMenuTrigger>
