@@ -365,7 +365,7 @@ export default function Auth() {
               <form onSubmit={handleSignupSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="signup-email" className="text-sm font-medium">
-                    Email
+                    ایمیل
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -386,7 +386,7 @@ export default function Auth() {
                 
                 <div className="space-y-2">
                   <label htmlFor="signup-password" className="text-sm font-medium">
-                    Password
+                    رمز عبور
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -408,7 +408,7 @@ export default function Auth() {
                 
                 <div className="space-y-2">
                   <label htmlFor="confirm-password" className="text-sm font-medium">
-                    Confirm Password
+                    تأیید رمز عبور
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -429,8 +429,8 @@ export default function Auth() {
                 </div>
                 
                 <Button type="submit" className="w-full" disabled={isLoggingIn || isGoogleLoading}>
-                  {isLoggingIn ? 'Creating Account...' : 'Create Account'}
-                  <UserPlus className="ml-2 h-5 w-5" />
+                  {isLoggingIn ? 'در حال ایجاد حساب...' : 'ایجاد حساب کاربری'}
+                  <UserPlus className="mr-2 h-5 w-5" />
                 </Button>
                 
                 <div className="relative my-4">
