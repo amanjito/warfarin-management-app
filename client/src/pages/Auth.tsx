@@ -63,8 +63,8 @@ export default function Auth() {
       email: '',
       password: '',
     },
-    mode: 'onBlur', // Validate when field loses focus
-    criteriaMode: 'firstError',
+    mode: 'onSubmit', // Only validate on form submit
+    reValidateMode: 'onSubmit', // Only re-validate on submit
   });
 
   const signupForm = useForm<z.infer<typeof signupSchema>>({
@@ -74,8 +74,8 @@ export default function Auth() {
       password: '',
       confirmPassword: '',
     },
-    mode: 'onBlur', // Validate when field loses focus
-    criteriaMode: 'firstError',
+    mode: 'onSubmit', // Only validate on form submit
+    reValidateMode: 'onSubmit', // Only re-validate on submit
   });
 
   useEffect(() => {
@@ -107,38 +107,16 @@ export default function Auth() {
     };
   }, [setLocation]);
 
-  // Reset form errors when switching tabs
+  // Reset form when switching tabs
   useEffect(() => {
     if (tab === 'login') {
-      loginForm.clearErrors();
       loginForm.reset();
     } else {
-      signupForm.clearErrors();
       signupForm.reset();
     }
   }, [tab, loginForm, signupForm]);
   
-  // Add handler to clear error when user starts typing
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>, form: typeof loginForm | typeof signupForm) => {
-    const value = e.target.value;
-    if (value) {
-      form.clearErrors('email');
-    }
-  };
-  
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>, form: typeof loginForm | typeof signupForm) => {
-    const value = e.target.value;
-    if (value) {
-      form.clearErrors('password');
-    }
-  };
-  
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value) {
-      signupForm.clearErrors('confirmPassword');
-    }
-  };
+  // We're validating on submit, so don't need separate handlers
 
   async function onLoginSubmit(values: z.infer<typeof loginSchema>) {
     setAuthLoading(true);
@@ -314,11 +292,7 @@ export default function Auth() {
                             <Input 
                               placeholder="your.email@example.com" 
                               className="pl-10" 
-                              {...field} 
-                              onChange={(e) => {
-                                field.onChange(e);
-                                handleEmailChange(e, loginForm);
-                              }}
+                              {...field}
                             />
                           </div>
                         </FormControl>
@@ -339,11 +313,7 @@ export default function Auth() {
                               type="password" 
                               placeholder="••••••••" 
                               className="pl-10" 
-                              {...field} 
-                              onChange={(e) => {
-                                field.onChange(e);
-                                handlePasswordChange(e, loginForm);
-                              }}
+                              {...field}
                             />
                           </div>
                         </FormControl>
@@ -394,11 +364,7 @@ export default function Auth() {
                             <Input 
                               placeholder="your.email@example.com" 
                               className="pl-10" 
-                              {...field} 
-                              onChange={(e) => {
-                                field.onChange(e);
-                                handleEmailChange(e, signupForm);
-                              }}
+                              {...field}
                             />
                           </div>
                         </FormControl>
@@ -419,11 +385,7 @@ export default function Auth() {
                               type="password" 
                               placeholder="••••••••" 
                               className="pl-10" 
-                              {...field} 
-                              onChange={(e) => {
-                                field.onChange(e);
-                                handlePasswordChange(e, signupForm);
-                              }}
+                              {...field}
                             />
                           </div>
                         </FormControl>
@@ -444,11 +406,7 @@ export default function Auth() {
                               type="password" 
                               placeholder="••••••••" 
                               className="pl-10" 
-                              {...field} 
-                              onChange={(e) => {
-                                field.onChange(e);
-                                handleConfirmPasswordChange(e);
-                              }}
+                              {...field}
                             />
                           </div>
                         </FormControl>
