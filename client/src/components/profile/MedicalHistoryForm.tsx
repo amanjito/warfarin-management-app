@@ -140,7 +140,8 @@ export default function MedicalHistoryForm({
         
       const method = isEditMode ? 'PUT' : 'POST';
       
-      await apiRequest(endpoint, {
+      await apiRequest({
+        url: endpoint,
         method,
         body: JSON.stringify(values),
       });

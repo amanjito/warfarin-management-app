@@ -236,7 +236,27 @@ export class MemStorage implements IStorage {
   
   async createUser(user: InsertUser): Promise<User> {
     const id = this.userId++;
-    const newUser: User = { ...user, id };
+    const newUser: User = { 
+      id,
+      username: user.username,
+      password: user.password,
+      name: user.name || null,
+      firstName: user.firstName || null,
+      lastName: user.lastName || null,
+      gender: user.gender || null,
+      birthDate: user.birthDate || null,
+      targetInrMin: user.targetInrMin || null,
+      targetInrMax: user.targetInrMax || null,
+      medicalConditions: user.medicalConditions || null,
+      allergies: user.allergies || null,
+      primaryPhysician: user.primaryPhysician || null,
+      emergencyContact: user.emergencyContact || null,
+      anticoagulantIndicationReason: user.anticoagulantIndicationReason || null,
+      dateStartedWarfarin: user.dateStartedWarfarin || null,
+      lastInrDate: user.lastInrDate || null,
+      lastInrValue: user.lastInrValue || null,
+      hasCompletedSetup: user.hasCompletedSetup || false
+    };
     this.users.set(id, newUser);
     return newUser;
   }
@@ -255,9 +275,11 @@ export class MemStorage implements IStorage {
   async createPtTest(test: InsertPtTest): Promise<PtTest> {
     const id = this.ptTestId++;
     const newTest: PtTest = { 
-      ...test, 
-      id, 
+      id,
+      userId: test.userId,
       testDate: test.testDate,
+      inrValue: test.inrValue,
+      notes: test.notes || null,
       createdAt: new Date()
     };
     this.ptTests.set(id, newTest);
@@ -276,7 +298,14 @@ export class MemStorage implements IStorage {
   
   async createMedication(medication: InsertMedication): Promise<Medication> {
     const id = this.medicationId++;
-    const newMedication: Medication = { ...medication, id };
+    const newMedication: Medication = { 
+      id,
+      userId: medication.userId,
+      name: medication.name,
+      dosage: medication.dosage,
+      quantity: medication.quantity,
+      instructions: medication.instructions || null
+    };
     this.medications.set(id, newMedication);
     return newMedication;
   }
@@ -308,7 +337,15 @@ export class MemStorage implements IStorage {
   
   async createReminder(reminder: InsertReminder): Promise<Reminder> {
     const id = this.reminderId++;
-    const newReminder: Reminder = { ...reminder, id };
+    const newReminder: Reminder = { 
+      id,
+      userId: reminder.userId,
+      medicationId: reminder.medicationId,
+      time: reminder.time,
+      days: reminder.days,
+      active: reminder.active || null,
+      notifyBefore: reminder.notifyBefore || null
+    };
     this.reminders.set(id, newReminder);
     return newReminder;
   }
@@ -342,7 +379,14 @@ export class MemStorage implements IStorage {
   
   async createMedicationLog(log: InsertMedicationLog): Promise<MedicationLog> {
     const id = this.medicationLogId++;
-    const newLog: MedicationLog = { ...log, id, takenAt: new Date() };
+    const newLog: MedicationLog = { 
+      id,
+      userId: log.userId,
+      reminderId: log.reminderId,
+      scheduled: log.scheduled,
+      taken: log.taken || null,
+      takenAt: new Date()
+    };
     this.medicationLogs.set(id, newLog);
     return newLog;
   }
