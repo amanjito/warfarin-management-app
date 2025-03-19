@@ -87,11 +87,11 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
           name="medicationId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Medication Name</FormLabel>
+              <FormLabel>نام دارو</FormLabel>
               <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select medication" />
+                    <SelectValue placeholder="انتخاب دارو" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -113,7 +113,7 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
             name="time"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Time</FormLabel>
+                <FormLabel>زمان</FormLabel>
                 <FormControl>
                   <Input type="time" {...field} />
                 </FormControl>
@@ -127,18 +127,18 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
             name="notifyBefore"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Reminder Notification</FormLabel>
+                <FormLabel>اعلان یادآوری</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select time" />
+                      <SelectValue placeholder="انتخاب زمان" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="15">15 minutes before</SelectItem>
-                    <SelectItem value="30">30 minutes before</SelectItem>
-                    <SelectItem value="60">1 hour before</SelectItem>
-                    <SelectItem value="0">At time of dose</SelectItem>
+                    <SelectItem value="15">۱۵ دقیقه قبل</SelectItem>
+                    <SelectItem value="30">۳۰ دقیقه قبل</SelectItem>
+                    <SelectItem value="60">۱ ساعت قبل</SelectItem>
+                    <SelectItem value="0">در زمان مصرف دارو</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -152,7 +152,7 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
           name="days"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Days of Week</FormLabel>
+              <FormLabel>روزهای هفته</FormLabel>
               <div className="flex space-x-2">
                 {days.map(day => (
                   <Toggle
@@ -176,10 +176,10 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
           name="notes"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notes</FormLabel>
+              <FormLabel>یادداشت</FormLabel>
               <FormControl>
                 <Textarea 
-                  placeholder="Additional information (e.g., take with food)" 
+                  placeholder="اطلاعات اضافی (مثلاً: با غذا مصرف شود)" 
                   className="resize-none" 
                   rows={2}
                   {...field} 
@@ -192,10 +192,10 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
         
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={() => form.reset()}>
-            Cancel
+            انصراف
           </Button>
           <Button type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : "Save Reminder"}
+            {isPending ? "در حال ذخیره..." : "ذخیره یادآوری"}
           </Button>
         </div>
       </form>

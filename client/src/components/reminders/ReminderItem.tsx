@@ -19,16 +19,19 @@ interface ReminderItemProps {
 export default function ReminderItem({ reminder, onTakeMedication }: ReminderItemProps) {
   const getIconStyles = () => {
     switch (reminder.medication.name) {
+      case "وارفارین":
       case "Warfarin":
         return {
           bgColor: "bg-blue-100",
           iconColor: "text-primary"
         };
+      case "متوپرولول":
       case "Metoprolol":
         return {
           bgColor: "bg-green-100",
           iconColor: "text-secondary"
         };
+      case "ویتامین د":
       case "Vitamin D":
         return {
           bgColor: "bg-yellow-100",
