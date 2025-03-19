@@ -115,7 +115,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
         ref={ref}
         variant="outline"
         type="button"
-        className="w-full text-right justify-between font-normal border-2 border-primary/20 hover:border-primary/40 bg-white"
+        className="w-full text-right justify-between font-normal border-2 border-primary/20 hover:border-primary/40 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-700"
       >
         <div className="flex items-center">
           <svg 
@@ -186,7 +186,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
                         type="number" 
                         step="0.1" 
                         placeholder="مثال: ۲/۵" 
-                        className="text-center border-2 border-primary/20 focus:border-primary"
+                        className="text-center border-2 border-primary/20 focus:border-primary dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                         {...field} 
                       />
                     </FormControl>
@@ -205,7 +205,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
                   <FormControl>
                     <Textarea 
                       placeholder="هر گونه توضیحات اضافی درباره این آزمایش" 
-                      className="resize-none text-right border-2 border-primary/20 focus:border-primary" 
+                      className="resize-none text-right border-2 border-primary/20 focus:border-primary dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
                       rows={3}
                       {...field} 
                     />
@@ -237,7 +237,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
                   type="button" 
                   variant="outline" 
                   onClick={onClose}
-                  className="border-2 border-gray-200 hover:border-gray-300"
+                  className="border-2 border-gray-200 hover:border-gray-300 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
                 >
                   انصراف
                 </Button>
@@ -258,6 +258,11 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
             direction: rtl !important;
           }
           
+          html.dark .responsive-calendar {
+            background-color: #1e293b !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+          }
+          
           .Calendar__day {
             /* روزهای تقویم */
             color: #333 !important;
@@ -266,10 +271,18 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
             border-radius: 50% !important;
           }
           
+          html.dark .Calendar__day {
+            color: #e2e8f0 !important;
+          }
+          
           .Calendar__day:hover {
             /* حالت هاور روی روزها */
             background-color: rgba(255, 51, 102, 0.1) !important;
             color: #ff3366 !important;
+          }
+          
+          html.dark .Calendar__day:hover {
+            background-color: rgba(255, 51, 102, 0.2) !important;
           }
           
           .Calendar__day.-selected {
@@ -289,6 +302,10 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
             margin-bottom: 8px !important;
           }
           
+          html.dark .Calendar__weekDays {
+            color: #94a3b8 !important;
+          }
+          
           .Calendar__header {
             /* هدر تقویم */
             padding: 10px 0 !important;
@@ -303,8 +320,16 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
             transition: all 0.2s !important;
           }
           
+          html.dark .Calendar__monthArrowWrapper {
+            background-color: rgba(255, 51, 102, 0.2) !important;
+          }
+          
           .Calendar__monthArrowWrapper:hover {
             background-color: rgba(255, 51, 102, 0.2) !important;
+          }
+          
+          html.dark .Calendar__monthArrowWrapper:hover {
+            background-color: rgba(255, 51, 102, 0.3) !important;
           }
           
           .Calendar__monthYear {
@@ -314,10 +339,18 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
             color: #333 !important;
           }
           
+          html.dark .Calendar__monthYear {
+            color: #f8fafc !important;
+          }
+          
           /* حالت غیرفعال برای روزهای خارج از محدوده */
           .Calendar__day.-disabled {
             color: #ccc !important;
             cursor: not-allowed !important;
+          }
+          
+          html.dark .Calendar__day.-disabled {
+            color: #475569 !important;
           }
         `}</style>
       </DialogContent>

@@ -228,6 +228,11 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           direction: rtl !important;
         }
         
+        html.dark .responsive-calendar {
+          background-color: #1e293b !important;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+        
         .Calendar__day {
           /* روزهای تقویم */
           color: #333 !important;
@@ -236,10 +241,18 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           border-radius: 50% !important;
         }
         
+        html.dark .Calendar__day {
+          color: #e2e8f0 !important;
+        }
+        
         .Calendar__day:hover {
           /* حالت هاور روی روزها */
           background-color: rgba(255, 51, 102, 0.1) !important;
           color: #ff3366 !important;
+        }
+        
+        html.dark .Calendar__day:hover {
+          background-color: rgba(255, 51, 102, 0.2) !important;
         }
         
         .Calendar__day.-selected {
@@ -259,6 +272,10 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           margin-bottom: 8px !important;
         }
         
+        html.dark .Calendar__weekDays {
+          color: #94a3b8 !important;
+        }
+        
         .Calendar__header {
           /* هدر تقویم */
           padding: 10px 0 !important;
@@ -273,8 +290,16 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           transition: all 0.2s !important;
         }
         
+        html.dark .Calendar__monthArrowWrapper {
+          background-color: rgba(255, 51, 102, 0.2) !important;
+        }
+        
         .Calendar__monthArrowWrapper:hover {
           background-color: rgba(255, 51, 102, 0.2) !important;
+        }
+        
+        html.dark .Calendar__monthArrowWrapper:hover {
+          background-color: rgba(255, 51, 102, 0.3) !important;
         }
         
         .Calendar__monthYear {
@@ -284,10 +309,18 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
           color: #333 !important;
         }
         
+        html.dark .Calendar__monthYear {
+          color: #f8fafc !important;
+        }
+        
         /* حالت غیرفعال برای روزهای خارج از محدوده */
         .Calendar__day.-disabled {
           color: #ccc !important;
           cursor: not-allowed !important;
+        }
+        
+        html.dark .Calendar__day.-disabled {
+          color: #475569 !important;
         }
       `}</style>
     </Form>
