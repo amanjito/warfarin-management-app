@@ -380,7 +380,7 @@ export default function Reminders() {
             {allMedications.map((medication) => (
               <li key={medication.id} className="py-3">
                 <div className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
+                  <div className={`w-11 h-11 rounded-full flex items-center justify-center mr-6 ${
                     medication.name === "Warfarin" 
                       ? "bg-blue-100 dark:bg-blue-900/50" 
                       : medication.name === "Metoprolol"
@@ -390,7 +390,7 @@ export default function Reminders() {
                           : "bg-purple-100 dark:bg-purple-900/50"
                   }`}>
                     <svg 
-                      className={`h-5 w-5 ${
+                      className={`h-6 w-6 ${
                         medication.name === "Warfarin" 
                           ? "text-primary dark:text-primary/90" 
                           : medication.name === "Metoprolol"
@@ -415,8 +415,8 @@ export default function Reminders() {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium dark:text-white">{medication.name}</p>
-                    <div className="flex text-sm text-gray-500 dark:text-gray-400">
+                    <p className="font-medium dark:text-white text-lg">{medication.name}</p>
+                    <div className="flex text-sm text-gray-500 dark:text-gray-400 mt-1">
                       <p>
                         {medication.dosage} - 
                         {medication.reminders.length > 0 
