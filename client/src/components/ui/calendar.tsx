@@ -12,6 +12,7 @@ const persianMonths = [
   'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
 ];
 
+// روزهای هفته در ایران به ترتیب از شنبه تا جمعه
 const persianWeekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
 
 function toJalaali(date: Date) {
@@ -31,6 +32,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
+      weekStartsOn={6} // شروع هفته از شنبه (6 در اینجا نشان‌دهنده شنبه است)
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4",
@@ -65,13 +67,42 @@ function Calendar({
         IconLeft: () => <ChevronLeft className="h-4 w-4" />,
         IconRight: () => <ChevronRight className="h-4 w-4" />,
       }}
+      dir="rtl"
       formatters={{
         formatCaption: (date) => {
           const jDate = toJalaali(date);
           return `${persianMonths[jDate.month - 1]} ${convertToPersianDigits(jDate.year.toString())}`;
         },
         formatWeekdayName: (weekday) => {
-          return persianWeekDays[weekday.getDay()];
+          // روزهای هفته در تقویم شمسی:
+          // شنبه = 0، یکشنبه = 1، دوشنبه = 2، سه‌شنبه = 3، چهارشنبه = 4، پنج‌شنبه = 5، جمعه = 6
+          let index;
+          switch(weekday.getDay()) {
+            case 0: // یکشنبه
+              index = 1;
+              break;
+            case 1: // دوشنبه
+              index = 2;
+              break;
+            case 2: // سه شنبه
+              index = 3;
+              break;
+            case 3: // چهارشنبه
+              index = 4;
+              break;
+            case 4: // پنج شنبه
+              index = 5;
+              break;
+            case 5: // جمعه
+              index = 6;
+              break;
+            case 6: // شنبه
+              index = 0;
+              break;
+            default:
+              index = 0;
+          }
+          return persianWeekDays[index];
         },
         formatDay: (date) => {
           const jDate = toJalaali(date);
