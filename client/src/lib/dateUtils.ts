@@ -10,7 +10,20 @@ const persianMonths = [
 // Convert to Persian (Shamsi) date
 export function toPersianDate(date: Date | string | number): { jy: number; jm: number; jd: number } {
   const dateObj = typeof date === 'string' ? new Date(date) : new Date(date);
-  return jalaali.toJalaali(dateObj);
+  console.log("تبدیل تاریخ میلادی به شمسی:", dateObj);
+  
+  // بررسی دقیق اختلاف منطقه زمانی
+  const localTime = new Date(dateObj.getTime());
+  console.log("زمان محلی:", localTime);
+  
+  // تنظیم به نیمه شب به زمان محلی برای جلوگیری از مشکلات منطقه زمانی
+  localTime.setHours(0, 0, 0, 0);
+  console.log("زمان محلی (نیمه شب):", localTime);
+  
+  const result = jalaali.toJalaali(localTime);
+  console.log("نتیجه تبدیل به شمسی:", result);
+  
+  return result;
 }
 
 // Convert Persian date to Gregorian date
