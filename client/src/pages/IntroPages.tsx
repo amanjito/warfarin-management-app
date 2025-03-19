@@ -16,32 +16,32 @@ function IntroPages() {
 
   const introSlides = [
     {
-      title: "Welcome to WarfarinTracker",
-      description: "Your comprehensive companion for managing Warfarin medication and tracking your health progress.",
+      title: "به نرم‌افزار واراترک خوش آمدید",
+      description: "همراه جامع شما برای مدیریت داروی وارفارین و پیگیری روند سلامتی‌تان",
       icon: <HeartPulse className="h-16 w-16 text-primary" />,
       color: "bg-blue-50",
     },
     {
-      title: "PT/INR Tracking",
-      description: "Easily log and monitor your PT/INR test results over time with visual charts to observe trends.",
+      title: "پیگیری PT/INR",
+      description: "به آسانی نتایج آزمایش PT/INR خود را در طول زمان ثبت و با نمودارهای تصویری روند آن را مشاهده کنید",
       icon: <TrendingUp className="h-16 w-16 text-green-600" />,
       color: "bg-green-50",
     },
     {
-      title: "Medication Management",
-      description: "Set up your medications and keep track of your dosage history with a few simple taps.",
+      title: "مدیریت دارو",
+      description: "داروهای خود را تنظیم کنید و با چند ضربه ساده سابقه دوز مصرفی خود را پیگیری کنید",
       icon: <PlusCircle className="h-16 w-16 text-blue-600" />,
       color: "bg-blue-50",
     },
     {
-      title: "Reminders",
-      description: "Never miss a dose with customizable medication reminders that notify you at the right time.",
+      title: "یادآوری‌ها",
+      description: "با یادآورهای قابل تنظیم دارویی که در زمان مناسب به شما اطلاع می‌دهند، هرگز مصرف دارو را فراموش نکنید",
       icon: <Bell className="h-16 w-16 text-amber-600" />,
       color: "bg-amber-50",
     },
     {
-      title: "Health Insights",
-      description: "Get personalized information and guidance about Warfarin and its effects on your health.",
+      title: "بینش‌های سلامتی",
+      description: "اطلاعات و راهنمایی‌های شخصی‌سازی شده درباره وارفارین و تأثیر آن بر سلامتی خود دریافت کنید",
       icon: <CalendarCheck className="h-16 w-16 text-primary" />,
       color: "bg-blue-50",
     },
@@ -73,8 +73,8 @@ function IntroPages() {
                 <div className={`${slide.color} w-32 h-32 rounded-full flex items-center justify-center mb-8`}>
                   {slide.icon}
                 </div>
-                <h2 className="text-2xl font-bold mb-4">{slide.title}</h2>
-                <p className="text-gray-600 mb-8 max-w-md mx-auto">{slide.description}</p>
+                <h2 className="text-2xl font-bold mb-4 font-vazirmatn">{slide.title}</h2>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto text-right font-vazirmatn leading-relaxed">{slide.description}</p>
               </div>
             </SwiperSlide>
           ))}
@@ -85,23 +85,25 @@ function IntroPages() {
         {currentSlide === introSlides.length - 1 ? (
           <Button 
             onClick={navigateToAuth} 
-            className="w-full py-6"
+            className="w-full py-6 font-vazirmatn"
           >
-            Get Started <ArrowRight className="ml-2 h-4 w-4" />
+            شروع کنید <ArrowRight className="mr-2 h-4 w-4 rtl:rotate-180" />
           </Button>
         ) : (
           <div className="flex justify-between">
             <Button 
               variant="ghost" 
               onClick={navigateToAuth}
+              className="font-vazirmatn"
             >
-              Skip
+              رد کردن
             </Button>
             <Button 
               variant="outline" 
               onClick={() => setCurrentSlide(currentSlide + 1)}
+              className="font-vazirmatn"
             >
-              Next <ArrowRight className="ml-2 h-4 w-4" />
+              بعدی <ArrowRight className="mr-2 h-4 w-4 rtl:rotate-180" />
             </Button>
           </div>
         )}
