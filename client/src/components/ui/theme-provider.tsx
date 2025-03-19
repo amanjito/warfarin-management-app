@@ -1,12 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { ThemeProvider as NextThemesProvider, type ThemeProviderProps as NextThemesProviderProps } from "next-themes"
 
-interface ThemeProviderProps extends React.PropsWithChildren {
-  attribute?: string;
-  defaultTheme?: string;
-  enableSystem?: boolean;
-  storageKey?: string;
-}
+interface ThemeProviderProps extends React.PropsWithChildren, Omit<NextThemesProviderProps, 'children'> {}
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   const [mounted, setMounted] = useState(false)

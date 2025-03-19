@@ -169,7 +169,7 @@ export default function Header() {
               >
                 <Heart className="h-4 w-4 text-white" />
               </motion.div>
-              <h1 className="text-lg font-semibold text-slate-900">وارفارین</h1>
+              <h1 className="text-lg font-semibold text-slate-900 dark:text-white">وارفارین</h1>
               <Badge variant="outline" className="mr-2 bg-primary/5 text-primary text-[10px] h-5 hidden sm:flex">v1.0</Badge>
             </motion.div>
 
@@ -184,7 +184,7 @@ export default function Header() {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="text-slate-500 hover:bg-slate-100 mr-1 rounded-full"
+                    className="text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 mr-1 rounded-full"
                   >
                     <Bell className="h-5 w-5" />
                   </Button>
@@ -203,7 +203,7 @@ export default function Header() {
                     variant="outline"
                     size="sm"
                     id="install-button"
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 mr-1.5 hidden sm:flex"
+                    className="border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 mr-1.5 hidden sm:flex"
                     onClick={handleInstall}
                   >
                     <Download className="h-4 w-4 ml-1.5" />
@@ -213,7 +213,7 @@ export default function Header() {
                     variant="ghost" 
                     size="icon" 
                     id="install-button-mobile"
-                    className="hover:bg-slate-100 mr-1 text-slate-500 sm:hidden rounded-full"
+                    className="hover:bg-slate-100 dark:hover:bg-slate-800 mr-1 text-slate-500 dark:text-slate-400 sm:hidden rounded-full"
                     onClick={handleInstall}
                   >
                     <Download className="h-5 w-5" />
@@ -228,16 +228,16 @@ export default function Header() {
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      className="hover:bg-slate-100 text-slate-700 flex items-center gap-2 rounded-full px-2 py-1 h-9"
+                      className="hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center gap-2 rounded-full px-2 py-1 h-9"
                     >
-                      <Avatar className="h-7 w-7 border border-slate-200">
+                      <Avatar className="h-7 w-7 border border-slate-200 dark:border-slate-700">
                         <AvatarImage src={userData?.user_metadata?.avatar_url} />
-                        <AvatarFallback className="text-xs bg-slate-100 text-slate-500">
+                        <AvatarFallback className="text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                           {userInitials}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex items-center gap-1">
-                        <span className="hidden md:inline-block font-medium text-xs ml-0.5">
+                        <span className="hidden md:inline-block font-medium text-xs ml-0.5 dark:text-slate-300">
                           {userData?.email?.split('@')[0] || 'کاربر'}
                         </span>
                         <ChevronDown className="h-4 w-4 opacity-70" />
@@ -276,7 +276,7 @@ export default function Header() {
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="hover:bg-slate-100 mr-1 text-slate-500 md:hidden rounded-full"
+                    className="hover:bg-slate-100 dark:hover:bg-slate-800 mr-1 text-slate-500 dark:text-slate-400 md:hidden rounded-full"
                     onClick={() => setSideMenuOpen(!sideMenuOpen)}
                   >
                     <Menu className="h-5 w-5" />
