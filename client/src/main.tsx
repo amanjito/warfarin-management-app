@@ -51,7 +51,7 @@ if ('serviceWorker' in navigator) {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider defaultTheme="light">
+  <ThemeProvider defaultTheme="system">
     <App />
   </ThemeProvider>
 );

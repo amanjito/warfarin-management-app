@@ -23,7 +23,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = "warfarin-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
@@ -33,19 +33,37 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement
 
+    // Remove all theme classes
     root.classList.remove("light", "dark")
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
+    // Get current theme accounting for system preference
+    let currentTheme = theme
+    if (currentTheme === "system") {
+      currentTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light"
-
-      root.classList.add(systemTheme)
-      return
     }
 
-    root.classList.add(theme)
+    // Add the theme class
+    root.classList.add(currentTheme)
+    
+    // Update data-theme attribute for components that might use it
+    root.setAttribute("data-theme", currentTheme)
+    
+    // Listen for system theme changes if using system theme
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
+      
+      const handleChange = () => {
+        const newTheme = mediaQuery.matches ? "dark" : "light"
+        root.classList.remove("light", "dark")
+        root.classList.add(newTheme)
+        root.setAttribute("data-theme", newTheme)
+      }
+      
+      mediaQuery.addEventListener("change", handleChange)
+      return () => mediaQuery.removeEventListener("change", handleChange)
+    }
   }, [theme])
 
   const value = {
