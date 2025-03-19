@@ -172,23 +172,23 @@ export default function MedicationInfo() {
       {/* Current Medication */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="flex flex-col">
-            <div className="flex justify-end items-center mb-2">
-              <div className="text-right ml-4">
+          <div className="flex items-start">
+            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
+              <Pill className="h-8 w-8 text-primary" />
+            </div>
+            <div className="flex flex-col">
+              <div className="text-right mb-2">
                 <h3 className="font-medium">وارفارین</h3>
                 <p className="text-sm text-gray-500">داروی ضدانعقاد</p>
               </div>
-              <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Pill className="h-8 w-8 text-primary" />
+              <div className="flex flex-col gap-1">
+                <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100 text-right">
+                  محدوده هدف INR: ۲/۰-۳/۰
+                </Badge>
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-right">
+                  دوز فعلی: ۵ میلی‌گرم
+                </Badge>
               </div>
-            </div>
-            <div className="flex flex-col gap-1 items-end">
-              <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100 text-right">
-                محدوده هدف INR: ۲/۰-۳/۰
-              </Badge>
-              <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-right">
-                دوز فعلی: ۵ میلی‌گرم
-              </Badge>
             </div>
           </div>
         </CardContent>
