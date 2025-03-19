@@ -148,9 +148,11 @@ export function isPastTime(timeString: string): boolean {
   return timeToCheck < now;
 }
 
-// Format date as short Persian date (for charts)
+// Format date as Persian date (for charts)
 export function formatPersianShortDate(date: Date | string | number): string {
   const dateObj = typeof date === 'string' ? new Date(date) : (date instanceof Date ? date : new Date(date));
+  const persianDate = toPersianDate(dateObj);
+  return `${persianMonths[persianDate.jm - 1]}`; date : new Date(date));
   
   // Convert to Persian calendar
   const persianDate = toPersianDate(dateObj);
