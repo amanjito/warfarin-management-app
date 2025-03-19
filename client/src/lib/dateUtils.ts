@@ -10,31 +10,7 @@ const persianMonths = [
 // Convert to Persian (Shamsi) date
 export function toPersianDate(date: Date | string | number): { jy: number; jm: number; jd: number } {
   const dateObj = typeof date === 'string' ? new Date(date) : new Date(date);
-  console.log("تبدیل تاریخ میلادی به شمسی:", dateObj);
-  
-  // بررسی دقیق اختلاف منطقه زمانی
-  const localTime = new Date(dateObj.getTime());
-  console.log("زمان محلی:", localTime);
-  
-  // تنظیم به نیمه شب به زمان محلی برای جلوگیری از مشکلات منطقه زمانی
-  localTime.setHours(0, 0, 0, 0);
-  console.log("زمان محلی (نیمه شب):", localTime);
-  
-  const result = jalaali.toJalaali(localTime);
-  console.log("نتیجه تبدیل به شمسی:", result);
-  
-  return result;
-}
-
-// Convert Persian date to Gregorian date
-export function toGregorianDate(year: number, month: number, day: number): Date {
-  console.log("تبدیل تاریخ شمسی به میلادی:", year, month, day);
-  const g = jalaali.toGregorian(year, month, day);
-  console.log("نتیجه تبدیل jalaali:", g);
-  // با تنظیم ساعت به 12 ظهر، از مشکلات مربوط به منطقه زمانی جلوگیری می‌کنیم
-  const result = new Date(g.gy, g.gm - 1, g.gd, 12, 0, 0);
-  console.log("تاریخ میلادی نهایی:", result);
-  return result;
+  return jalaali.toJalaali(dateObj);
 }
 
 // Format date for display

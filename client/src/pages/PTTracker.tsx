@@ -42,10 +42,7 @@ export default function PTTracker() {
   // Create mutation for adding a new PT test
   const addPtTestMutation = useMutation({
     mutationFn: async (newTest: Omit<PtTest, 'id' | 'userId' | 'createdAt'>) => {
-      const response = await apiRequest('/api/pt-tests', {
-        method: 'POST',
-        body: newTest
-      });
+      const response = await apiRequest('POST', '/api/pt-tests', newTest);
       return response.json();
     },
     onSuccess: () => {
@@ -67,10 +64,7 @@ export default function PTTracker() {
   // Create mutation for updating a PT test
   const updatePtTestMutation = useMutation({
     mutationFn: async ({id, data}: {id: number, data: any}) => {
-      const response = await apiRequest(`/api/pt-tests/${id}`, {
-        method: 'PUT',
-        body: data
-      });
+      const response = await apiRequest('PUT', `/api/pt-tests/${id}`, data);
       return response.json();
     },
     onSuccess: () => {
@@ -93,9 +87,7 @@ export default function PTTracker() {
   // Create mutation for deleting a PT test
   const deletePtTestMutation = useMutation({
     mutationFn: async (id: number) => {
-      await apiRequest(`/api/pt-tests/${id}`, {
-        method: 'DELETE'
-      });
+      await apiRequest('DELETE', `/api/pt-tests/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/pt-tests'] });

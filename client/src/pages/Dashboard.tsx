@@ -76,23 +76,12 @@ export default function Dashboard() {
       const isTaken = !!log?.taken;
       
       return {
-        id: medication.id,
-        name: medication.name,
-        dosage: medication.dosage,
-        quantity: medication.quantity,
+        ...medication,
         time: reminder.time,
         reminderId: reminder.id,
         isTaken
       };
-    }).filter(Boolean) as {
-      id: number;
-      name: string;
-      dosage: string;
-      quantity: string;
-      time: string;
-      reminderId: number;
-      isTaken: boolean;
-    }[];
+    }).filter(Boolean);
   };
   
   // Get the most recent INR value

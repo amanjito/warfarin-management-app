@@ -90,13 +90,17 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
+                      mode="single"
                       selected={selectedDate}
                       onSelect={(date) => {
-                        setSelectedDate(date);
-                        field.onChange(formatDateForApi(date));
-                        setIsCalendarOpen(false);
+                        if (date) {
+                          setSelectedDate(date);
+                          field.onChange(formatDateForApi(date));
+                          setIsCalendarOpen(false);
+                        }
                       }}
                       disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
