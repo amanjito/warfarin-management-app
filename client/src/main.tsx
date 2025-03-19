@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
 import { initializePushNotifications } from "./lib/pushNotifications";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import { useEffect } from "react";
 
 // Set document direction and language
@@ -49,4 +50,12 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+// Make window.deferredPrompt available globally for Header component
+// @ts-ignore
+window.deferredPrompt = deferredPrompt;
+
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <App />
+  </ThemeProvider>
+);
