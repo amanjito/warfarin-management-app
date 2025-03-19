@@ -10,7 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
-import { toGregorianDate, toPersianDate } from "@/lib/dateUtils";
+import { formatDate } from "@/lib/dateUtils";
 
 interface StatusCardProps {
   title: string;
@@ -50,17 +50,15 @@ export default function StatusCard({
     accent: "text-accent"
   };
   
+  const handleSelectDate = (date: Date) => {
+    console.log("تاریخ میلادی انتخاب شده:", date);
+    console.log("تاریخ شمسی انتخاب شده:", formatDate(date));
+    setSelectedDate(date);
+  };
+  
   const handleSave = () => {
     if (selectedDate && onUpdate) {
-      // تاریخ انتخاب شده توسط کاربر به فرمت میلادی است، اما نمایش آن به صورت شمسی است
-      // ما نیاز داریم تشخیص دهیم کاربر چه تاریخ شمسی را انتخاب کرده و سپس معادل آن را به میلادی ذخیره کنیم
-      
-      // نمایش تاریخ انتخاب شده
-      const persianDate = toPersianDate(selectedDate);
-      console.log("تاریخ شمسی انتخاب شده:", persianDate);
-      console.log("سال:", persianDate.jy, "ماه:", persianDate.jm, "روز:", persianDate.jd);
-      
-      // تاریخ میلادی را به عنوان خروجی برمی‌گردانیم
+      // تاریخ انتخاب شده قبلاً به صورت میلادی تبدیل شده است
       onUpdate(selectedDate);
       setOpen(false);
       toast({
@@ -95,9 +93,8 @@ export default function StatusCard({
           </DialogHeader>
           <div className="flex flex-col space-y-4 py-4">
             <Calendar
-              mode="single"
               selected={selectedDate}
-              onSelect={setSelectedDate}
+              onSelect={handleSelectDate}
               className="mx-auto"
               disabled={(date) => date < new Date()}
             />
