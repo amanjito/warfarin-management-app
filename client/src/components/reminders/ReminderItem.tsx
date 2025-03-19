@@ -49,7 +49,7 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
   
   return (
     <div className={`flex items-center p-3 rounded-lg ${reminder.taken ? 'bg-gray-50' : 'bg-blue-50'}`}>
-      <div className={`mr-4 w-12 h-12 ${iconStyles.bgColor} rounded-full flex items-center justify-center`}>
+      <div className={`ml-4 w-12 h-12 ${iconStyles.bgColor} rounded-full flex items-center justify-center`}>
         <svg 
           className={`h-6 w-6 ${iconStyles.iconColor}`} 
           xmlns="http://www.w3.org/2000/svg" 
@@ -84,13 +84,14 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
         </p>
       </div>
       {reminder.taken ? (
-        <div className="ml-2 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center">
+        <div className="mr-2 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center">
           <Check className="h-5 w-5" />
         </div>
       ) : (
         <Button 
           onClick={onTakeMedication}
-          className="ml-2 bg-primary text-white w-8 h-8 p-0 rounded-full"
+          className="mr-2 bg-primary text-white w-8 h-8 p-0 rounded-full"
+          title="مصرف دارو"
         >
           <Check className="h-5 w-5" />
         </Button>

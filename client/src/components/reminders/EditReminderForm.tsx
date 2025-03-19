@@ -153,13 +153,13 @@ export default function EditReminderForm({
             onClick={onClose}
             type="button"
           >
-            Cancel
+            انصراف
           </Button>
           <Button 
             type="submit"
             disabled={!form.formState.isValid || isPending}
           >
-            {isPending ? "Saving..." : "Save Changes"}
+            {isPending ? "در حال ذخیره..." : "ذخیره تغییرات"}
           </Button>
         </DialogFooter>
       </form>
