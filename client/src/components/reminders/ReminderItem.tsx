@@ -80,16 +80,11 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
           strokeLinejoin="round"
           whileHover={{ scale: 1.2 }}
         >
-          <path d="M10.5 20H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v3" />
-          <circle cx="18" cy="18" r="3" />
-          <path d="M18 14v1" />
-          <path d="M18 21v1" />
-          <path d="M22 18h-1" />
-          <path d="M15 18h-1" />
-          <path d="m21 15-.88.88" />
-          <path d="M15.88 20.12 15 21" />
-          <path d="m21 21-.88-.88" />
-          <path d="M15.88 15.88 15 15" />
+          {/* Pill/Capsule shape */}
+          <path d="M8,8 L16,16 A5.657,5.657 0 0 0 16,8 A5.657,5.657 0 0 0 8,8 A5.657,5.657 0 0 0 8,16 A5.657,5.657 0 0 0 16,16" />
+          
+          {/* Central line dividing the pill */}
+          <line x1="12" y1="10" x2="12" y2="14" transform="rotate(45, 12, 12)" strokeDasharray="1 0.5" />
         </motion.svg>
       </motion.div>
       <motion.div 
