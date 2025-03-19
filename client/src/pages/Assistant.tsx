@@ -76,14 +76,14 @@ export default function Assistant() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 text-right">دستیار هوشمند</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right dark:text-white">دستیار هوشمند</h2>
       
       {/* AI Chat Interface */}
       <Card className="mb-6 flex flex-col h-[calc(100vh-250px)]">
         {/* Chat Header */}
-        <div className="px-4 py-3 border-b">
+        <div className="px-4 py-3 border-b dark:border-slate-700">
           <div className="flex items-center justify-between flex-row-reverse">
-            <div className="w-10 h-10 bg-[#E91E63] rounded-full flex items-center justify-center ml-8">
+            <div className="w-10 h-10 bg-[#E91E63] dark:bg-[#D81B60] rounded-full flex items-center justify-center ml-8">
               <svg
                 className="h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,16 +102,16 @@ export default function Assistant() {
               </svg>
             </div>
             <div className="text-right pr-3">
-              <h3 className="font-medium">دستیار وارفارین</h3>
-              <p className="text-xs text-gray-500">سوالات دارویی خود را بپرسید</p>
+              <h3 className="font-medium dark:text-white">دستیار وارفارین</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400">سوالات دارویی خود را بپرسید</p>
             </div>
           </div>
         </div>
         
         {/* Chat Messages */}
-        <div className="flex-1 p-4 overflow-y-auto" ref={chatContainerRef}>
+        <div className="flex-1 p-4 overflow-y-auto dark:bg-slate-800/50" ref={chatContainerRef}>
           {isLoading ? (
-            <p className="text-center text-gray-500">در حال بارگذاری پیام‌ها...</p>
+            <p className="text-center text-gray-500 dark:text-gray-400">در حال بارگذاری پیام‌ها...</p>
           ) : messages && messages.length > 0 ? (
             messages.map((message: AssistantMessage) => (
               <ChatMessage 
@@ -121,7 +121,7 @@ export default function Assistant() {
               />
             ))
           ) : (
-            <p className="text-center text-gray-500">هنوز پیامی وجود ندارد. برای شروع، سوالی بپرسید!</p>
+            <p className="text-center text-gray-500 dark:text-gray-400">هنوز پیامی وجود ندارد. برای شروع، سوالی بپرسید!</p>
           )}
         </div>
         
@@ -140,18 +140,18 @@ export default function Assistant() {
       {/* Common Questions */}
       <Card>
         <div className="p-4">
-          <h3 className="font-medium mb-4">سوالات متداول</h3>
-          <ul className="divide-y divide-gray-200">
+          <h3 className="font-medium mb-4 dark:text-white">سوالات متداول</h3>
+          <ul className="divide-y divide-gray-200 dark:divide-slate-700">
             {faqs.map((question, index) => (
               <li key={index} className="py-3">
                 <Button
                   variant="ghost"
-                  className="w-full text-right justify-between font-normal hover:bg-gray-50 flex-row-reverse"
+                  className="w-full text-right justify-between font-normal hover:bg-gray-50 dark:hover:bg-slate-700 dark:text-white flex-row-reverse"
                   onClick={() => handleQuickQuestion(question)}
                   disabled={sendMessageMutation.isPending}
                 >
                   <span className="font-medium">{question}</span>
-                  <ChevronLeft className="h-5 w-5 text-gray-400" />
+                  <ChevronLeft className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                 </Button>
               </li>
             ))}
