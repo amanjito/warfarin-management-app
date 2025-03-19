@@ -61,8 +61,8 @@ export default function Navigation({ activeTab }: NavigationProps) {
     <motion.nav 
       className={cn(
         "fixed bottom-4 left-4 right-4 z-40 h-[60px]",
-        "rounded-xl shadow-lg border border-gray-200/30",
-        "backdrop-blur-lg bg-white/80",
+        "rounded-xl shadow-md border border-gray-100/50",
+        "backdrop-blur-md bg-white/90",
         "safe-area-bottom pb-safe"
       )}
       variants={containerVariants}
@@ -92,31 +92,43 @@ export default function Navigation({ activeTab }: NavigationProps) {
                     )}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {/* Active item background pill */}
+                    {/* Active item indicator - small dot */}
                     {isActive && (
                       <motion.div 
-                        className="absolute inset-0 m-auto w-11 h-11 bg-primary/10 rounded-full"
-                        layoutId="activeNavBackground"
-                        initial={{ scale: 0.8, opacity: 0 }}
+                        className="absolute -bottom-1 w-1.5 h-1.5 bg-primary rounded-full"
+                        layoutId="activeNavDot"
+                        initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
+                        exit={{ scale: 0, opacity: 0 }}
                         transition={{ type: "spring", stiffness: 500, damping: 30 }}
                       />
                     )}
                     
                     <div className="flex flex-col items-center justify-center space-y-1 z-10">
-                      <Icon 
+                      <motion.div
+                        animate={{ 
+                          scale: isActive ? 1.1 : 1,
+                          y: isActive ? -2 : 0
+                        }}
+                        transition={{ type: "spring", stiffness: 400 }}
+                      >
+                        <Icon 
+                          className={cn(
+                            "h-5 w-5 transition-all",
+                            isActive && "stroke-[2px]"
+                          )} 
+                        />
+                      </motion.div>
+                      <motion.span 
                         className={cn(
-                          "h-5 w-5 transition-all",
-                          isActive && "stroke-[2px]"
-                        )} 
-                      />
-                      <span className={cn(
-                        "text-[10px] font-medium",
-                        isActive ? "opacity-100" : "opacity-70"
-                      )}>
+                          "text-[10px] font-medium",
+                          isActive ? "opacity-100" : "opacity-70"
+                        )}
+                        animate={{ y: isActive ? 1 : 0 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
                         {tab.label}
-                      </span>
+                      </motion.span>
                     </div>
                     
                   </motion.div>
