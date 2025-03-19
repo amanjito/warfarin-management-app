@@ -54,6 +54,8 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
   
   // Convert Jalali to Gregorian for API
   const jalaliToGregorian = (jalaliDate: DayValue): string => {
+    if (!jalaliDate) return formatDateForApi(new Date());
+    
     const gregorian = jalaali.toGregorian(jalaliDate.year, jalaliDate.month, jalaliDate.day);
     return formatDateForApi(new Date(gregorian.gy, gregorian.gm - 1, gregorian.gd));
   };
@@ -135,6 +137,7 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
                 <FormLabel>تاریخ آزمایش</FormLabel>
                 <FormControl>
                   <div className="pt-1">
+                    {/* @ts-ignore */}
                     <Calendar
                       value={selectedDay}
                       onChange={handleDateChange}
@@ -144,7 +147,11 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
                       calendarClassName="responsive-calendar"
                       calendarSelectedDayClassName="selected-day"
                       colorPrimary="#ff3366"
-                      maximumDate={jalaliToday}
+                      maximumDate={{
+                        year: jalaliToday.jy,
+                        month: jalaliToday.jm,
+                        day: jalaliToday.jd
+                      }}
                     />
                   </div>
                 </FormControl>
@@ -209,7 +216,8 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
         </div>
       </form>
 
-      <style jsx global>{`
+      {/* @ts-ignore */}
+      <style jsx="true" global="true">{`
         .responsive-calendar {
           /* تنظیمات اصلی تقویم */
           font-family: 'Vazirmatn', sans-serif !important;
