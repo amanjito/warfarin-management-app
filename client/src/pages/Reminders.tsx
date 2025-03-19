@@ -94,7 +94,10 @@ export default function Reminders() {
   // Create mutation for adding a medication log (taking medication)
   const takeMedicationMutation = useMutation({
     mutationFn: async (log: { reminderId: number, scheduled: string, taken: boolean }) => {
-      const response = await apiRequest('POST', '/api/medication-logs', log);
+      const response = await apiRequest('/api/medication-logs', {
+        method: 'POST',
+        body: log
+      });
       return response.json();
     },
     onSuccess: () => {
@@ -105,7 +108,10 @@ export default function Reminders() {
   // Create mutation for adding a new medication
   const createMedicationMutation = useMutation({
     mutationFn: async (newMedication: Omit<Medication, 'id' | 'userId'>) => {
-      const response = await apiRequest('POST', '/api/medications', newMedication);
+      const response = await apiRequest('/api/medications', { 
+        method: 'POST',
+        body: newMedication
+      });
       return response.json();
     },
     onSuccess: () => {
@@ -116,7 +122,10 @@ export default function Reminders() {
   // Create mutation for adding a new reminder
   const addReminderMutation = useMutation({
     mutationFn: async (newReminder: Omit<Reminder, 'id' | 'userId'>) => {
-      const response = await apiRequest('POST', '/api/reminders', newReminder);
+      const response = await apiRequest('/api/reminders', {
+        method: 'POST',
+        body: newReminder
+      });
       return response.json();
     },
     onSuccess: () => {
@@ -127,7 +136,9 @@ export default function Reminders() {
   // Create mutation for deleting a medication
   const deleteMedicationMutation = useMutation({
     mutationFn: async (medicationId: number) => {
-      const response = await apiRequest('DELETE', `/api/medications/${medicationId}`);
+      const response = await apiRequest(`/api/medications/${medicationId}`, {
+        method: 'DELETE'
+      });
       return response.ok;
     },
     onSuccess: () => {
@@ -139,7 +150,10 @@ export default function Reminders() {
   // Create mutation for updating a reminder
   const updateReminderMutation = useMutation({
     mutationFn: async ({ id, data }: { id: number, data: Partial<Reminder> }) => {
-      const response = await apiRequest('PUT', `/api/reminders/${id}`, data);
+      const response = await apiRequest(`/api/reminders/${id}`, {
+        method: 'PUT',
+        body: data
+      });
       return response.json();
     },
     onSuccess: () => {
