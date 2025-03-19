@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MedicalHeart from "./icons/MedicalHeart";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Header() {
   const [, setLocation] = useLocation();
@@ -145,8 +146,8 @@ export default function Header() {
       <motion.header 
         className={`fixed top-0 left-0 right-0 z-40 ${
           scrolled 
-            ? "bg-white backdrop-blur-md shadow-sm border-b border-slate-200/80" 
-            : "bg-white border-b border-slate-200/60"
+            ? "bg-white dark:bg-slate-900 backdrop-blur-md shadow-sm border-b border-slate-200/80 dark:border-slate-700/50" 
+            : "bg-white dark:bg-slate-900 border-b border-slate-200/60 dark:border-slate-700/30"
         } transition-all duration-300`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -174,6 +175,9 @@ export default function Header() {
 
             {/* Controls */}
             <div className="flex items-center gap-0.5">
+              {/* Theme toggle button */}
+              <ThemeToggle variant="ghost" className="text-slate-500 hover:bg-slate-100 mr-1 rounded-full" />
+              
               {/* Notification button */}
               {!isMobile && (
                 <motion.div whileTap={{ scale: 0.9 }}>
@@ -296,8 +300,8 @@ export default function Header() {
                   href={item.path}
                   className={`flex items-center px-3 py-2.5 rounded-md text-sm transition-colors ${
                     isActive(item.path)
-                      ? 'text-primary font-medium bg-primary/5'
-                      : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                      ? 'text-primary font-medium bg-primary/5 dark:bg-primary/10'
+                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 hover:text-slate-900 dark:hover:text-white'
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -324,45 +328,45 @@ export default function Header() {
               onClick={() => setSideMenuOpen(false)}
             />
             <motion.div 
-              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-xs bg-white z-50 shadow-xl flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-xs bg-white dark:bg-slate-900 z-50 shadow-xl flex flex-col"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
             >
               {/* Header */}
-              <div className="p-4 flex justify-between items-center border-b">
+              <div className="p-4 flex justify-between items-center border-b dark:border-slate-700/50">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center ml-2">
                     <Heart className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-base font-medium text-slate-900">پایشگر وارفارین</h2>
-                    <p className="text-xs text-slate-500">سلامتی شما، اولویت ماست</p>
+                    <h2 className="text-base font-medium text-slate-900 dark:text-slate-100">پایشگر وارفارین</h2>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">سلامتی شما، اولویت ماست</p>
                   </div>
                 </div>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   onClick={() => setSideMenuOpen(false)}
-                  className="text-slate-500 hover:bg-slate-100 rounded-full"
+                  className="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
                 >
                   <X className="h-5 w-5" />
                 </Button>
               </div>
               
               {/* User section */}
-              <div className="p-4 border-b">
+              <div className="p-4 border-b dark:border-slate-700/50">
                 <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 border border-slate-200">
+                  <Avatar className="h-10 w-10 border border-slate-200 dark:border-slate-700">
                     <AvatarImage src={userData?.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-slate-100 text-slate-500">
+                    <AvatarFallback className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                       {userInitials}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-slate-900">{userData?.email?.split('@')[0] || 'کاربر'}</p>
-                    <p className="text-xs text-slate-500">{userData?.email}</p>
+                    <p className="font-medium text-slate-900 dark:text-slate-100">{userData?.email?.split('@')[0] || 'کاربر'}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{userData?.email}</p>
                   </div>
                 </div>
               </div>
@@ -379,8 +383,8 @@ export default function Header() {
                     href={item.path}
                     className={`flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 ${
                       isActive(item.path)
-                        ? 'text-primary font-medium bg-primary/5'
-                        : 'text-slate-700 hover:bg-slate-100'
+                        ? 'text-primary font-medium bg-primary/5 dark:bg-primary/10'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSideMenuOpen(false)}
@@ -396,27 +400,34 @@ export default function Header() {
                 
                 <motion.a
                   href="/settings"
-                  className="flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-slate-700 hover:bg-slate-100"
+                  className="flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSideMenuOpen(false)}
                 >
-                  <Settings className="h-4 w-4 ml-2 text-slate-500" />
+                  <Settings className="h-4 w-4 ml-2 text-slate-500 dark:text-slate-400" />
                   تنظیمات
                 </motion.a>
+
+                <div className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+                  <div className="flex items-center">
+                    <span className="ml-2">تغییر حالت نمایش</span>
+                  </div>
+                  <ThemeToggle variant="ghost" size="sm" className="text-slate-500" />
+                </div>
                 
                 {isInstallable && (
                   <motion.button
-                    className="w-full flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-slate-700 hover:bg-slate-100"
+                    className="w-full flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                     whileTap={{ scale: 0.98 }}
                     onClick={handleInstall}
                   >
-                    <Download className="h-4 w-4 ml-2 text-slate-500" />
+                    <Download className="h-4 w-4 ml-2 text-slate-500 dark:text-slate-400" />
                     نصب برنامه
                   </motion.button>
                 )}
                 
                 <motion.button
-                  className="w-full flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-red-500 hover:bg-red-50"
+                  className="w-full flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
                   whileTap={{ scale: 0.98 }}
                   onClick={handleLogout}
                   disabled={isLoggingOut}
@@ -427,7 +438,7 @@ export default function Header() {
               </div>
               
               {/* Footer */}
-              <div className="p-4 border-t text-xs text-center text-slate-500">
+              <div className="p-4 border-t dark:border-slate-700/50 text-xs text-center text-slate-500 dark:text-slate-400">
                 <p>نسخه ۱.۰.۰ | &copy; ۱۴۰۳ پایشگر وارفارین</p>
               </div>
             </motion.div>
