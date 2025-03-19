@@ -5,6 +5,7 @@ import { DayPicker } from "react-day-picker"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import jalaali from 'jalaali-js'
+import { convertToPersianDigits } from "@/lib/dateUtils"
 
 const persianMonths = [
   'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
@@ -72,10 +73,14 @@ function Calendar({
       formatters={{
         formatCaption: (date) => {
           const jDate = toJalaali(date);
-          return `${persianMonths[jDate.month - 1]} ${jDate.year}`;
+          return `${persianMonths[jDate.month - 1]} ${convertToPersianDigits(jDate.year.toString())}`;
         },
         formatWeekdayName: (weekday) => {
           return persianWeekDays[weekday.getDay()];
+        },
+        formatDay: (date) => {
+          const jDate = toJalaali(date);
+          return convertToPersianDigits(jDate.day.toString());
         }
       }}
       {...props}
