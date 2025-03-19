@@ -19,6 +19,8 @@ export interface IStorage {
   getPtTests(userId: number): Promise<PtTest[]>;
   getPtTest(id: number): Promise<PtTest | undefined>;
   createPtTest(test: InsertPtTest): Promise<PtTest>;
+  updatePtTest(id: number, test: Partial<InsertPtTest>): Promise<PtTest>;
+  deletePtTest(id: number): Promise<boolean>;
   
   // Medication operations
   getMedications(userId: number): Promise<Medication[]>;
@@ -249,6 +251,26 @@ export class MemStorage implements IStorage {
     };
     this.ptTests.set(id, newTest);
     return newTest;
+  }
+  
+  async updatePtTest(id: number, test: Partial<InsertPtTest>): Promise<PtTest> {
+    const existing = this.ptTests.get(id);
+    if (!existing) {
+      throw new Error("PT Test not found");
+    }
+    
+    // Handle date conversion if testDate is provided
+    let updatedTest: any = { ...existing, ...test };
+    if (test.testDate) {
+      updatedTest.testDate = new Date(test.testDate);
+    }
+    
+    this.ptTests.set(id, updatedTest);
+    return updatedTest;
+  }
+  
+  async deletePtTest(id: number): Promise<boolean> {
+    return this.ptTests.delete(id);
   }
   
   // Medication methods

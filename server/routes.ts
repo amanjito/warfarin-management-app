@@ -61,6 +61,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     res.json(test);
   });
+  
+  app.put("/api/pt-tests/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      // Ensure the PT test exists
+      const test = await storage.getPtTest(id);
+      if (!test) {
+        return res.status(404).json({ message: "PT Test not found" });
+      }
+      
+      // Extract only allowed fields for update
+      const { testDate, inrValue, notes } = req.body;
+      const updateData = {};
+      
+      if (testDate !== undefined) updateData.testDate = testDate;
+      if (inrValue !== undefined) updateData.inrValue = parseFloat(inrValue);
+      if (notes !== undefined) updateData.notes = notes;
+      
+      // Update the PT test
+      const updatedTest = await storage.updatePtTest(id, updateData);
+      res.json(updatedTest);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to update PT test" });
+      }
+    }
+  });
+  
+  app.delete("/api/pt-tests/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid ID" });
+      }
+      
+      // Ensure the PT test exists
+      const test = await storage.getPtTest(id);
+      if (!test) {
+        return res.status(404).json({ message: "PT Test not found" });
+      }
+      
+      // Delete the PT test
+      const deleted = await storage.deletePtTest(id);
+      
+      if (deleted) {
+        res.status(204).end();
+      } else {
+        res.status(500).json({ message: "Failed to delete PT test" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete PT test" });
+    }
+  });
 
   // Medications Routes
   app.get("/api/medications", async (req, res) => {
