@@ -101,7 +101,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen flex flex-col bg-[#F5F7FA]">
+      <div className="min-h-screen flex flex-col bg-[#F5F7FA] dark:bg-slate-950">
         {isAuthenticated ? <PrivateRouter /> : <PublicRouter />}
         <Toaster />
       </div>

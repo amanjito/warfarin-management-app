@@ -63,6 +63,7 @@ export default function Navigation({ activeTab }: NavigationProps) {
         "fixed bottom-4 left-4 right-4 z-40 h-[60px]",
         "rounded-xl shadow-md border border-gray-100/50",
         "backdrop-blur-md bg-white/90",
+        "dark:backdrop-blur-md dark:bg-slate-900/95 dark:border-slate-700/50 dark:shadow-lg",
         "safe-area-bottom pb-safe"
       )}
       variants={containerVariants}
@@ -88,14 +89,16 @@ export default function Navigation({ activeTab }: NavigationProps) {
                       "relative flex flex-col items-center justify-center",
                       "w-full h-full",
                       "cursor-pointer transition-all duration-300",
-                      isActive ? "text-primary" : "text-gray-400"
+                      isActive 
+                        ? "text-primary dark:text-blue-300" 
+                        : "text-gray-400 dark:text-gray-500"
                     )}
                     whileTap={{ scale: 0.95 }}
                   >
                     {/* Active item indicator - small dot */}
                     {isActive && (
                       <motion.div 
-                        className="absolute -bottom-1 w-1.5 h-1.5 bg-primary rounded-full"
+                        className="absolute -bottom-1 w-1.5 h-1.5 bg-primary dark:bg-blue-300 rounded-full"
                         layoutId="activeNavDot"
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
