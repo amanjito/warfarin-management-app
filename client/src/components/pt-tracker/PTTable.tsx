@@ -160,10 +160,10 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
                             variant="outline" 
                             className={`mr-2 ${
                               status.color === 'green' 
-                                ? 'bg-green-100 text-green-800 hover:bg-green-100' 
+                                ? 'bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/50' 
                                 : status.color === 'yellow'
-                                  ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100'
-                                  : 'bg-red-100 text-red-800 hover:bg-red-100'
+                                  ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-400 hover:bg-yellow-100 dark:hover:bg-yellow-900/50'
+                                  : 'bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50'
                             }`}
                           >
                             <div className="flex items-center">
@@ -177,9 +177,9 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="mt-2 text-sm text-gray-600"
+                            className="mt-2 text-sm text-gray-600 dark:text-gray-400"
                           >
-                            <Separator className="my-2" />
+                            <Separator className="my-2 dark:bg-slate-700/50" />
                             <p className="whitespace-pre-wrap">{test.notes}</p>
                           </motion.div>
                         )}
@@ -197,7 +197,7 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
                                 e.stopPropagation();
                                 onEdit(test);
                               }}
-                              className="h-8 w-8 p-0 rounded-full"
+                              className="h-8 w-8 p-0 rounded-full dark:text-slate-400 dark:hover:text-slate-300 dark:hover:bg-slate-700"
                             >
                               <Edit className="h-4 w-4" />
                               <span className="sr-only">ویرایش</span>
@@ -213,7 +213,7 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
                                 e.stopPropagation();
                                 onDelete(test);
                               }}
-                              className="h-8 w-8 p-0 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50"
+                              className="h-8 w-8 p-0 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30"
                             >
                               <Trash2 className="h-4 w-4" />
                               <span className="sr-only">حذف</span>

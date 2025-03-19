@@ -102,7 +102,7 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
         ref={ref}
         variant="outline"
         type="button"
-        className="w-full text-right justify-between font-normal border-2 border-primary/20 hover:border-primary/40 bg-white"
+        className="w-full text-right justify-between font-normal border-2 border-primary/20 hover:border-primary/40 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-700"
       >
         <div className="flex items-center">
           <svg 
@@ -171,7 +171,7 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
                     type="number" 
                     step="0.1" 
                     placeholder="مثال: ۲/۵" 
-                    className="text-center border-2 border-primary/20 focus:border-primary"
+                    className="text-center border-2 border-primary/20 focus:border-primary dark:bg-slate-800 dark:border-slate-700 dark:text-white"
                     {...field} 
                   />
                 </FormControl>
@@ -190,7 +190,7 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
               <FormControl>
                 <Textarea 
                   placeholder="هر گونه توضیحات اضافی درباره این آزمایش" 
-                  className="resize-none text-right border-2 border-primary/20 focus:border-primary" 
+                  className="resize-none text-right border-2 border-primary/20 focus:border-primary dark:bg-slate-800 dark:border-slate-700 dark:text-white" 
                   rows={3}
                   {...field} 
                 />
