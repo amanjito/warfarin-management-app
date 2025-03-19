@@ -178,14 +178,14 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
           render={({ field }) => (
             <FormItem>
               <FormLabel>روزهای هفته</FormLabel>
-              <div className="flex space-x-2">
+              <div className="flex justify-between space-x-0 space-y-0 gap-4 rtl:space-x-reverse">
                 {days.map(day => (
                   <Toggle
                     key={day.value}
                     pressed={selectedDays.includes(day.value)}
                     onPressedChange={() => toggleDay(day.value)}
                     variant="outline"
-                    className="w-8 h-8 p-0 data-[state=on]:bg-primary data-[state=on]:text-white border-primary text-primary"
+                    className="w-10 h-10 p-0 data-[state=on]:bg-primary data-[state=on]:text-white border-primary text-primary"
                   >
                     {day.label}
                   </Toggle>

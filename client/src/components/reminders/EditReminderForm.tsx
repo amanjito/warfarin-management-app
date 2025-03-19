@@ -116,7 +116,7 @@ export default function EditReminderForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>روزها</FormLabel>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-4 justify-between">
                 {[
                   { key: "Mon", label: "دو" },
                   { key: "Tue", label: "سه" },
@@ -131,6 +131,7 @@ export default function EditReminderForm({
                     type="button"
                     variant={field.value.includes(day.key) ? "default" : "outline"}
                     size="sm"
+                    className="min-w-[40px]"
                     onClick={() => {
                       const updatedDays = field.value.includes(day.key)
                         ? field.value.filter((d: string) => d !== day.key)
