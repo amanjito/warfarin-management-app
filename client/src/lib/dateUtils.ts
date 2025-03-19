@@ -13,6 +13,12 @@ export function toPersianDate(date: Date | string | number): { jy: number; jm: n
   return jalaali.toJalaali(dateObj);
 }
 
+// Convert Persian date to Gregorian date
+export function toGregorianDate(year: number, month: number, day: number): Date {
+  const g = jalaali.toGregorian(year, month, day);
+  return new Date(g.gy, g.gm - 1, g.gd);
+}
+
 // Format date for display
 export function formatDate(date: Date | string | number): string {
   const dateObj = typeof date === 'string' ? new Date(date) : (date instanceof Date ? date : new Date(date));

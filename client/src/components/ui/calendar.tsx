@@ -5,7 +5,7 @@ import { DayPicker } from "react-day-picker"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import jalaali from 'jalaali-js'
-import { convertToPersianDigits } from "@/lib/dateUtils"
+import { convertToPersianDigits, toPersianDate, toGregorianDate } from "@/lib/dateUtils"
 
 const persianMonths = [
   'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
@@ -17,11 +17,6 @@ const persianWeekDays = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
 function toJalaali(date: Date) {
   const j = jalaali.toJalaali(date);
   return { year: j.jy, month: j.jm, day: j.jd };
-}
-
-function toGregorian(year: number, month: number, day: number) {
-  const g = jalaali.toGregorian(year, month, day);
-  return new Date(g.gy, g.gm - 1, g.gd);
 }
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>

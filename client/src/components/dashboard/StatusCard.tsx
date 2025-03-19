@@ -10,6 +10,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
+import { toGregorianDate, toPersianDate } from "@/lib/dateUtils";
 
 interface StatusCardProps {
   title: string;
@@ -51,6 +52,8 @@ export default function StatusCard({
   
   const handleSave = () => {
     if (selectedDate && onUpdate) {
+      // Note: selectedDate is already in Gregorian format because it comes from the calendar component
+      // which internally uses the Gregorian date system while displaying Persian dates
       onUpdate(selectedDate);
       setOpen(false);
       toast({
