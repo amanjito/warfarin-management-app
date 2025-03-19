@@ -50,21 +50,21 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     return (
       <div className="flex items-center mb-4 justify-between">
         <div className="flex-1 text-right pr-4">
-          <p className="font-medium">آخرین INR</p>
-          <p className="text-sm text-gray-500">
+          <p className="font-medium dark:text-white">آخرین INR</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             اندازه‌گیری شده: {formatDate(latestTest.testDate)}
           </p>
         </div>
         <div 
           className={`w-20 h-20 rounded-full border-8 flex items-center justify-center mr-12 ml-4 ${
             latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
-              ? "border-green-500"
+              ? "border-green-500 dark:border-green-400"
               : latestTest.inrValue < 2.0
-                ? "border-yellow-500"
-                : "border-red-500"
+                ? "border-yellow-500 dark:border-yellow-400"
+                : "border-red-500 dark:border-red-400"
           }`}
         >
-          <span className="text-2xl font-bold">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
+          <span className="text-2xl font-bold dark:text-white">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
         </div>
       </div>
     );
@@ -72,8 +72,8 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
   
   if (!ptTests || ptTests.length === 0) {
     return (
-      <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">داده آزمایش PT موجود نیست</p>
+      <div className="h-[200px] flex items-center justify-center bg-gray-50 dark:bg-slate-800 rounded-lg">
+        <p className="text-gray-500 dark:text-gray-400">داده آزمایش PT موجود نیست</p>
       </div>
     );
   }
