@@ -101,8 +101,8 @@ export function Calendar({
       const gDate = jalaali.toGregorian(currentYear, currentMonth, day);
       console.log("تبدیل شده به میلادی توسط jalaali:", gDate);
       
-      // ایجاد تاریخ میلادی
-      const gregorianDate = new Date(gDate.gy, gDate.gm - 1, gDate.gd);
+      // ایجاد تاریخ میلادی - با تنظیم ساعت به 12 ظهر برای جلوگیری از مشکلات منطقه زمانی
+      const gregorianDate = new Date(gDate.gy, gDate.gm - 1, gDate.gd, 12, 0, 0);
       console.log("تاریخ میلادی نهایی:", gregorianDate);
       
       onSelect(gregorianDate);
