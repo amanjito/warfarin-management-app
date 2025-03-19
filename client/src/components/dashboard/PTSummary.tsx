@@ -125,17 +125,28 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     ]
   };
   
+  // Check for dark mode
+  const isDarkMode = document.documentElement.classList.contains('dark');
+  
   // Chart options
   const options: ChartOptions<'line'> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        display: false
+        display: false,
+        labels: {
+          color: isDarkMode ? '#e2e8f0' : '#000000'
+        }
       },
       tooltip: {
         mode: 'index' as const,
         intersect: false,
+        backgroundColor: isDarkMode ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+        titleColor: isDarkMode ? '#e2e8f0' : '#000000',
+        bodyColor: isDarkMode ? '#e2e8f0' : '#000000',
+        borderColor: isDarkMode ? 'rgba(100, 116, 139, 0.5)' : 'rgba(0, 0, 0, 0.1)',
+        borderWidth: 1,
         callbacks: {
           label: function(context) {
             let label = context.dataset.label || '';
@@ -155,16 +166,18 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
         min: 1,
         max: 4,
         grid: {
-          color: 'rgba(0, 0, 0, 0.05)'
+          color: isDarkMode ? 'rgba(148, 163, 184, 0.1)' : 'rgba(0, 0, 0, 0.05)'
         },
         title: {
           display: true,
           text: 'مقدار INR',
+          color: isDarkMode ? '#e2e8f0' : '#000000',
           font: {
             family: 'Vazirmatn'
           }
         },
         ticks: {
+          color: isDarkMode ? '#cbd5e1' : '#000000',
           callback: function(value) {
             return convertToPersianDigits(value.toString());
           }
@@ -177,9 +190,13 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
         title: {
           display: true,
           text: 'تاریخ',
+          color: isDarkMode ? '#e2e8f0' : '#000000',
           font: {
             family: 'Vazirmatn'
           }
+        },
+        ticks: {
+          color: isDarkMode ? '#cbd5e1' : '#000000'
         }
       }
     }

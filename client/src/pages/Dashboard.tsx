@@ -9,6 +9,16 @@ import { PtTest, Reminder, Medication, MedicationLog } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatDate, convertToPersianDigits, toPersianDate, formatDateForApi, formatTime } from "@/lib/dateUtils";
 
+// Define the MedicationWithStatus interface
+interface MedicationWithStatus {
+  id: number;
+  name: string;
+  dosage: string;
+  quantity: string;
+  time: string;
+  isTaken: boolean;
+}
+
 export default function Dashboard() {
   const today = formatDate(new Date());
   const userId = 1; // In a real app, get from auth context
@@ -78,7 +88,7 @@ export default function Dashboard() {
         reminderId: reminder.id,
         isTaken
       };
-    }).filter(Boolean);
+    }).filter(Boolean) as MedicationWithStatus[];
   };
   
   // Get the most recent INR value
@@ -106,19 +116,19 @@ export default function Dashboard() {
     : null;
   
   if (ptLoading || remindersLoading || medicationsLoading || logsLoading) {
-    return <div className="p-8 text-center">در حال بارگذاری داده‌ها...</div>;
+    return <div className="p-8 text-center dark:text-white">در حال بارگذاری داده‌ها...</div>;
   }
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 text-right">سارا، خوش آمدید</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right dark:text-white">سارا، خوش آمدید</h2>
       
       {/* Today's Summary */}
-      <Card className="mb-6">
+      <Card className="mb-6 dark:bg-slate-800 dark:border-slate-700">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium text-right">خلاصه امروز</h3>
-            <span className="text-sm text-gray-500">{today}</span>
+            <h3 className="font-medium text-right dark:text-white">خلاصه امروز</h3>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{today}</span>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -142,11 +152,11 @@ export default function Dashboard() {
       </Card>
       
       {/* PT Trend Summary */}
-      <Card className="mb-6">
+      <Card className="mb-6 dark:bg-slate-800 dark:border-slate-700">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium text-right">روند PT/INR</h3>
-            <Link href="/pt-tracker" className="text-sm text-primary">
+            <h3 className="font-medium text-right dark:text-white">روند PT/INR</h3>
+            <Link href="/pt-tracker" className="text-sm text-primary dark:text-blue-300">
               مشاهده جزئیات
             </Link>
           </div>
@@ -157,14 +167,18 @@ export default function Dashboard() {
             <div className="mt-3 text-center">
               <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm ${
                 inrStatus === "within" 
-                  ? "bg-green-100 text-green-800" 
+                  ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300" 
                   : inrStatus === "below"
-                    ? "bg-yellow-100 text-yellow-800"
-                    : "bg-red-100 text-red-800"
+                    ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300"
+                    : "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300"
               }`}>
                 <svg
                   className={`mr-1 h-4 w-4 ${
-                    inrStatus === "within" ? "text-green-600" : inrStatus === "below" ? "text-yellow-600" : "text-red-600"
+                    inrStatus === "within" 
+                      ? "text-green-600 dark:text-green-400" 
+                      : inrStatus === "below" 
+                        ? "text-yellow-600 dark:text-yellow-400" 
+                        : "text-red-600 dark:text-red-400"
                   }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -231,9 +245,9 @@ export default function Dashboard() {
       </div>
       
       {/* Today's Medications */}
-      <Card>
+      <Card className="dark:bg-slate-800 dark:border-slate-700">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4 text-right">داروهای امروز</h3>
+          <h3 className="font-medium mb-4 text-right dark:text-white">داروهای امروز</h3>
           <MedicationSummary medications={todaysMedications} />
         </CardContent>
       </Card>
