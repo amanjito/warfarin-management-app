@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search, AlertCircle } from "lucide-react";
+import { Bell, UserCircle, LogOut, Settings, Heart, Menu, X, Search, AlertCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import { useLocation } from "wouter";
@@ -26,6 +26,7 @@ export default function Header() {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [userData, setUserData] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -52,8 +53,29 @@ export default function Header() {
     
     window.addEventListener('scroll', handleScroll);
     
+    // Check if app is installable
+    const detectInstallable = () => {
+      // @ts-ignore - deferredPrompt is added by our event listener in main.tsx
+      setIsInstallable(!!window.deferredPrompt);
+    };
+    
+    // Listen for the beforeinstallprompt event
+    window.addEventListener('beforeinstallprompt', () => {
+      setIsInstallable(true);
+    });
+    
+    // Listen for the appinstalled event
+    window.addEventListener('appinstalled', () => {
+      setIsInstallable(false);
+    });
+    
+    // Check initially
+    detectInstallable();
+    
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('beforeinstallprompt', detectInstallable);
+      window.removeEventListener('appinstalled', () => setIsInstallable(false));
     };
   }, []);
 
@@ -75,6 +97,36 @@ export default function Header() {
     } finally {
       setIsLoggingOut(false);
       setSideMenuOpen(false);
+    }
+  };
+  
+  const handleInstall = async () => {
+    // Check if deferredPrompt is defined in the window object
+    // @ts-ignore - deferredPrompt is added by our event listener in main.tsx
+    const deferredPrompt = window.deferredPrompt;
+    
+    if (deferredPrompt) {
+      // Show the prompt
+      deferredPrompt.prompt();
+      
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      console.log(`User response to the install prompt: ${outcome}`);
+      
+      // Clear the deferredPrompt variable
+      // @ts-ignore
+      window.deferredPrompt = null;
+      
+      // Update UI
+      setIsInstallable(false);
+      
+      if (outcome === 'accepted') {
+        toast({
+          title: "نصب برنامه",
+          description: "برنامه با موفقیت به دستگاه شما اضافه شد",
+        });
+      }
     }
   };
 
@@ -170,6 +222,36 @@ export default function Header() {
                 <Bell className="h-5 w-5" />
               </Button>
             </motion.div>
+            
+            {/* Install button - only visible when app is installable */}
+            {isInstallable && (
+              <motion.div 
+                whileTap={{ scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Button 
+                  variant="outline"
+                  size="sm"
+                  id="install-button"
+                  className="border-white/30 text-white hover:bg-white/20 hover:text-white mr-2 hidden sm:flex"
+                  onClick={handleInstall}
+                >
+                  <Download className="h-4 w-4 ml-1.5" />
+                  نصب برنامه
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  id="install-button-mobile"
+                  className="hover:bg-white/20 mr-1 text-white sm:hidden"
+                  onClick={handleInstall}
+                >
+                  <Download className="h-5 w-5" />
+                </Button>
+              </motion.div>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -266,6 +348,18 @@ export default function Header() {
                   </div>
                 </div>
                 <Separator className="my-4" />
+                
+                {isInstallable && (
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start mb-2" 
+                    onClick={handleInstall}
+                  >
+                    <Download className="ml-2 h-4 w-4 rtl-icon" />
+                    نصب برنامه
+                  </Button>
+                )}
+                
                 <Button 
                   variant="destructive" 
                   className="w-full justify-start" 

@@ -1,8 +1,8 @@
 {
-  "name": "WarfarinTracker",
-  "short_name": "WarfarinTracker",
-  "description": "Comprehensive Medication Management for Warfarin Patients",
-  "start_url": "/",
+  "name": "وارفارین یار",
+  "short_name": "وارفارین",
+  "description": "مدیریت داروی وارفارین و پیگیری آزمایشات",
+  "start_url": "/?source=pwa",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196F3",
@@ -58,23 +58,23 @@
   ],
   "shortcuts": [
     {
-      "name": "View Medications",
-      "short_name": "Medications",
-      "description": "View your medications and dosage information",
+      "name": "مشاهده داروها",
+      "short_name": "داروها",
+      "description": "مشاهده اطلاعات داروها و دوز مصرفی",
       "url": "/medication-info",
       "icons": [{ "src": "/icons/pill.png", "sizes": "192x192" }]
     },
     {
-      "name": "Track PT/INR",
-      "short_name": "PT/INR",
-      "description": "Track your PT/INR test results",
+      "name": "پیگیری آزمایش PT/INR",
+      "short_name": "آزمایش",
+      "description": "پیگیری نتایج آزمایش PT/INR",
       "url": "/pt-tracker",
       "icons": [{ "src": "/icons/chart.png", "sizes": "192x192" }]
     },
     {
-      "name": "Set Reminders",
-      "short_name": "Reminders",
-      "description": "Set medication reminders",
+      "name": "تنظیم یادآوری",
+      "short_name": "یادآوری",
+      "description": "تنظیم یادآوری مصرف دارو",
       "url": "/reminders",
       "icons": [{ "src": "/icons/bell.png", "sizes": "192x192" }]
     }

@@ -47,8 +47,31 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   }
   
   try {
-    const registration = await navigator.serviceWorker.register('/service-worker.js');
+    const registration = await navigator.serviceWorker.register('/service-worker.js', { 
+      scope: '/' 
+    });
     console.log('Service worker registered:', registration);
+    
+    // Check if there's a waiting service worker and notify the user
+    if (registration.waiting) {
+      console.log('New service worker waiting to activate');
+      // You can show a notification to the user here
+    }
+    
+    // Listen for new service workers
+    registration.addEventListener('updatefound', () => {
+      // A new service worker is installing
+      const newWorker = registration.installing;
+      if (newWorker) {
+        newWorker.addEventListener('statechange', () => {
+          console.log('Service worker state changed:', newWorker.state);
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            // New content is available, you can notify the user
+            console.log('New content is available, please refresh.');
+          }
+        });
+      }
+    });
     
     // Set up a listener for messages from the service worker
     navigator.serviceWorker.addEventListener('message', event => {
