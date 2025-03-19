@@ -304,11 +304,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add system message for context
       formattedMessages.unshift({
         role: "system",
-        content: `You are a helpful medical assistant specializing in Warfarin medication information. 
-        Provide accurate information about Warfarin, its usage, side effects, interactions, and general 
-        anticoagulant therapy guidance. Keep responses concise but informative.
-        DO NOT provide any personalized medical advice or dosing recommendations.
-        Always suggest consulting healthcare providers for specific medical questions.`
+        content: `شما یک دستیار پزشکی متخصص در اطلاعات دارویی وارفارین هستید. 
+        اطلاعات دقیق درمورد وارفارین، نحوه مصرف، عوارض جانبی، تداخلات و راهنمایی‌های کلی درمان ضد انعقاد خون ارائه دهید.
+        پاسخ‌ها را مختصر اما مفید نگه دارید. همیشه به زبان فارسی پاسخ دهید.
+        هرگز توصیه پزشکی شخصی یا توصیه‌های دوز دارو ارائه ندهید.
+        همیشه برای سوالات خاص پزشکی، مشورت با متخصصان مراقبت‌های بهداشتی را پیشنهاد دهید.`
       });
       
       // Call OpenAI API
@@ -338,7 +338,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Create a fallback response
         const fallbackMessage = insertAssistantMessageSchema.parse({
           userId,
-          content: "I'm sorry, I'm having trouble connecting to my knowledge base right now. Please try again later or contact your healthcare provider for immediate assistance.",
+          content: "متأسفم، در حال حاضر در اتصال به پایگاه دانش خود مشکل دارم. لطفاً بعداً دوباره تلاش کنید یا برای کمک فوری با پزشک خود تماس بگیرید.",
           isUser: false
         });
         

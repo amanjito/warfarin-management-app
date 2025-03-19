@@ -194,11 +194,11 @@ export class MemStorage implements IStorage {
     
     // Sample assistant messages
     const assistantConversation = [
-      { content: "Hello! I'm your Warfarin Assistant. I can answer questions about your medication, potential interactions, and help you understand your treatment. What would you like to know today?", isUser: false },
-      { content: "What foods should I avoid while taking Warfarin?", isUser: true },
-      { content: "Great question! While on Warfarin, it's important to maintain a consistent intake of vitamin K, as it can affect how well your medication works. Foods high in vitamin K that you should consume consistently (not necessarily avoid) include: green leafy vegetables (kale, spinach, collard greens), brussels sprouts, broccoli, cabbage, and green tea. Sudden changes in vitamin K intake can affect your INR levels. The key is consistency in your diet. Would you like more information about food interactions?", isUser: false },
-      { content: "What should I do if I miss a dose?", isUser: true },
-      { content: "If you miss a dose of Warfarin: take it as soon as you remember on the same day, if you don't remember until the next day, skip the missed dose, never take a double dose to make up for a missed dose, and if you miss more than one dose, contact your healthcare provider. Always keep track of any missed doses and inform your healthcare provider at your next appointment, as they may need to adjust your dosing schedule or monitor your INR more closely.", isUser: false }
+      { content: "سلام! من دستیار وارفارین شما هستم. می‌توانم به سوالات شما درباره داروی‌تان، تداخلات احتمالی و درک بهتر درمان‌تان کمک کنم. امروز می‌خواهید درباره چه چیزی بدانید؟", isUser: false },
+      { content: "هنگام مصرف وارفارین از چه غذاهایی باید پرهیز کنم؟", isUser: true },
+      { content: "سوال خوبی است! در زمان مصرف وارفارین، مهم است که میزان مصرف ویتامین K را ثابت نگه دارید، زیرا می‌تواند بر عملکرد داروی شما تأثیر بگذارد. غذاهای غنی از ویتامین K که باید به طور منظم مصرف کنید (نه لزوماً از آنها اجتناب کنید) شامل: سبزیجات برگ‌دار سبز (کیل، اسفناج، کلم پیچ)، کلم بروکسل، بروکلی، کلم و چای سبز هستند. تغییرات ناگهانی در مصرف ویتامین K می‌تواند بر سطح INR شما تأثیر بگذارد. کلید اصلی، ثبات در رژیم غذایی شماست. آیا می‌خواهید اطلاعات بیشتری درباره تداخلات غذایی داشته باشید؟", isUser: false },
+      { content: "اگر یک دوز را فراموش کنم چه کار باید بکنم؟", isUser: true },
+      { content: "اگر دوزی از وارفارین را فراموش کردید: به محض یادآوری در همان روز آن را مصرف کنید، اگر تا روز بعد به یاد نیاوردید، دوز فراموش شده را نادیده بگیرید، هرگز برای جبران دوز فراموش شده، دوز مضاعف مصرف نکنید، و اگر بیش از یک دوز را فراموش کردید، با پزشک خود تماس بگیرید. همیشه دوزهای فراموش شده را ثبت کنید و در ویزیت بعدی به پزشک خود اطلاع دهید، زیرا ممکن است نیاز به تنظیم برنامه دوز شما یا کنترل دقیق‌تر INR داشته باشند.", isUser: false }
     ];
     
     assistantConversation.forEach((msg, index) => {
