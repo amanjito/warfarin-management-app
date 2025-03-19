@@ -15,8 +15,12 @@ export function toPersianDate(date: Date | string | number): { jy: number; jm: n
 
 // Convert Persian date to Gregorian date
 export function toGregorianDate(year: number, month: number, day: number): Date {
+  console.log("تبدیل تاریخ شمسی به میلادی:", year, month, day);
   const g = jalaali.toGregorian(year, month, day);
-  return new Date(g.gy, g.gm - 1, g.gd);
+  console.log("نتیجه تبدیل jalaali:", g);
+  const result = new Date(g.gy, g.gm - 1, g.gd);
+  console.log("تاریخ میلادی نهایی:", result);
+  return result;
 }
 
 // Format date for display

@@ -95,7 +95,16 @@ export function Calendar({
     
     // تبدیل به تاریخ میلادی برای برگرداندن به کامپوننت والد
     if (onSelect) {
-      const gregorianDate = toGregorianDate(currentYear, currentMonth, day);
+      console.log("انتخاب شده شمسی:", currentYear, currentMonth, day);
+      
+      // تبدیل مستقیم با تابع jalaali
+      const gDate = jalaali.toGregorian(currentYear, currentMonth, day);
+      console.log("تبدیل شده به میلادی توسط jalaali:", gDate);
+      
+      // ایجاد تاریخ میلادی
+      const gregorianDate = new Date(gDate.gy, gDate.gm - 1, gDate.gd);
+      console.log("تاریخ میلادی نهایی:", gregorianDate);
+      
       onSelect(gregorianDate);
     }
   };
