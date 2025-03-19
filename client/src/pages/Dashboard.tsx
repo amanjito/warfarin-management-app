@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import StatusCard from "@/components/dashboard/StatusCard";
 import QuickAction from "@/components/dashboard/QuickAction";
@@ -7,14 +7,11 @@ import MedicationSummary from "@/components/dashboard/MedicationSummary";
 import PTSummary from "@/components/dashboard/PTSummary";
 import { PtTest, Reminder, Medication, MedicationLog } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
-import { apiRequest } from "@/lib/queryClient";
 import { formatDate, convertToPersianDigits, toPersianDate, formatDateForApi, formatTime } from "@/lib/dateUtils";
 
 export default function Dashboard() {
   const today = formatDate(new Date());
   const userId = 1; // In a real app, get from auth context
-  const [nextPtDate, setNextPtDate] = useState<Date | null>(null);
-  const queryClient = useQueryClient();
   
   // Fetch PT tests
   const { data: ptTests, isLoading: ptLoading } = useQuery<PtTest[]>({
@@ -95,36 +92,6 @@ export default function Dashboard() {
     return sortedTests[0];
   };
   
-  // Create or update PT test with the next test date
-  const updatePtTestMutation = useMutation({
-    mutationFn: async (date: Date) => {
-      // If we have latest test, we'll create a new one with a future date
-      if (latestTest) {
-        // Create a new test with the selected date
-        return apiRequest('/api/pt-tests', {
-          method: 'POST',
-          body: {
-            userId,
-            testDate: formatDateForApi(date),
-            inrValue: 0, // This will be filled later when the test is actually done
-            notes: 'آزمایش PT برنامه‌ریزی شده'
-          }
-        });
-      }
-      return null;
-    },
-    onSuccess: () => {
-      // Invalidate the PT tests query to refresh the data
-      queryClient.invalidateQueries({ queryKey: ['/api/pt-tests'] });
-    }
-  });
-  
-  // Handle the update of the next PT test date
-  const handleUpdateNextPtDate = (date: Date) => {
-    setNextPtDate(date);
-    updatePtTestMutation.mutate(date);
-  };
-  
   const latestTest = getLatestINR();
   const todaysMedications = getTodaysMedications();
   const nextTestDate = calculateNextPTTest();
@@ -169,9 +136,6 @@ export default function Dashboard() {
               value={nextTestDate}
               subtitle={nextTestDate === "فردا" ? `وقت آزمایشگاه: ${formatTime("10:30")}` : ""}
               color="warning"
-              isEditable={true}
-              type="pt-test"
-              onUpdate={handleUpdateNextPtDate}
             />
           </div>
         </CardContent>
