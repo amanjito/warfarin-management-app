@@ -48,15 +48,15 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
     if (!latestTest) return null;
     
     return (
-      <div className="flex items-center mb-4">
-        <div className="flex-1 text-right">
+      <div className="flex items-center mb-4 justify-between">
+        <div className="flex-1 text-right pr-4">
           <p className="font-medium">آخرین INR</p>
           <p className="text-sm text-gray-500">
             اندازه‌گیری شده: {formatDate(latestTest.testDate)}
           </p>
         </div>
         <div 
-          className={`w-20 h-20 rounded-full border-8 flex items-center justify-center mr-8 ${
+          className={`w-20 h-20 rounded-full border-8 flex items-center justify-center mr-12 ml-4 ${
             latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
               ? "border-green-500"
               : latestTest.inrValue < 2.0
