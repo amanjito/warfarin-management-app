@@ -32,6 +32,44 @@ interface PTSummaryProps {
 }
 
 export default function PTSummary({ ptTests }: PTSummaryProps) {
+  // Get the latest INR test for display 
+  const getLatestTest = () => {
+    if (!ptTests || ptTests.length === 0) return null;
+    
+    return [...ptTests].sort((a, b) => 
+      new Date(b.testDate).getTime() - new Date(a.testDate).getTime()
+    )[0];
+  };
+
+  const latestTest = getLatestTest();
+  
+  // Render the PT test value in a circle
+  const renderPTCircle = () => {
+    if (!latestTest) return null;
+    
+    return (
+      <div className="flex items-center mb-4">
+        <div className="flex-1 text-right">
+          <p className="font-medium">آخرین INR</p>
+          <p className="text-sm text-gray-500">
+            اندازه‌گیری شده: {formatDate(latestTest.testDate)}
+          </p>
+        </div>
+        <div 
+          className={`w-20 h-20 rounded-full border-8 flex items-center justify-center mr-8 ${
+            latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
+              ? "border-green-500"
+              : latestTest.inrValue < 2.0
+                ? "border-yellow-500"
+                : "border-red-500"
+          }`}
+        >
+          <span className="text-2xl font-bold">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
+        </div>
+      </div>
+    );
+  };
+  
   if (!ptTests || ptTests.length === 0) {
     return (
       <div className="h-[200px] flex items-center justify-center bg-gray-50 rounded-lg">
@@ -148,8 +186,14 @@ export default function PTSummary({ ptTests }: PTSummaryProps) {
   };
   
   return (
-    <div className="h-[200px] relative">
-      <Line data={data} options={options} />
+    <div>
+      {/* Display the latest INR value in a circle */}
+      {renderPTCircle()}
+      
+      {/* Display the chart */}
+      <div className="h-[180px] relative">
+        <Line data={data} options={options} />
+      </div>
     </div>
   );
 }

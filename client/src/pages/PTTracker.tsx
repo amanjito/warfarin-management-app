@@ -205,11 +205,11 @@ export default function PTTracker() {
         <CardContent className="p-4">
           <h3 className="font-medium mb-3 text-right">وضعیت فعلی</h3>
           {latestTest ? (
-            <div className="flex items-center flex-row-reverse">
+            <div className="flex justify-between items-center">
               <div 
-                className={`w-24 h-24 rounded-full border-8 flex items-center justify-center ml-4 ${
+                className={`w-24 h-24 rounded-full border-8 flex items-center justify-center ${
                   latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
-                    ? "border-secondary"
+                    ? "border-green-500"
                     : latestTest.inrValue < 2.0
                       ? "border-yellow-500"
                       : "border-red-500"
@@ -217,7 +217,7 @@ export default function PTTracker() {
               >
                 <span className="text-2xl font-bold">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
               </div>
-              <div className="text-right">
+              <div className="text-right max-w-[60%]">
                 <p className="font-medium">آخرین INR</p>
                 <p className="text-sm text-gray-500">
                   اندازه‌گیری شده: {formatDate(latestTest.testDate)}
