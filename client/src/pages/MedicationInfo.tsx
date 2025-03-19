@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Pill, AlertCircle, PhoneCall, CreditCard } from "lucide-react";
 import InfoSection from "@/components/medication/InfoSection";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function MedicationInfo() {
   const [activeSection, setActiveSection] = useState("what-is-warfarin");
@@ -170,29 +171,60 @@ export default function MedicationInfo() {
       <h2 className="text-2xl font-semibold mb-6 text-right">اطلاعات وارفارین</h2>
       
       {/* Current Medication */}
-      <Card className="mb-6">
-        <CardContent className="pt-6">
-          <div className="flex items-start">
-            <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4">
-              <Pill className="h-8 w-8 text-primary" />
-            </div>
-            <div className="flex flex-col">
-              <div className="text-right mb-2">
-                <h3 className="font-medium">وارفارین</h3>
-                <p className="text-sm text-gray-500">داروی ضدانعقاد</p>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+      >
+        <Card className="mb-6 cursor-pointer overflow-hidden">
+          <CardContent className="pt-6">
+            <div className="flex items-start">
+              <motion.div 
+                className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0 ml-4"
+                whileHover={{ rotate: [0, -10, 10, -10, 0], transition: { duration: 0.5 } }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Pill className="h-8 w-8 text-primary" />
+                </motion.div>
+              </motion.div>
+              <div className="flex flex-col">
+                <motion.div 
+                  className="text-right mb-2"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <h3 className="font-medium">وارفارین</h3>
+                  <p className="text-sm text-gray-500">داروی ضدانعقاد</p>
+                </motion.div>
+                <div className="flex flex-col gap-1">
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
+                  >
+                    <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100 text-right">
+                      محدوده هدف INR: ۲/۰-۳/۰
+                    </Badge>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.2 }}
+                  >
+                    <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-right">
+                      دوز فعلی: ۵ میلی‌گرم
+                    </Badge>
+                  </motion.div>
+                </div>
               </div>
-              <div className="flex flex-col gap-1">
-                <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100 text-right">
-                  محدوده هدف INR: ۲/۰-۳/۰
-                </Badge>
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-right">
-                  دوز فعلی: ۵ میلی‌گرم
-                </Badge>
-              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
       
       {/* Information Sections */}
       <div className="space-y-4">

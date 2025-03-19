@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatTime } from "@/lib/dateUtils";
+import { motion } from "framer-motion";
 
 interface ReminderItemProps {
   reminder: {
@@ -48,9 +49,23 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
   const iconStyles = getIconStyles();
   
   return (
-    <div className={`flex items-center p-3 rounded-lg ${reminder.taken ? 'bg-gray-50' : 'bg-blue-50'}`}>
-      <div className={`ml-4 w-12 h-12 ${iconStyles.bgColor} rounded-full flex items-center justify-center`}>
-        <svg 
+    <motion.div 
+      className={`flex items-center p-3 rounded-lg ${reminder.taken ? 'bg-gray-50' : 'bg-blue-50'}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ 
+        scale: 1.02, 
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+        transition: { duration: 0.2 }
+      }}
+    >
+      <motion.div 
+        className={`ml-4 w-12 h-12 ${iconStyles.bgColor} rounded-full flex items-center justify-center`}
+        whileHover={{ rotate: 360 }}
+        transition={{ duration: 0.6, ease: "easeInOut" }}
+      >
+        <motion.svg 
           className={`h-6 w-6 ${iconStyles.iconColor}`} 
           xmlns="http://www.w3.org/2000/svg" 
           viewBox="0 0 24 24" 
@@ -59,6 +74,7 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
           strokeWidth="2" 
           strokeLinecap="round" 
           strokeLinejoin="round"
+          whileHover={{ scale: 1.2 }}
         >
           <path d="M10.5 20H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v3" />
           <circle cx="18" cy="18" r="3" />
@@ -70,32 +86,50 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
           <path d="M15.88 20.12 15 21" />
           <path d="m21 21-.88-.88" />
           <path d="M15.88 15.88 15 15" />
-        </svg>
-      </div>
-      <div className="flex-1">
+        </motion.svg>
+      </motion.div>
+      <motion.div 
+        className="flex-1"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
+      >
         <div className="flex justify-between">
           <p className="font-medium">{reminder.medication.name}</p>
-          <p className={`text-sm font-medium ${reminder.taken ? 'text-gray-500' : 'text-primary'}`}>
+          <motion.p 
+            className={`text-sm font-medium ${reminder.taken ? 'text-gray-500' : 'text-primary'}`}
+            whileHover={{ scale: 1.05 }}
+          >
             {formatTime(reminder.time)}
-          </p>
+          </motion.p>
         </div>
         <p className="text-sm text-gray-600">
           {reminder.medication.dosage} - {reminder.medication.quantity}
         </p>
-      </div>
+      </motion.div>
       {reminder.taken ? (
-        <div className="mr-2 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center">
-          <Check className="h-5 w-5" />
-        </div>
-      ) : (
-        <Button 
-          onClick={onTakeMedication}
-          className="mr-2 bg-primary text-white w-8 h-8 p-0 rounded-full"
-          title="مصرف دارو"
+        <motion.div 
+          className="mr-2 bg-green-500 text-white w-8 h-8 rounded-full flex items-center justify-center"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
         >
           <Check className="h-5 w-5" />
-        </Button>
+        </motion.div>
+      ) : (
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Button 
+            onClick={onTakeMedication}
+            className="mr-2 bg-primary text-white w-8 h-8 p-0 rounded-full"
+            title="مصرف دارو"
+          >
+            <Check className="h-5 w-5" />
+          </Button>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }
