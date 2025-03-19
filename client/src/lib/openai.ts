@@ -24,11 +24,11 @@ export async function generateMedicationResponse(userMessage: string, conversati
     const messages = [
       {
         role: "system",
-        content: `You are a helpful medical assistant specializing in Warfarin medication information. 
-        Provide accurate information about Warfarin, its usage, side effects, interactions, and general 
-        anticoagulant therapy guidance. Keep responses concise but informative.
-        DO NOT provide any personalized medical advice or dosing recommendations.
-        Always suggest consulting healthcare providers for specific medical questions.`
+        content: `شما یک دستیار پزشکی متخصص در اطلاعات دارویی وارفارین هستید. 
+        اطلاعات دقیق درمورد وارفارین، نحوه مصرف، عوارض جانبی، تداخلات و راهنمایی‌های کلی درمان ضد انعقاد خون ارائه دهید.
+        پاسخ‌ها را مختصر اما مفید نگه دارید. همیشه به زبان فارسی پاسخ دهید.
+        هرگز توصیه پزشکی شخصی یا توصیه‌های دوز دارو ارائه ندهید.
+        همیشه برای سوالات خاص پزشکی، مشورت با متخصصان مراقبت‌های بهداشتی را پیشنهاد دهید.`
       },
       ...conversationHistory,
       { role: "user", content: userMessage }
@@ -43,7 +43,7 @@ export async function generateMedicationResponse(userMessage: string, conversati
     return response.choices[0].message.content;
   } catch (error) {
     console.error("Error calling OpenAI API:", error);
-    return "I'm sorry, I encountered an error processing your request. Please try again later.";
+    return "متأسفم، در پردازش درخواست شما با خطا مواجه شدم. لطفاً بعداً دوباره تلاش کنید.";
   }
 }
 */
