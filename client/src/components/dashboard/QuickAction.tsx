@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { cn } from "@/lib/utils";
-import { Pill, Syringe, TestTube, Stethoscope, Droplets } from "lucide-react";
+import { LineChart, Bell, BookOpen, MessagesSquare } from "lucide-react";
 
 interface QuickActionProps {
   title: string;
@@ -27,13 +27,13 @@ export default function QuickAction({ title, icon, color, path }: QuickActionPro
   const getIcon = () => {
     switch (icon) {
       case "chart":
-        return <TestTube className={cn("h-6 w-6", textColorClasses[color])} />;
+        return <LineChart className={cn("h-6 w-6", textColorClasses[color])} />;
       case "bell":
-        return <Syringe className={cn("h-6 w-6", textColorClasses[color])} />;
+        return <Bell className={cn("h-6 w-6", textColorClasses[color])} />;
       case "info":
-        return <Pill className={cn("h-6 w-6", textColorClasses[color])} />;
+        return <BookOpen className={cn("h-6 w-6", textColorClasses[color])} />;
       case "chat":
-        return <Stethoscope className={cn("h-6 w-6", textColorClasses[color])} />;
+        return <MessagesSquare className={cn("h-6 w-6", textColorClasses[color])} />;
     }
   };
   
