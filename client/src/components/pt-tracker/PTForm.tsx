@@ -141,6 +141,7 @@ export default function PTForm({ onSubmit, isPending }: PTFormProps) {
                     <Calendar
                       value={selectedDay}
                       onChange={handleDateChange}
+                      // @ts-ignore - renderInput exists in the library but is missing from type definitions
                       renderInput={renderCustomInput}
                       shouldHighlightWeekends
                       locale="fa"

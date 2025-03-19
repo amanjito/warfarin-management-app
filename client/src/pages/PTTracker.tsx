@@ -198,12 +198,12 @@ export default function PTTracker() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 text-right">پیگیری آزمایش PT/INR</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right dark:text-white">پیگیری آزمایش PT/INR</h2>
       
       {/* Current Status */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-3 text-right">وضعیت فعلی</h3>
+          <h3 className="font-medium mb-3 text-right dark:text-white">وضعیت فعلی</h3>
           {latestTest ? (
             <div className="flex justify-between items-center">
               <div 
@@ -215,11 +215,11 @@ export default function PTTracker() {
                       : "border-red-500"
                 }`}
               >
-                <span className="text-2xl font-bold">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
+                <span className="text-2xl font-bold dark:text-white">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
               </div>
               <div className="text-right max-w-[60%]">
-                <p className="font-medium">آخرین INR</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium dark:text-white">آخرین INR</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   اندازه‌گیری شده: {formatDate(latestTest.testDate)}
                 </p>
                 <div className="mt-1">
@@ -227,10 +227,10 @@ export default function PTTracker() {
                     variant="outline" 
                     className={`px-2 py-1 ${
                       latestTest.inrValue >= 2.0 && latestTest.inrValue <= 3.0
-                        ? "bg-green-100 text-green-800 hover:bg-green-100"
+                        ? "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/50"
                         : latestTest.inrValue < 2.0
-                          ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                          : "bg-red-100 text-red-800 hover:bg-red-100"
+                          ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100 dark:hover:bg-yellow-900/50"
+                          : "bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900/50"
                     }`}
                   >
                     <svg
@@ -275,25 +275,25 @@ export default function PTTracker() {
               value={timeRange}
               onValueChange={(value) => setTimeRange(value)}
             >
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-[180px] dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">
                 <SelectValue placeholder="انتخاب بازه زمانی" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="dark:border-slate-700 dark:bg-slate-800">
                 <SelectItem value="3">۳ ماه اخیر</SelectItem>
                 <SelectItem value="6">۶ ماه اخیر</SelectItem>
                 <SelectItem value="12">سال اخیر</SelectItem>
                 <SelectItem value="all">تمام زمان‌ها</SelectItem>
               </SelectContent>
             </Select>
-            <h3 className="font-medium text-right">تاریخچه PT/INR</h3>
+            <h3 className="font-medium text-right dark:text-white">تاریخچه PT/INR</h3>
           </div>
           
           <PTChart ptTests={filteredTests} />
           
-          <div className="mt-4 flex justify-center gap-4 text-sm">
+          <div className="mt-4 flex justify-center gap-4 text-sm dark:text-gray-300">
             <div className="flex items-center">
               <span>محدوده هدف</span>
-              <span className="w-3 h-3 rounded-full bg-green-200 inline-block mr-1 ml-1"></span>
+              <span className="w-3 h-3 rounded-full bg-green-200 dark:bg-green-700 inline-block mr-1 ml-1"></span>
             </div>
             <div className="flex items-center">
               <span>مقدار INR</span>
@@ -306,7 +306,7 @@ export default function PTTracker() {
       {/* Record New PT Test */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4 text-right">ثبت آزمایش PT/INR جدید</h3>
+          <h3 className="font-medium mb-4 text-right dark:text-white">ثبت آزمایش PT/INR جدید</h3>
           <PTForm onSubmit={handleSubmit} isPending={addPtTestMutation.isPending} />
         </CardContent>
       </Card>
@@ -319,10 +319,11 @@ export default function PTTracker() {
               variant="outline" 
               size="sm" 
               onClick={toggleShowAllTests}
+              className="dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-600"
             >
               {showAllTests ? "نمایش آزمایش‌های اخیر" : "نمایش تمام آزمایش‌ها"}
             </Button>
-            <h3 className="font-medium text-right">آزمایش‌های {showAllTests ? "" : "اخیر"}</h3>
+            <h3 className="font-medium text-right dark:text-white">آزمایش‌های {showAllTests ? "" : "اخیر"}</h3>
           </div>
           
           <PTTable 
@@ -345,17 +346,17 @@ export default function PTTracker() {
       
       {/* Delete PT Test Alert Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-slate-800 dark:border-slate-700">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-right">حذف آزمایش PT/INR</AlertDialogTitle>
-            <AlertDialogDescription className="text-right">
+            <AlertDialogTitle className="text-right dark:text-white">حذف آزمایش PT/INR</AlertDialogTitle>
+            <AlertDialogDescription className="text-right dark:text-gray-300">
               آیا از حذف این آزمایش مطمئن هستید؟ این عمل قابل بازگشت نیست.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-row-reverse justify-start">
-            <AlertDialogCancel className="ml-2">انصراف</AlertDialogCancel>
+            <AlertDialogCancel className="ml-2 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">انصراف</AlertDialogCancel>
             <AlertDialogAction 
-              className="bg-red-500 hover:bg-red-600 text-white" 
+              className="bg-red-500 hover:bg-red-600 text-white dark:bg-red-700 dark:hover:bg-red-800" 
               onClick={confirmDelete}
               disabled={deletePtTestMutation.isPending}
             >

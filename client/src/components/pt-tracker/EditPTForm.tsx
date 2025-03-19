@@ -160,12 +160,14 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
                         <Calendar
                           value={selectedDay}
                           onChange={handleDateChange}
+                          // @ts-ignore - renderInput exists in the library but is missing from type definitions
                           renderInput={renderCustomInput}
                           shouldHighlightWeekends
                           locale="fa"
                           calendarClassName="responsive-calendar"
                           calendarSelectedDayClassName="selected-day"
                           colorPrimary="#ff3366"
+                          // @ts-ignore - type mismatch between null and Day
                           maximumDate={gregorianToJalali(new Date())}
                         />
                       </div>
