@@ -52,8 +52,15 @@ export default function StatusCard({
   
   const handleSave = () => {
     if (selectedDate && onUpdate) {
-      // Note: selectedDate is already in Gregorian format because it comes from the calendar component
-      // which internally uses the Gregorian date system while displaying Persian dates
+      // تاریخ انتخاب شده توسط کاربر به فرمت میلادی است، اما نمایش آن به صورت شمسی است
+      // ما نیاز داریم تشخیص دهیم کاربر چه تاریخ شمسی را انتخاب کرده و سپس معادل آن را به میلادی ذخیره کنیم
+      
+      // نمایش تاریخ انتخاب شده
+      const persianDate = toPersianDate(selectedDate);
+      console.log("تاریخ شمسی انتخاب شده:", persianDate);
+      console.log("سال:", persianDate.jy, "ماه:", persianDate.jm, "روز:", persianDate.jd);
+      
+      // تاریخ میلادی را به عنوان خروجی برمی‌گردانیم
       onUpdate(selectedDate);
       setOpen(false);
       toast({
