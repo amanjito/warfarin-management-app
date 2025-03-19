@@ -19,10 +19,10 @@ export default function InfoSection({ id, title, content }: InfoSectionProps) {
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)"
       }}
     >
-      <AccordionItem value={id} className="bg-white rounded-lg shadow overflow-hidden transition-all duration-300">
-        <AccordionTrigger className="px-4 py-3 bg-gray-50 hover:bg-gray-100 hover:no-underline group">
+      <AccordionItem value={id} className="bg-white dark:bg-slate-800 rounded-lg shadow dark:shadow-slate-900/60 overflow-hidden transition-all duration-300">
+        <AccordionTrigger className="px-4 py-3 bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-600 hover:no-underline group">
           <motion.h3 
-            className="font-medium text-right w-full"
+            className="font-medium text-right w-full dark:text-white"
             whileTap={{ scale: 0.98 }}
           >
             {title}
