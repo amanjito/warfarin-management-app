@@ -82,8 +82,8 @@ export default function Assistant() {
       <Card className="mb-6 flex flex-col h-[calc(100vh-250px)]">
         {/* Chat Header */}
         <div className="px-4 py-3 border-b">
-          <div className="flex items-center flex-row-reverse">
-            <div className="w-10 h-10 bg-[#E91E63] rounded-full flex items-center justify-center ml-3">
+          <div className="flex items-center justify-between flex-row-reverse">
+            <div className="w-10 h-10 bg-[#E91E63] rounded-full flex items-center justify-center ml-8">
               <svg
                 className="h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +101,7 @@ export default function Assistant() {
                 <line x1="16" y1="16" x2="16" y2="16" />
               </svg>
             </div>
-            <div className="text-right">
+            <div className="text-right pr-3">
               <h3 className="font-medium">دستیار وارفارین</h3>
               <p className="text-xs text-gray-500">سوالات دارویی خود را بپرسید</p>
             </div>
