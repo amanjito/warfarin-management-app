@@ -1,7 +1,7 @@
 import { PtTest } from "@shared/schema";
-import { format } from "date-fns";
 import { Card } from "@/components/ui/card";
 import { Line } from 'react-chartjs-2';
+import { formatPersianShortDate, convertToPersianDigits } from "@/lib/dateUtils";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -39,7 +39,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     console.log("No PT tests available to render");
     return (
       <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">No PT test data available</p>
+        <p className="text-gray-500">اطلاعات آزمایش PT موجود نیست</p>
       </div>
     );
   }
@@ -52,7 +52,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
   console.log("PTChart sortedTests:", sortedTests);
   
   // Prepare data for chart
-  const labels = sortedTests.map(test => format(new Date(test.testDate), "MMM d"));
+  const labels = sortedTests.map(test => formatPersianShortDate(test.testDate));
   const inrValues = sortedTests.map(test => test.inrValue);
   
   // Create a target range dataset (constant values for min and max)
@@ -64,7 +64,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     labels,
     datasets: [
       {
-        label: 'INR Value',
+        label: 'مقدار INR',
         data: inrValues,
         borderColor: '#2196F3',
         backgroundColor: 'rgba(33, 150, 243, 0.1)',
@@ -74,7 +74,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
         pointHoverRadius: 8
       },
       {
-        label: 'Target Range Min',
+        label: 'کف محدوده هدف',
         data: targetRangeMin,
         borderColor: 'rgba(76, 175, 80, 0.5)',
         borderDash: [5, 5],
@@ -82,7 +82,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
         fill: false
       },
       {
-        label: 'Target Range Max',
+        label: 'سقف محدوده هدف',
         data: targetRangeMax,
         borderColor: 'rgba(76, 175, 80, 0.5)',
         borderDash: [5, 5],
@@ -102,7 +102,19 @@ export default function PTChart({ ptTests }: PTChartProps) {
       },
       tooltip: {
         mode: 'index' as const,
-        intersect: false
+        intersect: false,
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += convertToPersianDigits(context.parsed.y.toFixed(1));
+            }
+            return label;
+          }
+        }
       }
     },
     scales: {
@@ -111,7 +123,12 @@ export default function PTChart({ ptTests }: PTChartProps) {
         max: 4,
         title: {
           display: true,
-          text: 'INR Value'
+          text: 'مقدار INR'
+        },
+        ticks: {
+          callback: function(value) {
+            return convertToPersianDigits(value.toString());
+          }
         },
         grid: {
           color: 'rgba(0, 0, 0, 0.05)'

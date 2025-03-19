@@ -147,3 +147,19 @@ export function isPastTime(timeString: string): boolean {
   
   return timeToCheck < now;
 }
+
+// Format date as short Persian date (for charts)
+export function formatPersianShortDate(date: Date | string | number): string {
+  const dateObj = typeof date === 'string' ? new Date(date) : (date instanceof Date ? date : new Date(date));
+  
+  // Convert to Persian calendar
+  const persianDate = toPersianDate(dateObj);
+  
+  // Convert to Persian digits
+  const persianDay = convertToPersianDigits(persianDate.jd.toString());
+  
+  // Use abbreviated month name
+  const persianMonthAbbrev = persianMonths[persianDate.jm - 1].substring(0, 3);
+  
+  return `${persianMonthAbbrev} ${persianDay}`;
+}
