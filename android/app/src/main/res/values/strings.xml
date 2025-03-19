@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">مدیریت وارفارین</string>
+    <string name="title_activity_main">مدیریت وارفارین</string>
+    <string name="package_name">com.warfarin.app</string>
+    <string name="custom_url_scheme">com.warfarin.app</string>
+</resources>
