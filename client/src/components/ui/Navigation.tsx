@@ -18,7 +18,7 @@ export default function Navigation({ activeTab }: NavigationProps) {
   const tabs = [
     { id: "dashboard", label: "خانه", icon: Home, path: "/dashboard" },
     { id: "pt-tracker", label: "آزمایش PT", icon: Activity, path: "/pt-tracker" },
-    { id: "medication", label: "داروها", icon: Pill, path: "/medication" },
+    { id: "medication", label: "دانش وارفارینی", icon: Pill, path: "/medication" },
     { id: "reminders", label: "یادآورها", icon: Clock, path: "/reminders" },
     { id: "assistant", label: "دستیار", icon: MessageSquare, path: "/assistant" },
   ];
@@ -121,7 +121,8 @@ export default function Navigation({ activeTab }: NavigationProps) {
                       </motion.div>
                       <motion.span 
                         className={cn(
-                          "text-[10px] font-medium",
+                          "text-[9px] font-medium",
+                          tab.id === "medication" ? "text-[8px]" : "",
                           isActive ? "opacity-100" : "opacity-70"
                         )}
                         animate={{ y: isActive ? 1 : 0 }}
