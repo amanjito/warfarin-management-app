@@ -69,9 +69,12 @@ function PrivateRouter() {
 }
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  // برای تست، کاربر را به صورت پیش‌فرض احراز هویت شده در نظر می‌گیریم
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
 
   useEffect(() => {
+    // اینجا کد احراز هویت را غیرفعال می‌کنیم تا بتوانیم صفحات را ببینیم
+    /*
     // Check current auth status
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
@@ -88,6 +91,7 @@ function App() {
     return () => {
       subscription.unsubscribe();
     };
+    */
   }, []);
 
   // Show loading state while checking auth
