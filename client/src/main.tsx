@@ -3,6 +3,7 @@ import App from "./App";
 import "./index.css";
 import { initializePushNotifications } from "./lib/pushNotifications";
 import { useEffect } from "react";
+import { ThemeProvider } from "./components/theme/theme-provider";
 
 // Set document direction and language
 document.documentElement.dir = "rtl";
@@ -49,4 +50,8 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider defaultTheme="light">
+    <App />
+  </ThemeProvider>
+);
