@@ -1,10 +1,12 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PtTest } from "@shared/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PtTest } from "@shared/schema";
-import { format } from "date-fns";
-import { Edit, Trash2 } from "lucide-react";
-import { formatDate, toPersianDate, convertToPersianDigits } from "@/lib/dateUtils";
+import { Edit, Trash2, Calendar, AlertCircle, CheckCircle } from "lucide-react";
+import { toPersianDate, convertToPersianDigits } from "@/lib/dateUtils";
+import jalaali from 'jalaali-js';
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { Separator } from "@/components/ui/separator";
 
 interface PTTableProps {
   ptTests: PtTest[];
@@ -14,29 +16,88 @@ interface PTTableProps {
 }
 
 export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: PTTableProps) {
-  // Show all tests or just the most recent (up to 4)
-  const displayTests = showAll ? ptTests : ptTests.slice(0, 4);
+  const [selectedTest, setSelectedTest] = useState<PtTest | null>(null);
+  const [animate, setAnimate] = useState(true);
   
-  // Helper to determine status label and color based on INR value
-  const getStatusBadge = (inrValue: number) => {
+  // Group tests by month and year
+  const groupedTests = ptTests.reduce((acc, test) => {
+    const date = new Date(test.testDate);
+    const persianDate = jalaali.toJalaali(date);
+    const key = `${persianDate.jy}-${persianDate.jm}`;
+    
+    if (!acc[key]) {
+      acc[key] = {
+        year: persianDate.jy,
+        month: persianDate.jm,
+        tests: []
+      };
+    }
+    
+    acc[key].tests.push(test);
+    return acc;
+  }, {} as Record<string, { year: number, month: number, tests: PtTest[] }>);
+
+  // Convert to array and sort by date (newest first)
+  const groupedTestsArray = Object.values(groupedTests).sort((a, b) => {
+    if (a.year !== b.year) return b.year - a.year;
+    return b.month - a.month;
+  });
+  
+  // Filter to show only recent months if not showing all
+  const displayGroups = showAll ? groupedTestsArray : groupedTestsArray.slice(0, 3);
+  
+  // Helper to determine status based on INR value
+  const getStatus = (inrValue: number) => {
     if (inrValue >= 2.0 && inrValue <= 3.0) {
-      return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">در محدوده</Badge>;
+      return {
+        label: "در محدوده هدف",
+        color: "green",
+        icon: <CheckCircle className="h-4 w-4 text-green-500" />
+      };
     } else if (inrValue < 2.0) {
-      return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">زیر محدوده</Badge>;
+      return {
+        label: "زیر محدوده هدف",
+        color: "yellow",
+        icon: <AlertCircle className="h-4 w-4 text-yellow-500" />
+      };
     } else {
-      return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">بالای محدوده</Badge>;
+      return {
+        label: "بالای محدوده هدف",
+        color: "red",
+        icon: <AlertCircle className="h-4 w-4 text-red-500" />
+      };
     }
   };
   
-  // Format date as Persian (Jalali) date
-  const formatPersianDate = (date: Date | string): string => {
-    const persianDate = toPersianDate(new Date(date));
-    const persianDay = convertToPersianDigits(persianDate.jd.toString());
-    const persianMonth = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
-                          'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'][persianDate.jm - 1];
-    const persianYear = convertToPersianDigits(persianDate.jy.toString());
-    
-    return `${persianDay} ${persianMonth} ${persianYear}`;
+  // Get persian month name
+  const getPersianMonthName = (month: number): string => {
+    const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+                           'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+    return persianMonths[month - 1];
+  };
+  
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    show: { 
+      y: 0, 
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24
+      }
+    }
   };
   
   if (ptTests.length === 0) {
@@ -48,60 +109,120 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
   }
   
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px] text-right">تاریخ</TableHead>
-            <TableHead className="text-right">مقدار INR</TableHead>
-            <TableHead className="text-right">وضعیت</TableHead>
-            <TableHead className="hidden md:table-cell text-right">یادداشت‌ها</TableHead>
-            {(onEdit || onDelete) && (
-              <TableHead className="w-[100px] text-center">عملیات</TableHead>
-            )}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {displayTests.map((test) => (
-            <TableRow key={test.id}>
-              <TableCell className="font-medium whitespace-nowrap text-right">
-                {formatPersianDate(test.testDate)}
-              </TableCell>
-              <TableCell className="font-medium text-right">{convertToPersianDigits(test.inrValue.toFixed(1))}</TableCell>
-              <TableCell className="text-right">{getStatusBadge(test.inrValue)}</TableCell>
-              <TableCell className="hidden md:table-cell text-gray-500 truncate max-w-[200px] text-right">
-                {test.notes || "—"}
-              </TableCell>
-              {(onEdit || onDelete) && (
-                <TableCell className="flex justify-center gap-2">
-                  {onEdit && (
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => onEdit(test)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit className="h-4 w-4" />
-                      <span className="sr-only">ویرایش</span>
-                    </Button>
-                  )}
-                  {onDelete && (
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => onDelete(test)}
-                      className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">حذف</span>
-                    </Button>
-                  )}
-                </TableCell>
-              )}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="space-y-6">
+      {displayGroups.map((group) => (
+        <motion.div 
+          key={`${group.year}-${group.month}`}
+          initial={animate ? "hidden" : false}
+          animate={animate ? "show" : false}
+          variants={containerVariants}
+          className="bg-gray-50 rounded-lg p-4"
+          onAnimationComplete={() => setAnimate(false)}
+        >
+          <div className="flex items-center mb-3">
+            <Calendar className="h-5 w-5 ml-2 text-primary" />
+            <h3 className="font-semibold">
+              {getPersianMonthName(group.month)} {convertToPersianDigits(group.year.toString())}
+            </h3>
+          </div>
+          
+          <div className="space-y-3">
+            {group.tests.sort((a, b) => new Date(b.testDate).getTime() - new Date(a.testDate).getTime()).map((test) => {
+              const status = getStatus(test.inrValue);
+              const persianDate = toPersianDate(new Date(test.testDate));
+              const isSelected = selectedTest?.id === test.id;
+              
+              return (
+                <motion.div 
+                  key={test.id}
+                  variants={itemVariants}
+                  className={`rounded-lg border ${isSelected ? 'border-primary' : 'border-gray-200'} bg-white p-3 shadow-sm transition-all hover:shadow`}
+                  onClick={() => setSelectedTest(isSelected ? null : test)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className={`h-10 w-10 rounded-full bg-${status.color}-100 flex items-center justify-center ml-3`}>
+                        <span className="font-bold text-sm">{convertToPersianDigits(test.inrValue.toFixed(1))}</span>
+                      </div>
+                      
+                      <div>
+                        <div className="flex items-center">
+                          <span className="font-medium">
+                            {convertToPersianDigits(persianDate.jd.toString())} {getPersianMonthName(persianDate.jm)}
+                          </span>
+                          <Badge 
+                            variant="outline" 
+                            className={`mr-2 ${
+                              status.color === 'green' 
+                                ? 'bg-green-100 text-green-800 hover:bg-green-100' 
+                                : status.color === 'yellow'
+                                  ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-100'
+                                  : 'bg-red-100 text-red-800 hover:bg-red-100'
+                            }`}
+                          >
+                            <div className="flex items-center">
+                              {status.icon}
+                              <span className="mr-1 text-xs">{status.label}</span>
+                            </div>
+                          </Badge>
+                        </div>
+                        {isSelected && test.notes && (
+                          <motion.div 
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mt-2 text-sm text-gray-600"
+                          >
+                            <Separator className="my-2" />
+                            <p className="whitespace-pre-wrap">{test.notes}</p>
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {(onEdit || onDelete) && (
+                      <div className="flex space-x-1 mr-0 ml-0">
+                        {onEdit && (
+                          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onEdit(test);
+                              }}
+                              className="h-8 w-8 p-0 rounded-full"
+                            >
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">ویرایش</span>
+                            </Button>
+                          </motion.div>
+                        )}
+                        {onDelete && (
+                          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onDelete(test);
+                              }}
+                              className="h-8 w-8 p-0 rounded-full text-red-500 hover:text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span className="sr-only">حذف</span>
+                            </Button>
+                          </motion.div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }
