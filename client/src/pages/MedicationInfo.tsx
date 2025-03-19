@@ -182,10 +182,10 @@ export default function MedicationInfo() {
                 <p className="text-sm text-gray-500">داروی ضدانعقاد</p>
               </div>
               <div className="flex flex-wrap gap-2 justify-end">
-                <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">
+                <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100 text-right w-auto">
                   محدوده هدف INR: ۲/۰-۳/۰
                 </Badge>
-                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100 text-right w-auto">
                   دوز فعلی: ۵ میلی‌گرم
                 </Badge>
               </div>
