@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { PtTest } from "@shared/schema";
 import { format } from "date-fns";
 import { Edit, Trash2 } from "lucide-react";
+import { formatDate, toPersianDate, convertToPersianDigits } from "@/lib/dateUtils";
 
 interface PTTableProps {
   ptTests: PtTest[];
@@ -25,6 +26,17 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
     } else {
       return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">بالای محدوده</Badge>;
     }
+  };
+  
+  // Format date as Persian (Jalali) date
+  const formatPersianDate = (date: Date | string): string => {
+    const persianDate = toPersianDate(new Date(date));
+    const persianDay = convertToPersianDigits(persianDate.jd.toString());
+    const persianMonth = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+                          'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'][persianDate.jm - 1];
+    const persianYear = convertToPersianDigits(persianDate.jy.toString());
+    
+    return `${persianDay} ${persianMonth} ${persianYear}`;
   };
   
   if (ptTests.length === 0) {
@@ -53,9 +65,9 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
           {displayTests.map((test) => (
             <TableRow key={test.id}>
               <TableCell className="font-medium whitespace-nowrap text-right">
-                {format(new Date(test.testDate), "MMM dd, yyyy")}
+                {formatPersianDate(test.testDate)}
               </TableCell>
-              <TableCell className="font-medium text-right">{test.inrValue.toFixed(1)}</TableCell>
+              <TableCell className="font-medium text-right">{convertToPersianDigits(test.inrValue.toFixed(1))}</TableCell>
               <TableCell className="text-right">{getStatusBadge(test.inrValue)}</TableCell>
               <TableCell className="hidden md:table-cell text-gray-500 truncate max-w-[200px] text-right">
                 {test.notes || "—"}

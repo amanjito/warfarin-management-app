@@ -22,7 +22,7 @@ import PTForm from "@/components/pt-tracker/PTForm";
 import PTTable from "@/components/pt-tracker/PTTable";
 import EditPTForm from "@/components/pt-tracker/EditPTForm";
 import { apiRequest } from "@/lib/queryClient";
-import { formatDateForApi } from "@/lib/dateUtils";
+import { formatDateForApi, formatDate, convertToPersianDigits } from "@/lib/dateUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PTTracker() {
@@ -215,12 +215,12 @@ export default function PTTracker() {
                       : "border-red-500"
                 }`}
               >
-                <span className="text-2xl font-bold">{latestTest.inrValue.toFixed(1)}</span>
+                <span className="text-2xl font-bold">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
               </div>
               <div className="text-right">
                 <p className="font-medium">آخرین INR</p>
                 <p className="text-sm text-gray-500">
-                  اندازه‌گیری شده: {format(new Date(latestTest.testDate), "MMM dd, yyyy")}
+                  اندازه‌گیری شده: {formatDate(latestTest.testDate)}
                 </p>
                 <div className="mt-1">
                   <Badge 
