@@ -12,7 +12,9 @@ import { Toggle } from "@/components/ui/toggle";
 
 // Create a schema for form validation
 const formSchema = z.object({
-  medicationId: z.string().nonempty({ message: "انتخاب دارو الزامی است" }),
+  medicationName: z.string().nonempty({ message: "نام دارو الزامی است" }),
+  medicationDosage: z.string().optional(),
+  medicationQuantity: z.string().optional(),
   time: z.string().nonempty({ message: "زمان مصرف الزامی است" }),
   days: z.array(z.string()).min(1, { message: "حداقل یک روز هفته باید انتخاب شود" }),
   notifyBefore: z.string().optional(),
@@ -33,7 +35,9 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      medicationId: "",
+      medicationName: "",
+      medicationDosage: "",
+      medicationQuantity: "",
       time: "",
       days: selectedDays,
       notifyBefore: "15",
@@ -60,7 +64,9 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
     
     // Reset form
     form.reset({
-      medicationId: "",
+      medicationName: "",
+      medicationDosage: "",
+      medicationQuantity: "",
       time: "",
       days: ["1", "2", "3", "4", "5", "6", "7"],
       notifyBefore: "15",
@@ -82,30 +88,49 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="medicationId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>نام دارو</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="medicationName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>نام دارو</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="انتخاب دارو" />
-                  </SelectTrigger>
+                  <Input placeholder="نام دارو را وارد کنید" {...field} />
                 </FormControl>
-                <SelectContent>
-                  {medications.map(medication => (
-                    <SelectItem key={medication.id} value={medication.id.toString()}>
-                      {medication.name} ({medication.dosage})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="medicationDosage"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>دوز دارو</FormLabel>
+                <FormControl>
+                  <Input placeholder="مثال: 5 میلی‌گرم" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="medicationQuantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>مقدار مصرف</FormLabel>
+                <FormControl>
+                  <Input placeholder="مثال: 1 قرص" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         
         <div className="grid grid-cols-2 gap-4">
           <FormField

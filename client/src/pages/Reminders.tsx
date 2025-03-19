@@ -102,6 +102,17 @@ export default function Reminders() {
     },
   });
   
+  // Create mutation for adding a new medication
+  const createMedicationMutation = useMutation({
+    mutationFn: async (newMedication: Omit<Medication, 'id' | 'userId'>) => {
+      const response = await apiRequest('POST', '/api/medications', newMedication);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/medications'] });
+    },
+  });
+
   // Create mutation for adding a new reminder
   const addReminderMutation = useMutation({
     mutationFn: async (newReminder: Omit<Reminder, 'id' | 'userId'>) => {
@@ -182,12 +193,23 @@ export default function Reminders() {
     // Convert days array to comma-separated string
     const daysString = data.days.join(',');
     
-    addReminderMutation.mutate({
-      medicationId: parseInt(data.medicationId),
-      time: data.time,
-      days: daysString,
-      active: true,
-      notifyBefore: parseInt(data.notifyBefore || "15")
+    // First create a new medication
+    createMedicationMutation.mutate({
+      name: data.medicationName,
+      dosage: data.medicationDosage || "",
+      quantity: data.medicationQuantity || "",
+      instructions: data.notes || null
+    }, {
+      onSuccess: (newMedication) => {
+        // Then create a reminder for this medication
+        addReminderMutation.mutate({
+          medicationId: newMedication.id,
+          time: data.time,
+          days: daysString,
+          active: true,
+          notifyBefore: parseInt(data.notifyBefore || "15")
+        });
+      }
     });
   };
   
