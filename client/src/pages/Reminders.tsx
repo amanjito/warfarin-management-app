@@ -238,7 +238,7 @@ export default function Reminders() {
     const reminder = selectedMedication.reminders[0];
     return {
       time: reminder.time,
-      notifyBefore: (reminder.notifyBefore || 15).toString(), // Convert to string for the form
+      notifyBefore: String(reminder.notifyBefore || 15), // Convert to string for the form
       days: reminder.days ? reminder.days.split(',') : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     };
   };
@@ -279,7 +279,7 @@ export default function Reminders() {
   const allMedications = getAllMedicationsWithReminders();
   
   if (medicationsLoading || remindersLoading || logsLoading) {
-    return <div className="p-8 text-center">Loading reminders data...</div>;
+    return <div className="p-8 text-center">در حال بارگذاری اطلاعات یادآورها...</div>;
   }
   
   return (

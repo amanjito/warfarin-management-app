@@ -12,9 +12,9 @@ import { Toggle } from "@/components/ui/toggle";
 
 // Create a schema for form validation
 const formSchema = z.object({
-  medicationId: z.string().nonempty({ message: "Medication is required" }),
-  time: z.string().nonempty({ message: "Time is required" }),
-  days: z.array(z.string()).min(1, { message: "At least one day must be selected" }),
+  medicationId: z.string().nonempty({ message: "انتخاب دارو الزامی است" }),
+  time: z.string().nonempty({ message: "زمان مصرف الزامی است" }),
+  days: z.array(z.string()).min(1, { message: "حداقل یک روز هفته باید انتخاب شود" }),
   notifyBefore: z.string().optional(),
   notes: z.string().optional()
 });
@@ -70,13 +70,13 @@ export default function ReminderForm({ medications, onSubmit, isPending }: Remin
   };
   
   const days = [
-    { value: "7", label: "S" },
-    { value: "1", label: "M" },
-    { value: "2", label: "T" },
-    { value: "3", label: "W" },
-    { value: "4", label: "T" },
-    { value: "5", label: "F" },
-    { value: "6", label: "S" }
+    { value: "7", label: "ی" },
+    { value: "1", label: "د" },
+    { value: "2", label: "س" },
+    { value: "3", label: "چ" },
+    { value: "4", label: "پ" },
+    { value: "5", label: "ج" },
+    { value: "6", label: "ش" }
   ];
   
   return (
