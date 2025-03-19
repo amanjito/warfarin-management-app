@@ -18,6 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MedicalHeart from "./icons/MedicalHeart";
 import { Badge } from "@/components/ui/badge";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export default function Header() {
   const [, setLocation] = useLocation();
@@ -145,8 +146,8 @@ export default function Header() {
       <motion.header 
         className={`fixed top-0 left-0 right-0 z-40 ${
           scrolled 
-            ? "bg-white backdrop-blur-md shadow-sm border-b border-slate-200/80" 
-            : "bg-white border-b border-slate-200/60"
+            ? "bg-background/95 backdrop-blur-md shadow-sm border-b border-border/80" 
+            : "bg-background border-b border-border/60"
         } transition-all duration-300`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -186,6 +187,9 @@ export default function Header() {
                   </Button>
                 </motion.div>
               )}
+              
+              {/* Theme Toggle Button */}
+              <ThemeToggle />
               
               {/* Install button */}
               {isInstallable && (
@@ -324,7 +328,7 @@ export default function Header() {
               onClick={() => setSideMenuOpen(false)}
             />
             <motion.div 
-              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-xs bg-white z-50 shadow-xl flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-xs bg-background z-50 shadow-xl flex flex-col"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -337,8 +341,8 @@ export default function Header() {
                     <Heart className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-base font-medium text-slate-900">پایشگر وارفارین</h2>
-                    <p className="text-xs text-slate-500">سلامتی شما، اولویت ماست</p>
+                    <h2 className="text-base font-medium text-foreground">پایشگر وارفارین</h2>
+                    <p className="text-xs text-muted-foreground">سلامتی شما، اولویت ماست</p>
                   </div>
                 </div>
                 <Button 
@@ -361,8 +365,8 @@ export default function Header() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-slate-900">{userData?.email?.split('@')[0] || 'کاربر'}</p>
-                    <p className="text-xs text-slate-500">{userData?.email}</p>
+                    <p className="font-medium text-foreground">{userData?.email?.split('@')[0] || 'کاربر'}</p>
+                    <p className="text-xs text-muted-foreground">{userData?.email}</p>
                   </div>
                 </div>
               </div>
@@ -380,7 +384,7 @@ export default function Header() {
                     className={`flex items-center px-3 py-2.5 rounded-md text-sm transition-colors my-1 ${
                       isActive(item.path)
                         ? 'text-primary font-medium bg-primary/5'
-                        : 'text-slate-700 hover:bg-slate-100'
+                        : 'text-foreground hover:bg-secondary'
                     }`}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setSideMenuOpen(false)}
@@ -403,6 +407,12 @@ export default function Header() {
                   <Settings className="h-4 w-4 ml-2 text-slate-500" />
                   تنظیمات
                 </motion.a>
+                
+                {/* Theme toggle in side menu */}
+                <div className="px-3 py-2 flex items-center">
+                  <span className="text-sm text-slate-700 ml-2">تغییر تم:</span>
+                  <ThemeToggle />
+                </div>
                 
                 {isInstallable && (
                   <motion.button
