@@ -24,11 +24,11 @@ import { Medication, Reminder } from "@shared/schema";
 // Reusing the same schema from Reminders.tsx
 const editReminderSchema = z.object({
   time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: "Time must be in the format HH:MM (24-hour)",
+    message: "زمان باید در قالب HH:MM (24 ساعته) باشد",
   }),
-  notifyBefore: z.string().transform(val => parseInt(val, 10)),
+  notifyBefore: z.string(), // Keep as string to avoid type errors
   days: z.array(z.string()).min(1, {
-    message: "Select at least one day",
+    message: "حداقل یک روز را انتخاب کنید",
   }),
 });
 
@@ -69,7 +69,7 @@ export default function EditReminderForm({
           name="time"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Time</FormLabel>
+              <FormLabel>زمان</FormLabel>
               <FormControl>
                 <Input 
                   type="time" 
@@ -87,22 +87,22 @@ export default function EditReminderForm({
           name="notifyBefore"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Notify Before</FormLabel>
+              <FormLabel>زمان اطلاع‌رسانی</FormLabel>
               <Select 
                 onValueChange={field.onChange} 
                 defaultValue={field.value.toString()}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select when to be notified" />
+                    <SelectValue placeholder="زمان اطلاع‌رسانی را انتخاب کنید" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="5">5 minutes</SelectItem>
-                  <SelectItem value="10">10 minutes</SelectItem>
-                  <SelectItem value="15">15 minutes</SelectItem>
-                  <SelectItem value="30">30 minutes</SelectItem>
-                  <SelectItem value="60">1 hour</SelectItem>
+                  <SelectItem value="5">۵ دقیقه قبل</SelectItem>
+                  <SelectItem value="10">۱۰ دقیقه قبل</SelectItem>
+                  <SelectItem value="15">۱۵ دقیقه قبل</SelectItem>
+                  <SelectItem value="30">۳۰ دقیقه قبل</SelectItem>
+                  <SelectItem value="60">۱ ساعت قبل</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -115,22 +115,30 @@ export default function EditReminderForm({
           name="days"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Days</FormLabel>
+              <FormLabel>روزها</FormLabel>
               <div className="flex flex-wrap gap-2">
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                {[
+                  { key: "Mon", label: "دو" },
+                  { key: "Tue", label: "سه" },
+                  { key: "Wed", label: "چه" },
+                  { key: "Thu", label: "پن" },
+                  { key: "Fri", label: "جم" },
+                  { key: "Sat", label: "شن" },
+                  { key: "Sun", label: "یک" }
+                ].map((day) => (
                   <Button
-                    key={day}
+                    key={day.key}
                     type="button"
-                    variant={field.value.includes(day) ? "default" : "outline"}
+                    variant={field.value.includes(day.key) ? "default" : "outline"}
                     size="sm"
                     onClick={() => {
-                      const updatedDays = field.value.includes(day)
-                        ? field.value.filter((d: string) => d !== day)
-                        : [...field.value, day];
+                      const updatedDays = field.value.includes(day.key)
+                        ? field.value.filter((d: string) => d !== day.key)
+                        : [...field.value, day.key];
                       field.onChange(updatedDays);
                     }}
                   >
-                    {day}
+                    {day.label}
                   </Button>
                 ))}
               </div>

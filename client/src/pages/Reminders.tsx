@@ -54,11 +54,11 @@ import {
 // Form validation schema for editing alarm time
 const editReminderSchema = z.object({
   time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-    message: "Time must be in the format HH:MM (24-hour)",
+    message: "زمان باید در قالب HH:MM (24 ساعته) باشد",
   }),
-  notifyBefore: z.string().transform(val => parseInt(val, 10)),
+  notifyBefore: z.string(), // Keep as string to avoid type errors
   days: z.array(z.string()).min(1, {
-    message: "Select at least one day",
+    message: "حداقل یک روز را انتخاب کنید",
   }),
 });
 
@@ -258,7 +258,7 @@ export default function Reminders() {
         data: {
           time: values.time,
           days: daysString,
-          notifyBefore: values.notifyBefore,
+          notifyBefore: parseInt(values.notifyBefore),
           active: true
         }
       });
@@ -269,7 +269,7 @@ export default function Reminders() {
         time: values.time,
         days: daysString,
         active: true,
-        notifyBefore: values.notifyBefore
+        notifyBefore: parseInt(values.notifyBefore)
       });
       setEditModalOpen(false);
     }
