@@ -284,13 +284,13 @@ export default function Reminders() {
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">Medication Reminders</h2>
+      <h2 className="text-2xl font-semibold mb-6">یادآورهای دارویی</h2>
       
       {/* Today's Schedule */}
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">Today's Schedule</h3>
+            <h3 className="font-medium">برنامه امروز</h3>
             <span className="text-sm text-gray-500">{today}</span>
           </div>
           
@@ -304,7 +304,7 @@ export default function Reminders() {
                 />
               ))
             ) : (
-              <p className="text-center text-gray-500 py-4">No medications scheduled for today</p>
+              <p className="text-center text-gray-500 py-4">برای امروز دارویی در برنامه نیست</p>
             )}
           </div>
         </CardContent>
@@ -314,7 +314,7 @@ export default function Reminders() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
           <BellRing className="h-5 w-5 text-primary" />
-          <h3 className="font-medium">Notifications</h3>
+          <h3 className="font-medium">اعلان‌ها</h3>
         </div>
         <NotificationManager />
       </div>
@@ -322,7 +322,7 @@ export default function Reminders() {
       {/* Create New Reminder */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4">Create New Reminder</h3>
+          <h3 className="font-medium mb-4">ایجاد یادآور جدید</h3>
           <ReminderForm 
             medications={medications || []} 
             onSubmit={handleFormSubmit}
@@ -335,7 +335,7 @@ export default function Reminders() {
       <Card>
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">All Medications</h3>
+            <h3 className="font-medium">همه داروها</h3>
             <button 
               className="text-sm text-primary flex items-center gap-1"
               onClick={toggleEditMode}
@@ -343,12 +343,12 @@ export default function Reminders() {
               {isEditMode ? (
                 <>
                   <Check className="h-4 w-4" />
-                  Done
+                  تمام
                 </>
               ) : (
                 <>
                   <Edit className="h-4 w-4" />
-                  Edit List
+                  ویرایش لیست
                 </>
               )}
             </button>
@@ -403,8 +403,8 @@ export default function Reminders() {
                       <p>
                         {medication.dosage} - 
                         {medication.reminders.length > 0 
-                          ? ` Daily at ${medication.reminders[0].time}`
-                          : " No reminders set"}
+                          ? ` روزانه در ساعت ${medication.reminders[0].time}`
+                          : " یادآوری تنظیم نشده است"}
                       </p>
                     </div>
                   </div>
@@ -435,20 +435,20 @@ export default function Reminders() {
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {getMedicationName(medicationToDelete)}</AlertDialogTitle>
+            <AlertDialogTitle>حذف {getMedicationName(medicationToDelete)}</AlertDialogTitle>
             <AlertDialogDescription>
-              This action will permanently remove <strong>{getMedicationName(medicationToDelete)}</strong> and all associated reminders.
-              This action cannot be undone.
+              این عملیات <strong>{getMedicationName(medicationToDelete)}</strong> و تمامی یادآورهای مرتبط با آن را به طور دائمی حذف خواهد کرد.
+              این عملیات قابل بازگشت نیست.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDelete}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelDelete}>انصراف</AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmDelete}
               className="bg-red-500 hover:bg-red-600"
               disabled={deleteMedicationMutation.isPending}
             >
-              {deleteMedicationMutation.isPending ? "Deleting..." : "Delete Medication"}
+              {deleteMedicationMutation.isPending ? "در حال حذف..." : "حذف دارو"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -458,9 +458,9 @@ export default function Reminders() {
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit {selectedMedication?.name} Reminder</DialogTitle>
+            <DialogTitle>ویرایش یادآور {selectedMedication?.name}</DialogTitle>
             <DialogDescription>
-              Update when and how often to take this medication
+              زمان و تناوب مصرف این دارو را به‌روزرسانی کنید
             </DialogDescription>
           </DialogHeader>
           

@@ -98,14 +98,14 @@ export default function NotificationManager() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BellOff className="h-5 w-5 text-muted-foreground" />
-            Notifications
+            اعلان‌ها
           </CardTitle>
         </CardHeader>
         <CardContent>
           <Alert variant="destructive" className="mb-4">
-            <AlertTitle>Not Supported</AlertTitle>
+            <AlertTitle>پشتیبانی نمی‌شود</AlertTitle>
             <AlertDescription>
-              Push notifications are not supported in your browser. Please use a modern browser like Chrome, Firefox, or Edge.
+              اعلان‌های پیش‌رو در مرورگر شما پشتیبانی نمی‌شوند. لطفاً از یک مرورگر مدرن مانند کروم، فایرفاکس یا اج استفاده کنید.
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -118,22 +118,22 @@ export default function NotificationManager() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5 text-primary" />
-          Notifications
+          اعلان‌ها
         </CardTitle>
         <CardDescription>
-          Receive reminders when it's time to take your medication
+          زمانی که وقت مصرف داروی شماست، یادآوری دریافت کنید
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="notifications">Enable Notifications</Label>
+            <Label htmlFor="notifications">فعال‌سازی اعلان‌ها</Label>
             <p className="text-sm text-muted-foreground">
               {isSubscribed
-                ? "Notifications are enabled"
+                ? "اعلان‌ها فعال هستند"
                 : permissionStatus === "denied"
-                ? "Notifications are blocked in your browser settings"
-                : "Enable notifications to get medication reminders"}
+                ? "اعلان‌ها در تنظیمات مرورگر شما مسدود شده‌اند"
+                : "برای دریافت یادآورهای دارویی، اعلان‌ها را فعال کنید"}
             </p>
           </div>
           <Switch
@@ -146,9 +146,9 @@ export default function NotificationManager() {
 
         {permissionStatus === "denied" && (
           <Alert variant="destructive" className="mt-4">
-            <AlertTitle>Permission Denied</AlertTitle>
+            <AlertTitle>دسترسی رد شده</AlertTitle>
             <AlertDescription>
-              You've blocked notifications for this site. Please update your browser settings to enable notifications.
+              شما اعلان‌ها را برای این سایت مسدود کرده‌اید. لطفاً تنظیمات مرورگر خود را برای فعال‌سازی اعلان‌ها به‌روزرسانی کنید.
             </AlertDescription>
           </Alert>
         )}
@@ -161,7 +161,7 @@ export default function NotificationManager() {
               disabled={isLoading}
               className="w-full"
             >
-              {testSent ? "Test Notification Sent!" : "Send Test Notification"}
+              {testSent ? "اعلان آزمایشی ارسال شد!" : "ارسال اعلان آزمایشی"}
             </Button>
           </div>
         )}
