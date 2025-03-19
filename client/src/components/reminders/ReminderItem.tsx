@@ -23,25 +23,25 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
       case "وارفارین":
       case "Warfarin":
         return {
-          bgColor: "bg-blue-100",
-          iconColor: "text-primary"
+          bgColor: "bg-blue-100 dark:bg-blue-900/40",
+          iconColor: "text-primary dark:text-blue-400"
         };
       case "متوپرولول":
       case "Metoprolol":
         return {
-          bgColor: "bg-green-100",
-          iconColor: "text-secondary"
+          bgColor: "bg-green-100 dark:bg-green-900/40",
+          iconColor: "text-secondary dark:text-green-400"
         };
       case "ویتامین د":
       case "Vitamin D":
         return {
-          bgColor: "bg-yellow-100",
-          iconColor: "text-yellow-500"
+          bgColor: "bg-yellow-100 dark:bg-yellow-900/40",
+          iconColor: "text-yellow-500 dark:text-yellow-400"
         };
       default:
         return {
-          bgColor: "bg-purple-100",
-          iconColor: "text-purple-500"
+          bgColor: "bg-purple-100 dark:bg-purple-900/40",
+          iconColor: "text-purple-500 dark:text-purple-400"
         };
     }
   };
@@ -50,7 +50,11 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
   
   return (
     <motion.div 
-      className={`flex items-center p-3 rounded-lg ${reminder.taken ? 'bg-gray-50' : 'bg-blue-50'}`}
+      className={`flex items-center p-3 rounded-lg ${
+        reminder.taken 
+          ? 'bg-gray-50 dark:bg-slate-800/50' 
+          : 'bg-blue-50 dark:bg-blue-900/20'
+      }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -95,15 +99,19 @@ export default function ReminderItem({ reminder, onTakeMedication }: ReminderIte
         transition={{ delay: 0.1, duration: 0.3 }}
       >
         <div className="flex justify-between">
-          <p className="font-medium">{reminder.medication.name}</p>
+          <p className="font-medium dark:text-white">{reminder.medication.name}</p>
           <motion.p 
-            className={`text-sm font-medium ${reminder.taken ? 'text-gray-500' : 'text-primary'}`}
+            className={`text-sm font-medium ${
+              reminder.taken 
+                ? 'text-gray-500 dark:text-gray-400' 
+                : 'text-primary dark:text-primary/90'
+            }`}
             whileHover={{ scale: 1.05 }}
           >
             {formatTime(reminder.time)}
           </motion.p>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
           {reminder.medication.dosage} - {reminder.medication.quantity}
         </p>
       </motion.div>

@@ -102,7 +102,7 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
   
   if (ptTests.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
         هنوز آزمایش PT ثبت نشده است. از فرم بالا برای افزودن اولین آزمایش استفاده کنید.
       </div>
     );
@@ -116,12 +116,12 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
           initial={animate ? "hidden" : false}
           animate={animate ? "show" : false}
           variants={containerVariants}
-          className="bg-gray-50 rounded-lg p-4"
+          className="bg-gray-50 dark:bg-slate-800/50 rounded-lg p-4"
           onAnimationComplete={() => setAnimate(false)}
         >
           <div className="flex items-center mb-3">
-            <Calendar className="h-5 w-5 ml-2 text-primary" />
-            <h3 className="font-semibold">
+            <Calendar className="h-5 w-5 ml-2 text-primary dark:text-primary/90" />
+            <h3 className="font-semibold dark:text-white">
               {getPersianMonthName(group.month)} {convertToPersianDigits(group.year.toString())}
             </h3>
           </div>
@@ -136,18 +136,24 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
                 <motion.div 
                   key={test.id}
                   variants={itemVariants}
-                  className={`rounded-lg border ${isSelected ? 'border-primary' : 'border-gray-200'} bg-white p-3 shadow-sm transition-all hover:shadow`}
+                  className={`rounded-lg border ${isSelected ? 'border-primary' : 'border-gray-200 dark:border-slate-700'} bg-white dark:bg-slate-800 p-3 shadow-sm transition-all hover:shadow dark:shadow-slate-900/30`}
                   onClick={() => setSelectedTest(isSelected ? null : test)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <div className={`h-10 w-10 rounded-full bg-${status.color}-100 flex items-center justify-center ml-3`}>
-                        <span className="font-bold text-sm">{convertToPersianDigits(test.inrValue.toFixed(1))}</span>
+                      <div className={`h-10 w-10 rounded-full ${
+                        status.color === 'green' 
+                          ? 'bg-green-100 dark:bg-green-900/50' 
+                          : status.color === 'yellow'
+                            ? 'bg-yellow-100 dark:bg-yellow-900/50'
+                            : 'bg-red-100 dark:bg-red-900/50'
+                      } flex items-center justify-center ml-3`}>
+                        <span className="font-bold text-sm dark:text-white">{convertToPersianDigits(test.inrValue.toFixed(1))}</span>
                       </div>
                       
                       <div>
                         <div className="flex items-center">
-                          <span className="font-medium">
+                          <span className="font-medium dark:text-white">
                             {convertToPersianDigits(persianDate.jd.toString())} {getPersianMonthName(persianDate.jm)}
                           </span>
                           <Badge 
