@@ -1,15 +1,20 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PtTest } from "@shared/schema";
 import { format } from "date-fns";
+import { Edit, Trash2 } from "lucide-react";
 
 interface PTTableProps {
   ptTests: PtTest[];
+  onEdit?: (test: PtTest) => void;
+  onDelete?: (test: PtTest) => void;
+  showAll?: boolean;
 }
 
-export default function PTTable({ ptTests }: PTTableProps) {
-  // Only show the most recent tests (up to 4)
-  const recentTests = ptTests.slice(0, 4);
+export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: PTTableProps) {
+  // Show all tests or just the most recent (up to 4)
+  const displayTests = showAll ? ptTests : ptTests.slice(0, 4);
   
   // Helper to determine status label and color based on INR value
   const getStatusBadge = (inrValue: number) => {
@@ -39,10 +44,13 @@ export default function PTTable({ ptTests }: PTTableProps) {
             <TableHead className="text-right">مقدار INR</TableHead>
             <TableHead className="text-right">وضعیت</TableHead>
             <TableHead className="hidden md:table-cell text-right">یادداشت‌ها</TableHead>
+            {(onEdit || onDelete) && (
+              <TableHead className="w-[100px] text-center">عملیات</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {recentTests.map((test) => (
+          {displayTests.map((test) => (
             <TableRow key={test.id}>
               <TableCell className="font-medium whitespace-nowrap text-right">
                 {format(new Date(test.testDate), "MMM dd, yyyy")}
@@ -52,6 +60,32 @@ export default function PTTable({ ptTests }: PTTableProps) {
               <TableCell className="hidden md:table-cell text-gray-500 truncate max-w-[200px] text-right">
                 {test.notes || "—"}
               </TableCell>
+              {(onEdit || onDelete) && (
+                <TableCell className="flex justify-center gap-2">
+                  {onEdit && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => onEdit(test)}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Edit className="h-4 w-4" />
+                      <span className="sr-only">ویرایش</span>
+                    </Button>
+                  )}
+                  {onDelete && (
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => onDelete(test)}
+                      className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span className="sr-only">حذف</span>
+                    </Button>
+                  )}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>

@@ -3,17 +3,36 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { queryClient } from "@/lib/queryClient";
 import { PtTest } from "@shared/schema";
 import PTChart from "@/components/pt-tracker/PTChart";
 import PTForm from "@/components/pt-tracker/PTForm";
 import PTTable from "@/components/pt-tracker/PTTable";
+import EditPTForm from "@/components/pt-tracker/EditPTForm";
 import { apiRequest } from "@/lib/queryClient";
 import { formatDateForApi } from "@/lib/dateUtils";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function PTTracker() {
+  const { toast } = useToast();
   const [timeRange, setTimeRange] = useState("3");
+  const [showAllTests, setShowAllTests] = useState(false);
+  const [editingTest, setEditingTest] = useState<PtTest | null>(null);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [testToDelete, setTestToDelete] = useState<PtTest | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
   // Fetch PT tests
   const { data: ptTests, isLoading } = useQuery<PtTest[]>({
@@ -28,7 +47,63 @@ export default function PTTracker() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/pt-tests'] });
+      toast({
+        title: "آزمایش با موفقیت ثبت شد",
+        description: "اطلاعات آزمایش PT/INR جدید با موفقیت ذخیره شد",
+      });
     },
+    onError: () => {
+      toast({
+        title: "خطا در ثبت آزمایش",
+        description: "متاسفانه در ذخیره اطلاعات آزمایش مشکلی پیش آمد",
+        variant: "destructive"
+      });
+    }
+  });
+  
+  // Create mutation for updating a PT test
+  const updatePtTestMutation = useMutation({
+    mutationFn: async ({id, data}: {id: number, data: any}) => {
+      const response = await apiRequest('PUT', `/api/pt-tests/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/pt-tests'] });
+      setIsEditFormOpen(false);
+      toast({
+        title: "آزمایش با موفقیت بروزرسانی شد",
+        description: "اطلاعات آزمایش PT/INR با موفقیت بروزرسانی شد",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "خطا در بروزرسانی آزمایش",
+        description: "متاسفانه در بروزرسانی اطلاعات آزمایش مشکلی پیش آمد",
+        variant: "destructive"
+      });
+    }
+  });
+  
+  // Create mutation for deleting a PT test
+  const deletePtTestMutation = useMutation({
+    mutationFn: async (id: number) => {
+      await apiRequest('DELETE', `/api/pt-tests/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/pt-tests'] });
+      setIsDeleteDialogOpen(false);
+      toast({
+        title: "آزمایش با موفقیت حذف شد",
+        description: "آزمایش PT/INR انتخاب شده با موفقیت حذف شد",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "خطا در حذف آزمایش",
+        description: "متاسفانه در حذف آزمایش مشکلی پیش آمد",
+        variant: "destructive"
+      });
+    }
   });
   
   // Get latest PT test
@@ -52,20 +127,15 @@ export default function PTTracker() {
   // Filter tests based on time range (in months)
   const getFilteredTests = () => {
     if (!ptTests) {
-      console.log("getFilteredTests: ptTests is undefined or null");
       return [];
     }
     
-    console.log("getFilteredTests: Initial ptTests:", ptTests);
-    
     if (timeRange === "all") {
-      console.log("getFilteredTests: Returning all tests");
       return ptTests;
     }
     
     // For demo purposes, we'll bypass the current date filter since our 
     // sample data is from 2023 and today is 2025 in the simulation
-    console.log(`getFilteredTests: Returning all tests regardless of timeRange: ${timeRange}`);
     return ptTests;
     
     // In a real production app with current data, we would use this:
@@ -74,10 +144,7 @@ export default function PTTracker() {
     const cutoffDate = new Date();
     cutoffDate.setMonth(cutoffDate.getMonth() - months);
     
-    console.log(`getFilteredTests: Filtering by ${months} months, cutoff date:`, cutoffDate);
-    
     const filtered = ptTests.filter(test => new Date(test.testDate) >= cutoffDate);
-    console.log("getFilteredTests: Filtered tests:", filtered);
     
     return filtered;
     */
@@ -92,6 +159,37 @@ export default function PTTracker() {
       inrValue: parseFloat(data.inrValue),
       notes: data.notes
     });
+  };
+  
+  const handleEdit = (test: PtTest) => {
+    setEditingTest(test);
+    setIsEditFormOpen(true);
+  };
+  
+  const handleEditSubmit = (id: number, data: any) => {
+    updatePtTestMutation.mutate({
+      id,
+      data: {
+        testDate: data.testDate,
+        inrValue: parseFloat(data.inrValue),
+        notes: data.notes
+      }
+    });
+  };
+  
+  const handleDelete = (test: PtTest) => {
+    setTestToDelete(test);
+    setIsDeleteDialogOpen(true);
+  };
+  
+  const confirmDelete = () => {
+    if (testToDelete) {
+      deletePtTestMutation.mutate(testToDelete.id);
+    }
+  };
+  
+  const toggleShowAllTests = () => {
+    setShowAllTests(prev => !prev);
   };
   
   if (isLoading) {
@@ -217,12 +315,55 @@ export default function PTTracker() {
       <Card>
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium text-right w-full">آزمایش‌های اخیر</h3>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={toggleShowAllTests}
+            >
+              {showAllTests ? "نمایش آزمایش‌های اخیر" : "نمایش تمام آزمایش‌ها"}
+            </Button>
+            <h3 className="font-medium text-right">آزمایش‌های {showAllTests ? "" : "اخیر"}</h3>
           </div>
           
-          <PTTable ptTests={ptTests || []} />
+          <PTTable 
+            ptTests={ptTests || []} 
+            onEdit={handleEdit} 
+            onDelete={handleDelete} 
+            showAll={showAllTests}
+          />
         </CardContent>
       </Card>
+      
+      {/* Edit PT Test Dialog */}
+      <EditPTForm
+        ptTest={editingTest}
+        isOpen={isEditFormOpen}
+        onClose={() => setIsEditFormOpen(false)}
+        onSubmit={handleEditSubmit}
+        isPending={updatePtTestMutation.isPending}
+      />
+      
+      {/* Delete PT Test Alert Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-right">حذف آزمایش PT/INR</AlertDialogTitle>
+            <AlertDialogDescription className="text-right">
+              آیا از حذف این آزمایش مطمئن هستید؟ این عمل قابل بازگشت نیست.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse justify-start">
+            <AlertDialogCancel className="ml-2">انصراف</AlertDialogCancel>
+            <AlertDialogAction 
+              className="bg-red-500 hover:bg-red-600 text-white" 
+              onClick={confirmDelete}
+              disabled={deletePtTestMutation.isPending}
+            >
+              {deletePtTestMutation.isPending ? "در حال حذف..." : "حذف"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
