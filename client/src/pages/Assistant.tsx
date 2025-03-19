@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -11,11 +11,22 @@ import { AssistantMessage } from "@shared/schema";
 
 export default function Assistant() {
   const [newMessage, setNewMessage] = useState("");
+  // Create a ref for the chat container
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+  // Track messages length for auto-scrolling
+  const [messagesLength, setMessagesLength] = useState(0);
   
   // Fetch assistant messages
   const { data: messages, isLoading } = useQuery<AssistantMessage[]>({
-    queryKey: ['/api/assistant-messages'],
+    queryKey: ['/api/assistant-messages']
   });
+  
+  // Update messagesLength when messages change
+  useEffect(() => {
+    if (messages) {
+      setMessagesLength(messages.length);
+    }
+  }, [messages]);
   
   // Create mutation for sending messages
   const sendMessageMutation = useMutation({
@@ -39,12 +50,20 @@ export default function Assistant() {
     sendMessageMutation.mutate(question);
   };
   
+  // useEffect for scrolling to bottom when messages change
+  useEffect(() => {
+    if (chatContainerRef.current && messages && messages.length > messagesLength) {
+      // Scroll to the bottom of the chat container
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, messagesLength]);
+  
   // Frequently asked questions
   const faqs = [
     "محدوده هدف INR برای اکثر بیماران چیست؟",
     "آیا می‌توانم هنگام مصرف وارفارین الکل بنوشم؟",
     "از چه داروهای بدون نسخه باید اجتناب کنم؟",
-    "چگونه باید برای جراحی در حین مصرف وارفارین آماده شوم؟"
+    "اگر یک دوز را فراموش کنم چه کار باید بکنم؟"
   ];
   
   // Quick suggestions
@@ -90,11 +109,11 @@ export default function Assistant() {
         </div>
         
         {/* Chat Messages */}
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 p-4 overflow-y-auto" ref={chatContainerRef}>
           {isLoading ? (
             <p className="text-center text-gray-500">در حال بارگذاری پیام‌ها...</p>
           ) : messages && messages.length > 0 ? (
-            messages.map((message) => (
+            messages.map((message: AssistantMessage) => (
               <ChatMessage 
                 key={message.id} 
                 message={message.content} 
