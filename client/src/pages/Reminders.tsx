@@ -301,19 +301,19 @@ export default function Reminders() {
   const allMedications = getAllMedicationsWithReminders();
   
   if (medicationsLoading || remindersLoading || logsLoading) {
-    return <div className="p-8 text-center">در حال بارگذاری اطلاعات یادآورها...</div>;
+    return <div className="p-8 text-center dark:text-white">در حال بارگذاری اطلاعات یادآورها...</div>;
   }
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6">یادآورهای دارویی</h2>
+      <h2 className="text-2xl font-semibold mb-6 dark:text-white">یادآورهای دارویی</h2>
       
       {/* Today's Schedule */}
       <Card className="mb-6">
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">برنامه امروز</h3>
-            <span className="text-sm text-gray-500">{today}</span>
+            <h3 className="font-medium dark:text-white">برنامه امروز</h3>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{today}</span>
           </div>
           
           <div className="space-y-4">
@@ -326,7 +326,7 @@ export default function Reminders() {
                 />
               ))
             ) : (
-              <p className="text-center text-gray-500 py-4">برای امروز دارویی در برنامه نیست</p>
+              <p className="text-center text-gray-500 dark:text-gray-400 py-4">برای امروز دارویی در برنامه نیست</p>
             )}
           </div>
         </CardContent>
@@ -335,8 +335,8 @@ export default function Reminders() {
       {/* Notification Settings */}
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
-          <BellRing className="h-5 w-5 text-primary" />
-          <h3 className="font-medium">اعلان‌ها</h3>
+          <BellRing className="h-5 w-5 text-primary dark:text-primary/90" />
+          <h3 className="font-medium dark:text-white">اعلان‌ها</h3>
         </div>
         <NotificationManager />
       </div>
@@ -344,7 +344,7 @@ export default function Reminders() {
       {/* Create New Reminder */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4">ایجاد یادآور جدید</h3>
+          <h3 className="font-medium mb-4 dark:text-white">ایجاد یادآور جدید</h3>
           <ReminderForm 
             medications={medications || []} 
             onSubmit={handleFormSubmit}
@@ -357,9 +357,9 @@ export default function Reminders() {
       <Card>
         <CardContent className="p-4">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="font-medium">همه داروها</h3>
+            <h3 className="font-medium dark:text-white">همه داروها</h3>
             <button 
-              className="text-sm text-primary flex items-center gap-1"
+              className="text-sm text-primary dark:text-primary/90 flex items-center gap-1"
               onClick={toggleEditMode}
             >
               {isEditMode ? (
@@ -376,28 +376,28 @@ export default function Reminders() {
             </button>
           </div>
           
-          <ul className="divide-y divide-gray-200">
+          <ul className="divide-y divide-gray-200 dark:divide-slate-700">
             {allMedications.map((medication) => (
               <li key={medication.id} className="py-3">
                 <div className="flex items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-3 ${
                     medication.name === "Warfarin" 
-                      ? "bg-blue-100" 
+                      ? "bg-blue-100 dark:bg-blue-900/50" 
                       : medication.name === "Metoprolol"
-                        ? "bg-green-100"
+                        ? "bg-green-100 dark:bg-green-900/50"
                         : medication.name === "Vitamin D"
-                          ? "bg-yellow-100"
-                          : "bg-purple-100"
+                          ? "bg-yellow-100 dark:bg-yellow-900/50"
+                          : "bg-purple-100 dark:bg-purple-900/50"
                   }`}>
                     <svg 
                       className={`h-5 w-5 ${
                         medication.name === "Warfarin" 
-                          ? "text-primary" 
+                          ? "text-primary dark:text-primary/90" 
                           : medication.name === "Metoprolol"
-                            ? "text-secondary"
+                            ? "text-secondary dark:text-secondary/90"
                             : medication.name === "Vitamin D"
-                              ? "text-yellow-500"
-                              : "text-purple-500"
+                              ? "text-yellow-500 dark:text-yellow-400"
+                              : "text-purple-500 dark:text-purple-400"
                       }`} 
                       xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 24 24" 
@@ -420,8 +420,8 @@ export default function Reminders() {
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium">{medication.name}</p>
-                    <div className="flex text-sm text-gray-500">
+                    <p className="font-medium dark:text-white">{medication.name}</p>
+                    <div className="flex text-sm text-gray-500 dark:text-gray-400">
                       <p>
                         {medication.dosage} - 
                         {medication.reminders.length > 0 
@@ -432,7 +432,7 @@ export default function Reminders() {
                   </div>
                   {isEditMode ? (
                     <button 
-                      className="text-red-500 hover:text-red-700 p-2" 
+                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2" 
                       onClick={() => handleDeleteMedication(medication.id)}
                       disabled={deleteMedicationMutation.isPending}
                     >
@@ -440,7 +440,7 @@ export default function Reminders() {
                     </button>
                   ) : (
                     <button 
-                      className="text-gray-400 hover:text-gray-500 p-2"
+                      className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 p-2"
                       onClick={() => handleEditMedication(medication as MedicationWithReminders)}
                     >
                       <ChevronRight className="h-5 w-5" />
@@ -455,19 +455,19 @@ export default function Reminders() {
       
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-slate-800 dark:border-slate-700">
           <AlertDialogHeader>
-            <AlertDialogTitle>حذف {getMedicationName(medicationToDelete)}</AlertDialogTitle>
-            <AlertDialogDescription>
-              این عملیات <strong>{getMedicationName(medicationToDelete)}</strong> و تمامی یادآورهای مرتبط با آن را به طور دائمی حذف خواهد کرد.
+            <AlertDialogTitle className="dark:text-white">حذف {getMedicationName(medicationToDelete)}</AlertDialogTitle>
+            <AlertDialogDescription className="dark:text-gray-300">
+              این عملیات <strong className="dark:text-white">{getMedicationName(medicationToDelete)}</strong> و تمامی یادآورهای مرتبط با آن را به طور دائمی حذف خواهد کرد.
               این عملیات قابل بازگشت نیست.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={cancelDelete}>انصراف</AlertDialogCancel>
+            <AlertDialogCancel onClick={cancelDelete} className="dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white">انصراف</AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmDelete}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800"
               disabled={deleteMedicationMutation.isPending}
             >
               {deleteMedicationMutation.isPending ? "در حال حذف..." : "حذف دارو"}
@@ -478,10 +478,10 @@ export default function Reminders() {
       
       {/* Edit Medication Reminder Dialog */}
       <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md dark:bg-slate-800 dark:border-slate-700">
           <DialogHeader>
-            <DialogTitle>ویرایش یادآور {selectedMedication?.name}</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="dark:text-white">ویرایش یادآور {selectedMedication?.name}</DialogTitle>
+            <DialogDescription className="dark:text-gray-300">
               زمان و تناوب مصرف این دارو را به‌روزرسانی کنید
             </DialogDescription>
           </DialogHeader>
