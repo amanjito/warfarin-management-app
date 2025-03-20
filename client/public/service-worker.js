@@ -99,13 +99,15 @@ self.addEventListener('push', (event) => {
       body: data.body || 'Time to take your medication',
       icon: data.icon || '/icons/icon-192x192.png',
       badge: '/icons/badge-72x72.png',
-      vibrate: [100, 50, 100],
+      vibrate: [200, 100, 200, 100, 200], // Enhanced vibration pattern
+      sound: '/sounds/medication-reminder.mp3', // Sound file path (note: this only works on some platforms)
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
         url: data.url || '/',
         reminderId: data.reminderId,
-        medicationId: data.medicationId
+        medicationId: data.medicationId,
+        playSound: true // Flag to play sound via client side
       },
       actions: [
         {
@@ -121,8 +123,21 @@ self.addEventListener('push', (event) => {
       ]
     };
     
+    // Show notification and then notify clients to play sound
+    // This is because not all browsers support sound in notifications
     event.waitUntil(
-      self.registration.showNotification(data.title || 'Medication Reminder', options)
+      Promise.all([
+        self.registration.showNotification(data.title || 'Medication Reminder', options),
+        // Notify all client windows to play sound
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'PLAY_NOTIFICATION_SOUND',
+              notificationType: 'medication'
+            });
+          });
+        })
+      ])
     );
   } catch (err) {
     console.error('Service Worker: Error processing push notification', err);

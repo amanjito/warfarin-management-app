@@ -40,6 +40,45 @@ export default function NotificationManager() {
       }).catch(console.error);
     }
   }, []);
+  
+  // Setup event listener for playing notification sounds
+  useEffect(() => {
+    // Function to play notification sound
+    const playNotificationSound = (type: string = 'medication') => {
+      try {
+        // Use the global function from medication-reminder.js if available
+        if (window.playMedicationReminderSound) {
+          window.playMedicationReminderSound();
+        } else {
+          // Fallback to playing the sound directly
+          const audio = new Audio('/sounds/medication-reminder.mp3');
+          audio.volume = 0.7;
+          audio.play().catch(error => {
+            console.error('Error playing notification sound:', error);
+          });
+        }
+      } catch (error) {
+        console.error('Error playing notification sound:', error);
+      }
+    };
+
+    // Listen for messages from service worker
+    const handleMessage = (event: MessageEvent) => {
+      // Check if the message is to play a notification sound
+      if (event.data && event.data.type === 'PLAY_NOTIFICATION_SOUND') {
+        console.log('Received request to play notification sound:', event.data);
+        playNotificationSound(event.data.notificationType);
+      }
+    };
+    
+    // Add event listener
+    navigator.serviceWorker.addEventListener('message', handleMessage);
+    
+    // Cleanup function
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   // Request permission and subscribe
   const handleEnableNotifications = async () => {
