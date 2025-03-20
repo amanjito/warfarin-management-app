@@ -64,7 +64,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     labels,
     datasets: [
       {
-        label: 'مقدار INR',
+        label: 'مقدار INR'.replace("INR", "<span class='unicode-bidi'>INR</span>"),
         data: inrValues,
         borderColor: '#2196F3',
         backgroundColor: 'rgba(33, 150, 243, 0.1)',
@@ -123,7 +123,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
         max: 4,
         title: {
           display: true,
-          text: 'مقدار INR'
+          text: 'مقدار INR'.replace("INR", "<span class='unicode-bidi'>INR</span>")
         },
         ticks: {
           callback: function(value) {
