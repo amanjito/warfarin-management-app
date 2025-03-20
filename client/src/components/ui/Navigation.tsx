@@ -1,4 +1,4 @@
-import { Home, TrendingUp, Pill, Clock, MessageSquare, Activity, Plus } from "lucide-react";
+import { Home, TrendingUp, Pill, Clock, MessageSquare, Activity, UserCircle } from "lucide-react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
@@ -21,6 +21,7 @@ export default function Navigation({ activeTab }: NavigationProps) {
     { id: "medication", label: "دانش وارفارینی", icon: Pill, path: "/medication" },
     { id: "reminders", label: "یادآورها", icon: Clock, path: "/reminders" },
     { id: "assistant", label: "دستیار", icon: MessageSquare, path: "/assistant" },
+    { id: "profile", label: "پروفایل", icon: UserCircle, path: "/profile" },
   ];
   
   // Update indicator on mount and when active tab changes

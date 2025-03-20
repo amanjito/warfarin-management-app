@@ -12,6 +12,7 @@ import PTTracker from "@/pages/PTTracker";
 import MedicationInfo from "@/pages/MedicationInfo";
 import Reminders from "@/pages/Reminders";
 import Assistant from "@/pages/Assistant";
+import Profile from "@/pages/Profile";
 import NotFound from "@/pages/not-found";
 import IntroPages from "@/pages/IntroPages";
 import Auth from "@/pages/Auth";
@@ -60,6 +61,7 @@ function PrivateRouter() {
           <Route path="/medication" component={MedicationInfo} />
           <Route path="/reminders" component={Reminders} />
           <Route path="/assistant" component={Assistant} />
+          <Route path="/profile" component={Profile} />
           <Route component={NotFound} />
         </Switch>
       </main>
