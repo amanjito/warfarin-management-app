@@ -193,12 +193,12 @@ export default function PTTracker() {
   };
   
   if (isLoading) {
-    return <div className="p-8 text-center">در حال بارگذاری اطلاعات آزمایش PT...</div>;
+    return <div className="p-8 text-center">در حال بارگذاری اطلاعات آزمایش <span className="unicode-bidi">PT</span>...</div>;
   }
   
   return (
     <div>
-      <h2 className="text-2xl font-semibold mb-6 text-right dark:text-white">پیگیری آزمایش PT/INR</h2>
+      <h2 className="text-2xl font-semibold mb-6 text-right dark:text-white">پیگیری آزمایش <span className="unicode-bidi">PT/INR</span></h2>
       
       {/* Current Status */}
       <Card className="mb-6">
@@ -218,7 +218,7 @@ export default function PTTracker() {
                 <span className="text-2xl font-bold dark:text-white">{convertToPersianDigits(latestTest.inrValue.toFixed(1))}</span>
               </div>
               <div className="text-right max-w-[60%]">
-                <p className="font-medium dark:text-white">آخرین INR</p>
+                <p className="font-medium dark:text-white">آخرین <span className="unicode-bidi">INR</span></p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   اندازه‌گیری شده: {formatDate(latestTest.testDate)}
                 </p>
@@ -262,7 +262,7 @@ export default function PTTracker() {
               </div>
             </div>
           ) : (
-            <p className="text-right">هنوز آزمایش PT ثبت نشده است.</p>
+            <p className="text-right">هنوز آزمایش <span className="unicode-bidi">PT</span> ثبت نشده است.</p>
           )}
         </CardContent>
       </Card>
@@ -285,7 +285,7 @@ export default function PTTracker() {
                 <SelectItem value="all">تمام زمان‌ها</SelectItem>
               </SelectContent>
             </Select>
-            <h3 className="font-medium text-right dark:text-white">تاریخچه PT/INR</h3>
+            <h3 className="font-medium text-right dark:text-white">تاریخچه <span className="unicode-bidi">PT/INR</span></h3>
           </div>
           
           <PTChart ptTests={filteredTests} />
@@ -296,7 +296,7 @@ export default function PTTracker() {
               <span className="w-3 h-3 rounded-full bg-green-200 dark:bg-green-700 inline-block mr-1 ml-1"></span>
             </div>
             <div className="flex items-center">
-              <span>مقدار INR</span>
+              <span>مقدار <span className="unicode-bidi">INR</span></span>
               <span className="w-3 h-3 rounded-full bg-primary inline-block mr-1 ml-1"></span>
             </div>
           </div>
@@ -306,7 +306,7 @@ export default function PTTracker() {
       {/* Record New PT Test */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <h3 className="font-medium mb-4 text-right dark:text-white">ثبت آزمایش PT/INR جدید</h3>
+          <h3 className="font-medium mb-4 text-right dark:text-white">ثبت آزمایش <span className="unicode-bidi">PT/INR</span> جدید</h3>
           <PTForm onSubmit={handleSubmit} isPending={addPtTestMutation.isPending} />
         </CardContent>
       </Card>
@@ -348,7 +348,7 @@ export default function PTTracker() {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent className="dark:bg-slate-800 dark:border-slate-700">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-right dark:text-white">حذف آزمایش PT/INR</AlertDialogTitle>
+            <AlertDialogTitle className="text-right dark:text-white">حذف آزمایش <span className="unicode-bidi">PT/INR</span></AlertDialogTitle>
             <AlertDialogDescription className="text-right dark:text-gray-300">
               آیا از حذف این آزمایش مطمئن هستید؟ این عمل قابل بازگشت نیست.
             </AlertDialogDescription>
