@@ -69,23 +69,23 @@ function PrivateRouter() {
 }
 
 function App() {
-  // For testing purposes, we'll temporarily set isAuthenticated to true
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(true);
+  // Initially set isAuthenticated to null (loading state)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     // Check current auth status
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      // Comment out the real auth check for now to test routes
-      // setIsAuthenticated(!!data.session);
+      // Enable real auth check
+      setIsAuthenticated(!!data.session);
     };
     
     checkAuth();
 
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      // Comment out the real auth check for now to test routes
-      // setIsAuthenticated(!!session);
+      // Enable real auth check
+      setIsAuthenticated(!!session);
     });
 
     return () => {
