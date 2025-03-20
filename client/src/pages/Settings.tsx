@@ -1,24 +1,37 @@
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Bell, 
-  Moon, 
-  Languages, 
-  Contact, 
-  AlertTriangle, 
-  HelpCircle, 
-  BookOpen, 
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Bell,
+  Moon,
+  Languages,
+  Contact,
+  AlertTriangle,
+  HelpCircle,
+  BookOpen,
   LogOut,
-  Trash2
-} from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useLocation } from 'wouter';
+  Trash2,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useLocation } from "wouter";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -30,14 +43,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { isPushNotificationSupported, subscribeToPushNotifications, unsubscribeFromPushNotifications } from '@/lib/pushNotifications';
+import {
+  isPushNotificationSupported,
+  subscribeToPushNotifications,
+  unsubscribeFromPushNotifications,
+} from "@/lib/pushNotifications";
 
 export default function Settings() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [isPending, setIsPending] = useState(false);
   const pushSupported = isPushNotificationSupported();
-  
+
   // Settings state
   const [settings, setSettings] = useState({
     // Notification settings
@@ -45,114 +62,120 @@ export default function Settings() {
     reminderNotifications: true,
     ptTestReminders: true,
     medicationUpdates: true,
-    
+
     // Appearance settings
-    darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
-    
+    darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
+
     // Language settings
-    language: 'fa',
+    language: "fa",
   });
-  
+
   const handleToggleSetting = (key: keyof typeof settings) => {
-    setSettings(prev => {
+    setSettings((prev) => {
       const newSettings = { ...prev, [key]: !prev[key] };
-      
+
       // Special handling for push notifications
-      if (key === 'pushNotifications') {
+      if (key === "pushNotifications") {
         togglePushNotifications(newSettings.pushNotifications);
       }
-      
+
       // Special handling for dark mode
-      if (key === 'darkMode') {
-        document.documentElement.classList.toggle('dark', newSettings.darkMode);
-        localStorage.setItem('darkMode', newSettings.darkMode ? 'true' : 'false');
+      if (key === "darkMode") {
+        document.documentElement.classList.toggle("dark", newSettings.darkMode);
+        localStorage.setItem(
+          "darkMode",
+          newSettings.darkMode ? "true" : "false",
+        );
       }
-      
+
       return newSettings;
     });
   };
-  
+
   const togglePushNotifications = async (enabled: boolean) => {
     if (!pushSupported) return;
-    
+
     setIsPending(true);
     try {
       if (enabled) {
         const success = await subscribeToPushNotifications();
         if (!success) {
-          setSettings(prev => ({ ...prev, pushNotifications: false }));
+          setSettings((prev) => ({ ...prev, pushNotifications: false }));
           toast({
-            title: 'اعلان‌ها فعال نشدند',
-            description: 'لطفا مجوز اعلان‌ها را در مرورگر خود فعال کنید.',
-            variant: 'destructive',
+            title: "اعلان‌ها فعال نشدند",
+            description: "لطفا مجوز اعلان‌ها را در مرورگر خود فعال کنید.",
+            variant: "destructive",
           });
         }
       } else {
         await unsubscribeFromPushNotifications();
       }
     } catch (error) {
-      console.error('Error toggling push notifications:', error);
+      console.error("Error toggling push notifications:", error);
       toast({
-        title: 'خطایی رخ داد',
-        description: 'مشکلی در تغییر وضعیت اعلان‌ها به وجود آمد.',
-        variant: 'destructive',
+        title: "خطایی رخ داد",
+        description: "مشکلی در تغییر وضعیت اعلان‌ها به وجود آمد.",
+        variant: "destructive",
       });
     } finally {
       setIsPending(false);
     }
   };
-  
+
   const handleLanguageChange = (value: string) => {
-    setSettings(prev => ({ ...prev, language: value }));
+    setSettings((prev) => ({ ...prev, language: value }));
     // In a real app, this would trigger language change
     toast({
-      title: 'زبان تغییر کرد',
-      description: value === 'fa' ? 'زبان به فارسی تغییر یافت.' : 'Language changed to English.',
+      title: "زبان تغییر کرد",
+      description:
+        value === "fa"
+          ? "زبان به فارسی تغییر یافت."
+          : "Language changed to English.",
     });
   };
-  
+
   const handleLogout = async () => {
     setIsPending(true);
     try {
       await supabase.auth.signOut();
       toast({
-        title: 'خروج از حساب کاربری',
-        description: 'شما با موفقیت از حساب کاربری خود خارج شدید.',
+        title: "خروج از حساب کاربری",
+        description: "شما با موفقیت از حساب کاربری خود خارج شدید.",
       });
-      setLocation('/auth');
+      setLocation("/auth");
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
       toast({
-        title: 'خطا در خروج',
-        description: 'مشکلی در خروج از حساب کاربری رخ داد.',
-        variant: 'destructive',
+        title: "خطا در خروج",
+        description: "مشکلی در خروج از حساب کاربری رخ داد.",
+        variant: "destructive",
       });
     } finally {
       setIsPending(false);
     }
   };
-  
+
   const handleDeleteAccount = async () => {
     setIsPending(true);
     try {
       // In a real app, you would delete the user account
       // await supabase.auth.api.deleteUser(user.id)
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast({
-        title: 'حساب کاربری حذف شد',
-        description: 'حساب کاربری شما با موفقیت حذف شد.',
+        title: "حساب کاربری حذف شد",
+        description: "حساب کاربری شما با موفقیت حذف شد.",
       });
-      
+
       // Log out and redirect to auth page
       await supabase.auth.signOut();
-      setLocation('/auth');
+      setLocation("/auth");
     } catch (error) {
-      console.error('Error deleting account:', error);
+      console.error("Error deleting account:", error);
       toast({
-        title: 'خطا در حذف حساب',
-        description: 'مشکلی در حذف حساب کاربری رخ داد.',
-        variant: 'destructive',
+        title: "خطا در حذف حساب",
+        description: "مشکلی در حذف حساب کاربری رخ داد.",
+        variant: "destructive",
       });
     } finally {
       setIsPending(false);
@@ -163,9 +186,11 @@ export default function Settings() {
     <div className="container mx-auto py-6 px-4 space-y-6">
       <div className="flex flex-col items-start mb-6">
         <h1 className="text-2xl font-bold">تنظیمات</h1>
-        <p className="text-gray-500 dark:text-gray-400">تنظیمات و ترجیحات برنامه خود را مدیریت کنید</p>
+        <p className="text-gray-500 dark:text-gray-400">
+          تنظیمات و ترجیحات برنامه خود را مدیریت کنید
+        </p>
       </div>
-      
+
       <Tabs defaultValue="notifications" className="w-full max-w-3xl mx-auto">
         <TabsList className="grid grid-cols-3 mb-8">
           <TabsTrigger value="notifications">
@@ -181,7 +206,7 @@ export default function Settings() {
             حساب کاربری
           </TabsTrigger>
         </TabsList>
-        
+
         <TabsContent value="notifications">
           <Card>
             <CardHeader>
@@ -196,7 +221,9 @@ export default function Settings() {
                   <Switch
                     id="push-notifications"
                     checked={settings.pushNotifications}
-                    onCheckedChange={() => handleToggleSetting('pushNotifications')}
+                    onCheckedChange={() =>
+                      handleToggleSetting("pushNotifications")
+                    }
                     disabled={!pushSupported || isPending}
                   />
                 </div>
@@ -207,49 +234,59 @@ export default function Settings() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Switch
                     id="reminder-notifications"
                     checked={settings.reminderNotifications}
-                    onCheckedChange={() => handleToggleSetting('reminderNotifications')}
+                    onCheckedChange={() =>
+                      handleToggleSetting("reminderNotifications")
+                    }
                   />
                 </div>
                 <div className="space-y-0.5">
-                  <Label htmlFor="reminder-notifications">یادآوری‌های دارو</Label>
+                  <Label htmlFor="reminder-notifications">
+                    یادآوری‌های دارو
+                  </Label>
                   <p className="text-sm text-muted-foreground">
                     دریافت اعلان برای مصرف دارو در زمان‌های مشخص شده
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Switch
                     id="pt-test-reminders"
                     checked={settings.ptTestReminders}
-                    onCheckedChange={() => handleToggleSetting('ptTestReminders')}
+                    onCheckedChange={() =>
+                      handleToggleSetting("ptTestReminders")
+                    }
                   />
                 </div>
                 <div className="space-y-0.5">
-                  <Label htmlFor="pt-test-reminders">یادآوری‌های آزمایش PT</Label>
+                  <Label htmlFor="pt-test-reminders">یادآوری‌های آزمایش</Label>
                   <p className="text-sm text-muted-foreground">
-                    دریافت اعلان برای انجام آزمایش‌های PT در زمان مقرر
+                    دریافت اعلان برای انجام آزمایش‌ها در زمان مقرر
                   </p>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <Switch
                     id="medication-updates"
                     checked={settings.medicationUpdates}
-                    onCheckedChange={() => handleToggleSetting('medicationUpdates')}
+                    onCheckedChange={() =>
+                      handleToggleSetting("medicationUpdates")
+                    }
                   />
                 </div>
                 <div className="space-y-0.5">
-                  <Label htmlFor="medication-updates">به‌روزرسانی‌های دارویی</Label>
+                  <Label htmlFor="medication-updates">
+                    به‌روزرسانی‌های دارویی
+                  </Label>
                   <p className="text-sm text-muted-foreground">
                     اطلاع‌رسانی درباره تغییرات در برنامه دارویی
                   </p>
@@ -258,7 +295,7 @@ export default function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
-        
+
         <TabsContent value="appearance">
           <Card>
             <CardHeader>
@@ -273,7 +310,7 @@ export default function Settings() {
                   <Switch
                     id="dark-mode"
                     checked={settings.darkMode}
-                    onCheckedChange={() => handleToggleSetting('darkMode')}
+                    onCheckedChange={() => handleToggleSetting("darkMode")}
                   />
                 </div>
                 <div className="space-y-0.5">
@@ -283,26 +320,33 @@ export default function Settings() {
                   </p>
                 </div>
               </div>
-              
+
               <div className="space-y-2 text-right">
                 <Label htmlFor="language-select">زبان</Label>
                 <Select
                   value={settings.language}
                   onValueChange={handleLanguageChange}
                 >
-                  <SelectTrigger id="language-select" className="w-full text-right">
+                  <SelectTrigger
+                    id="language-select"
+                    className="w-full text-right"
+                  >
                     <SelectValue placeholder="انتخاب زبان" />
                     <Languages className="ml-2 h-4 w-4" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fa" className="text-right">فارسی</SelectItem>
-                    <SelectItem value="en" className="text-right">English</SelectItem>
+                    <SelectItem value="fa" className="text-right">
+                      فارسی
+                    </SelectItem>
+                    <SelectItem value="en" className="text-right">
+                      English
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </CardContent>
           </Card>
-          
+
           <Card className="mt-6">
             <CardHeader>
               <CardTitle>اطلاعات و راهنمایی</CardTitle>
@@ -327,7 +371,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Button variant="ghost" size="sm">
                   مطالعه
@@ -347,10 +391,8 @@ export default function Settings() {
             </CardContent>
           </Card>
         </TabsContent>
-        
-        <TabsContent value="account">
 
-          
+        <TabsContent value="account">
           <Card className="mt-6">
             <CardHeader>
               <CardTitle>حساب کاربری</CardTitle>
@@ -368,7 +410,7 @@ export default function Settings() {
                 <LogOut className="h-4 w-4 text-red-500" />
                 <span>خروج از حساب کاربری</span>
               </Button>
-              
+
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -382,9 +424,12 @@ export default function Settings() {
                 </AlertDialogTrigger>
                 <AlertDialogContent className="text-right">
                   <AlertDialogHeader>
-                    <AlertDialogTitle>آیا از حذف حساب کاربری خود مطمئن هستید؟</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      آیا از حذف حساب کاربری خود مطمئن هستید؟
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      این عمل غیرقابل بازگشت است. تمام داده‌های شما شامل سوابق دارویی، آزمایش‌ها و یادآوری‌ها به طور دائمی حذف خواهند شد.
+                      این عمل غیرقابل بازگشت است. تمام داده‌های شما شامل سوابق
+                      دارویی، آزمایش‌ها و یادآوری‌ها به طور دائمی حذف خواهند شد.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter className="flex-row-reverse">
