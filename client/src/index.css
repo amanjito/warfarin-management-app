@@ -79,13 +79,34 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
   }
   
   .notification-settings .setting-description {
     color: #666;
     font-size: 0.9rem;
     margin-top: 0.25rem;
+    max-width: 80%;
+  }
+
+  /* Improve switch styling */
+  .notification-settings [data-state] {
+    margin-right: 1rem;
+    background-color: #e4e4e7;
+  }
+
+  .notification-settings [data-state="checked"] {
+    background-color: #3b82f6;
+  }
+
+  .notification-settings .switch-thumb {
+    background-color: white;
+    transform: translateX(2px);
+  }
+
+  .notification-settings [data-state="checked"] .switch-thumb {
+    transform: translateX(19px);
   }
 
   /* Flip icons in RTL mode where needed */
