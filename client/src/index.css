@@ -60,9 +60,32 @@
   }
 
   /* Fix direction for inputs */
-  input, textarea, select {
+  input, textarea, select, p, div {
     direction: rtl;
     text-align: right;
+  }
+  
+  .notification-settings {
+    text-align: right;
+    padding: 1rem;
+  }
+  
+  .notification-settings h2 {
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+  
+  .notification-settings .setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .notification-settings .setting-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
   }
 
   /* Flip icons in RTL mode where needed */
