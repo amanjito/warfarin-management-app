@@ -39,7 +39,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     console.log("No PT tests available to render");
     return (
       <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">اطلاعات آزمایش PT موجود نیست</p>
+        <p className="text-gray-500">اطلاعات آزمایش <span className="unicode-bidi">PT</span> موجود نیست</p>
       </div>
     );
   }
