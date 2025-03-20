@@ -15,6 +15,8 @@ import Assistant from "@/pages/Assistant";
 import NotFound from "@/pages/not-found";
 import IntroPages from "@/pages/IntroPages";
 import Auth from "@/pages/Auth";
+import Profile from "@/pages/Profile";
+import Settings from "@/pages/Settings";
 
 // Check if user has seen intro pages
 const hasSeenIntro = () => {
@@ -60,6 +62,8 @@ function PrivateRouter() {
           <Route path="/medication" component={MedicationInfo} />
           <Route path="/reminders" component={Reminders} />
           <Route path="/assistant" component={Assistant} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </main>
