@@ -84,9 +84,6 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// Importing notification sound
-importScripts('/sounds/notification.js');
-
 // Push notification event
 self.addEventListener('push', (event) => {
   if (!event.data) {
@@ -102,16 +99,13 @@ self.addEventListener('push', (event) => {
       body: data.body || 'Time to take your medication',
       icon: data.icon || '/icons/icon-192x192.png',
       badge: '/icons/badge-72x72.png',
-      vibrate: [100, 50, 100, 200, 100, 50, 100],
-      sound: notificationSound, // Use the imported notification sound
-      silent: false, // Ensure sound is played
+      vibrate: [100, 50, 100],
       data: {
         dateOfArrival: Date.now(),
         primaryKey: 1,
         url: data.url || '/',
         reminderId: data.reminderId,
-        medicationId: data.medicationId,
-        sound: notificationSound // Pass sound to notification click handler
+        medicationId: data.medicationId
       },
       actions: [
         {
@@ -128,42 +122,12 @@ self.addEventListener('push', (event) => {
     };
     
     event.waitUntil(
-      // Show notification and play sound
-      Promise.all([
-        self.registration.showNotification(data.title || 'Medication Reminder', options),
-        playNotificationSound()
-      ])
+      self.registration.showNotification(data.title || 'Medication Reminder', options)
     );
   } catch (err) {
     console.error('Service Worker: Error processing push notification', err);
   }
 });
-
-// Function to play notification sound independently
-async function playNotificationSound() {
-  try {
-    // Use clients to find open windows
-    const allClients = await self.clients.matchAll({ type: 'window' });
-    
-    // If there's an open window, send a message to play the sound
-    if (allClients.length > 0) {
-      allClients.forEach(client => {
-        client.postMessage({
-          type: 'PLAY_NOTIFICATION_SOUND',
-          sound: notificationSound
-        });
-      });
-    } else {
-      // If no clients are open, we can't play a sound directly from the service worker
-      console.log('Service Worker: No open windows to play sound');
-    }
-    
-    return Promise.resolve();
-  } catch (error) {
-    console.error('Service Worker: Error playing notification sound', error);
-    return Promise.resolve(); // Don't fail the notification if sound fails
-  }
-}
 
 // Notification click event
 self.addEventListener('notificationclick', (event) => {
@@ -226,32 +190,26 @@ self.addEventListener('notificationclick', (event) => {
       event.waitUntil(
         new Promise(resolve => {
           setTimeout(() => {
-            Promise.all([
-              self.registration.showNotification('Medication Reminder', {
-                body: 'This is your snoozed reminder. Please take your medication now.',
-                icon: '/icons/icon-192x192.png',
-                badge: '/icons/badge-72x72.png',
-                vibrate: [100, 50, 100, 200, 100, 50, 100],
-                sound: notificationSound,
-                silent: false,
-                data: {
-                  dateOfArrival: Date.now(),
-                  primaryKey: 2,
-                  url: '/reminders',
-                  reminderId,
-                  medicationId,
-                  sound: notificationSound
-                },
-                actions: [
-                  {
-                    action: 'take',
-                    title: 'Take Now',
-                    icon: '/icons/check.png'
-                  }
-                ]
-              }),
-              playNotificationSound()
-            ]);
+            self.registration.showNotification('Medication Reminder', {
+              body: 'This is your snoozed reminder. Please take your medication now.',
+              icon: '/icons/icon-192x192.png',
+              badge: '/icons/badge-72x72.png',
+              vibrate: [100, 50, 100],
+              data: {
+                dateOfArrival: Date.now(),
+                primaryKey: 2,
+                url: '/reminders',
+                reminderId,
+                medicationId
+              },
+              actions: [
+                {
+                  action: 'take',
+                  title: 'Take Now',
+                  icon: '/icons/check.png'
+                }
+              ]
+            });
             resolve();
           }, 10 * 60 * 1000); // 10 minutes
         })
