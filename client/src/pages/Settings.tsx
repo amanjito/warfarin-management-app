@@ -233,9 +233,9 @@ export default function Settings() {
                   />
                 </div>
                 <div className="space-y-0.5">
-                  <Label htmlFor="pt-test-reminders">یادآوری‌های آزمایش PT</Label>
+                  <Label htmlFor="pt-test-reminders" className="inline-block">یادآوری‌های آزمایش <span className="unicode-bidi isolate">PT</span></Label>
                   <p className="text-sm text-muted-foreground">
-                    دریافت اعلان برای انجام آزمایش‌های PT در زمان مقرر
+                    دریافت اعلان برای انجام آزمایش‌های <span className="unicode-bidi isolate">PT</span> در زمان مقرر
                   </p>
                 </div>
               </div>
