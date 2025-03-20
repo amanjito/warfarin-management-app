@@ -130,6 +130,23 @@ export default function NotificationManager() {
       setIsLoading(false);
     }
   };
+  
+  // Test just the sound
+  const handleTestSound = () => {
+    try {
+      if (window.playMedicationReminderSound) {
+        window.playMedicationReminderSound();
+      } else {
+        const audio = new Audio('/sounds/medication-reminder.mp3');
+        audio.volume = 0.7;
+        audio.play().catch(error => {
+          console.error('Error playing test sound:', error);
+        });
+      }
+    } catch (error) {
+      console.error('Error testing sound:', error);
+    }
+  };
 
   if (!isSupported) {
     return (
@@ -193,7 +210,7 @@ export default function NotificationManager() {
         )}
 
         {isSubscribed && (
-          <div className="pt-4">
+          <div className="pt-4 space-y-2">
             <Button 
               variant="outline" 
               onClick={handleSendTestNotification} 
@@ -201,6 +218,15 @@ export default function NotificationManager() {
               className="w-full"
             >
               {testSent ? "اعلان آزمایشی ارسال شد!" : "ارسال اعلان آزمایشی"}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              onClick={handleTestSound} 
+              className="w-full flex items-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide-volume-2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+              تست صدای اعلان
             </Button>
           </div>
         )}

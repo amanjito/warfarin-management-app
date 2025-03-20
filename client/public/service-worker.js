@@ -119,6 +119,11 @@ self.addEventListener('push', (event) => {
           action: 'snooze',
           title: 'Snooze',
           icon: '/icons/snooze.png'
+        },
+        {
+          action: 'dismiss',
+          title: 'Dismiss',
+          icon: '/icons/check.png'
         }
       ]
     };
