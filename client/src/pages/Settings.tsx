@@ -51,10 +51,6 @@ export default function Settings() {
     
     // Language settings
     language: 'fa',
-    
-    // Privacy settings
-    dataSharingConsent: false,
-    analyticsConsent: true,
   });
   
   const handleToggleSetting = (key: keyof typeof settings) => {
@@ -343,43 +339,7 @@ export default function Settings() {
         </TabsContent>
         
         <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>حریم خصوصی و داده‌ها</CardTitle>
-              <CardDescription>
-                مدیریت داده‌های شخصی و تنظیمات حریم خصوصی
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="data-sharing">اشتراک‌گذاری داده‌های پزشکی</Label>
-                  <p className="text-sm text-muted-foreground">
-                    اجازه اشتراک‌گذاری داده‌های بی‌نام با پژوهشگران برای بهبود درمان
-                  </p>
-                </div>
-                <Switch
-                  id="data-sharing"
-                  checked={settings.dataSharingConsent}
-                  onCheckedChange={() => handleToggleSetting('dataSharingConsent')}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="analytics">ارسال داده‌های تحلیلی</Label>
-                  <p className="text-sm text-muted-foreground">
-                    کمک به بهبود برنامه با ارسال داده‌های استفاده ناشناس
-                  </p>
-                </div>
-                <Switch
-                  id="analytics"
-                  checked={settings.analyticsConsent}
-                  onCheckedChange={() => handleToggleSetting('analyticsConsent')}
-                />
-              </div>
-            </CardContent>
-          </Card>
+
           
           <Card className="mt-6">
             <CardHeader>
