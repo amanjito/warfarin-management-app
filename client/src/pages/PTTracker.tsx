@@ -279,8 +279,8 @@ export default function PTTracker() {
                 <SelectValue placeholder="انتخاب بازه زمانی" />
               </SelectTrigger>
               <SelectContent className="dark:border-slate-700 dark:bg-slate-800">
-                <SelectItem value="3">۳ ماه اخیر</SelectItem>
-                <SelectItem value="6">۶ ماه اخیر</SelectItem>
+                <SelectItem value="3">ماه اخیر ۳</SelectItem>
+                <SelectItem value="6">ماه اخیر ۶</SelectItem>
                 <SelectItem value="12">سال اخیر</SelectItem>
                 <SelectItem value="all">تمام زمان‌ها</SelectItem>
               </SelectContent>
