@@ -103,7 +103,7 @@ export default function PTTable({ ptTests, onEdit, onDelete, showAll = false }: 
   if (ptTests.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-        هنوز آزمایش <span className="unicode-bidi">PT</span> ثبت نشده است. از فرم بالا برای افزودن اولین آزمایش استفاده کنید.
+        هنوز آزمایش PT ثبت نشده است. از فرم بالا برای افزودن اولین آزمایش استفاده کنید.
       </div>
     );
   }

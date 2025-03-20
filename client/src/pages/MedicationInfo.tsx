@@ -36,7 +36,7 @@ export default function MedicationInfo() {
             <li>سابقه سکته</li>
           </ul>
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            نظارت منظم بر <span className="unicode-bidi">INR</span> (نسبت نرمال شده بین‌المللی) شما هنگام مصرف وارفارین برای اطمینان از دریافت دوز مناسب ضروری است.
+            نظارت منظم بر INR (نسبت نرمال شده بین‌المللی) شما هنگام مصرف وارفارین برای اطمینان از دریافت دوز مناسب ضروری است.
           </p>
         </>
       )
@@ -55,7 +55,7 @@ export default function MedicationInfo() {
             <li>بدون مشورت با پزشک، دوز خود را تغییر ندهید</li>
             <li>اگر یک دوز را فراموش کردید، به محض یادآوری در همان روز آن را مصرف کنید</li>
             <li>برای جبران دوز فراموش شده، دوز دوبرابر مصرف نکنید</li>
-            <li>قرار ملاقات‌های منظم برای آزمایش <span className="unicode-bidi">INR</span> را رعایت کنید</li>
+            <li>قرار ملاقات‌های منظم برای آزمایش INR را رعایت کنید</li>
           </ul>
           <div className="bg-yellow-50 dark:bg-yellow-900/30 border-r-4 border-yellow-400 p-3 text-sm text-right">
             <p className="font-medium text-yellow-800 dark:text-yellow-300">مهم</p>
@@ -207,7 +207,7 @@ export default function MedicationInfo() {
                     transition={{ duration: 0.3, delay: 0.1 }}
                   >
                     <Badge variant="outline" className="bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/50 text-right">
-                      محدوده هدف <span className="unicode-bidi">INR</span>: ۲/۰-۳/۰
+                      محدوده هدف INR: ۲/۰-۳/۰
                     </Badge>
                   </motion.div>
                   <motion.div

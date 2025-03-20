@@ -69,11 +69,4 @@
   .rtl-icon {
     transform: scaleX(-1);
   }
-  
-  /* Fix for mixed Latin/RTL text */
-  .unicode-bidi {
-    unicode-bidi: isolate !important;
-    display: inline-block;
-    direction: ltr;
-  }
 }

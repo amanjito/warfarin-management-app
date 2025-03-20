@@ -18,7 +18,7 @@ const formSchema = z.object({
   testDate: z.string().nonempty({ message: "تاریخ آزمایش الزامی است" }),
   inrValue: z.string().refine(
     (val) => !isNaN(parseFloat(val)) && parseFloat(val) > 0,
-    { message: "مقدار INR باید یک عدد مثبت باشد".replace("INR", "<span class='unicode-bidi'>INR</span>") }
+    { message: "مقدار INR باید یک عدد مثبت باشد" }
   ),
   notes: z.string().optional()
 });
@@ -142,7 +142,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="text-right">ویرایش آزمایش <span className="unicode-bidi">PT/INR</span></DialogTitle>
+          <DialogTitle className="text-right">ویرایش آزمایش PT/INR</DialogTitle>
         </DialogHeader>
         
         <Form {...form}>
@@ -182,7 +182,7 @@ export default function EditPTForm({ ptTest, isOpen, onClose, onSubmit, isPendin
                 name="inrValue"
                 render={({ field }) => (
                   <FormItem className="text-right">
-                    <FormLabel>مقدار <span className="unicode-bidi">INR</span></FormLabel>
+                    <FormLabel>مقدار INR</FormLabel>
                     <FormControl>
                       <Input 
                         type="number" 

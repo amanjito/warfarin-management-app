@@ -39,7 +39,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     console.log("No PT tests available to render");
     return (
       <div className="h-[300px] flex items-center justify-center bg-gray-50 rounded-lg">
-        <p className="text-gray-500">اطلاعات آزمایش <span className="unicode-bidi">PT</span> موجود نیست</p>
+        <p className="text-gray-500">اطلاعات آزمایش PT موجود نیست</p>
       </div>
     );
   }
@@ -64,7 +64,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
     labels,
     datasets: [
       {
-        label: 'مقدار INR'.replace("INR", "<span class='unicode-bidi'>INR</span>"),
+        label: 'مقدار INR',
         data: inrValues,
         borderColor: '#2196F3',
         backgroundColor: 'rgba(33, 150, 243, 0.1)',
@@ -123,7 +123,7 @@ export default function PTChart({ ptTests }: PTChartProps) {
         max: 4,
         title: {
           display: true,
-          text: 'مقدار INR'.replace("INR", "<span class='unicode-bidi'>INR</span>")
+          text: 'مقدار INR'
         },
         ticks: {
           callback: function(value) {
