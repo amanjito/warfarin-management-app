@@ -190,62 +190,62 @@ export default function Settings() {
                 مشخص کنید که چه زمانی و چگونه می‌خواهید اعلان‌ها را دریافت کنید.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="push-notifications">اعلان‌های پوش</Label>
-                  <p className="text-sm text-muted-foreground">
-                    دریافت اعلان‌ها حتی زمانی که برنامه بسته است
-                  </p>
-                </div>
+            <CardContent className="space-y-4 text-right">
+              <div className="flex flex-row-reverse items-center justify-between">
                 <Switch
                   id="push-notifications"
                   checked={settings.pushNotifications}
                   onCheckedChange={() => handleToggleSetting('pushNotifications')}
                   disabled={!pushSupported || isPending}
                 />
+                <div className="space-y-0.5">
+                  <Label htmlFor="push-notifications">اعلان‌های پوش</Label>
+                  <p className="text-sm text-muted-foreground">
+                    دریافت اعلان‌ها حتی زمانی که برنامه بسته است
+                  </p>
+                </div>
               </div>
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <Switch
+                  id="reminder-notifications"
+                  checked={settings.reminderNotifications}
+                  onCheckedChange={() => handleToggleSetting('reminderNotifications')}
+                />
                 <div className="space-y-0.5">
                   <Label htmlFor="reminder-notifications">یادآوری‌های دارو</Label>
                   <p className="text-sm text-muted-foreground">
                     دریافت اعلان برای مصرف دارو در زمان‌های مشخص شده
                   </p>
                 </div>
-                <Switch
-                  id="reminder-notifications"
-                  checked={settings.reminderNotifications}
-                  onCheckedChange={() => handleToggleSetting('reminderNotifications')}
-                />
               </div>
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <Switch
+                  id="pt-test-reminders"
+                  checked={settings.ptTestReminders}
+                  onCheckedChange={() => handleToggleSetting('ptTestReminders')}
+                />
                 <div className="space-y-0.5">
                   <Label htmlFor="pt-test-reminders">یادآوری‌های آزمایش PT</Label>
                   <p className="text-sm text-muted-foreground">
                     دریافت اعلان برای انجام آزمایش‌های PT در زمان مقرر
                   </p>
                 </div>
-                <Switch
-                  id="pt-test-reminders"
-                  checked={settings.ptTestReminders}
-                  onCheckedChange={() => handleToggleSetting('ptTestReminders')}
-                />
               </div>
               
-              <div className="flex items-center justify-between">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <Switch
+                  id="medication-updates"
+                  checked={settings.medicationUpdates}
+                  onCheckedChange={() => handleToggleSetting('medicationUpdates')}
+                />
                 <div className="space-y-0.5">
                   <Label htmlFor="medication-updates">به‌روزرسانی‌های دارویی</Label>
                   <p className="text-sm text-muted-foreground">
                     اطلاع‌رسانی درباره تغییرات در برنامه دارویی
                   </p>
                 </div>
-                <Switch
-                  id="medication-updates"
-                  checked={settings.medicationUpdates}
-                  onCheckedChange={() => handleToggleSetting('medicationUpdates')}
-                />
               </div>
             </CardContent>
           </Card>
@@ -259,34 +259,34 @@ export default function Settings() {
                 ظاهر برنامه و زبان مورد نظر خود را تنظیم کنید.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+            <CardContent className="space-y-4 text-right">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <Switch
+                  id="dark-mode"
+                  checked={settings.darkMode}
+                  onCheckedChange={() => handleToggleSetting('darkMode')}
+                />
                 <div className="space-y-0.5">
                   <Label htmlFor="dark-mode">حالت تاریک</Label>
                   <p className="text-sm text-muted-foreground">
                     فعال‌سازی حالت تاریک برای استفاده در محیط‌های کم‌نور
                   </p>
                 </div>
-                <Switch
-                  id="dark-mode"
-                  checked={settings.darkMode}
-                  onCheckedChange={() => handleToggleSetting('darkMode')}
-                />
               </div>
               
-              <div className="space-y-2">
+              <div className="space-y-2 text-right">
                 <Label htmlFor="language-select">زبان</Label>
                 <Select
                   value={settings.language}
                   onValueChange={handleLanguageChange}
                 >
-                  <SelectTrigger id="language-select" className="w-full">
-                    <Languages className="mr-2 h-4 w-4" />
+                  <SelectTrigger id="language-select" className="w-full text-right">
                     <SelectValue placeholder="انتخاب زبان" />
+                    <Languages className="ml-2 h-4 w-4" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="fa">فارسی</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="fa" className="text-right">فارسی</SelectItem>
+                    <SelectItem value="en" className="text-right">English</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -300,9 +300,9 @@ export default function Settings() {
                 راهنما و منابع کمکی برای استفاده از برنامه
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+            <CardContent className="space-y-4 text-right">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
                   <div className="bg-primary/10 p-2 rounded-full">
                     <HelpCircle className="h-6 w-6 text-primary" />
                   </div>
@@ -318,8 +318,8 @@ export default function Settings() {
                 </Button>
               </div>
               
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
+              <div className="flex flex-row-reverse items-center justify-between">
+                <div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
                   <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded-full">
                     <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
                   </div>
@@ -348,36 +348,36 @@ export default function Settings() {
                 مدیریت حساب کاربری و دسترسی‌های شما
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 text-right">
               <Button
                 variant="outline"
-                className="w-full justify-between"
+                className="w-full flex flex-row-reverse justify-between"
                 onClick={handleLogout}
                 disabled={isPending}
               >
-                <span>خروج از حساب کاربری</span>
                 <LogOut className="h-4 w-4 text-red-500" />
+                <span>خروج از حساب کاربری</span>
               </Button>
               
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
                     variant="destructive"
-                    className="w-full justify-between"
+                    className="w-full flex flex-row-reverse justify-between"
                     disabled={isPending}
                   >
-                    <span>حذف حساب کاربری</span>
                     <Trash2 className="h-4 w-4" />
+                    <span>حذف حساب کاربری</span>
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent>
+                <AlertDialogContent className="text-right">
                   <AlertDialogHeader>
                     <AlertDialogTitle>آیا از حذف حساب کاربری خود مطمئن هستید؟</AlertDialogTitle>
                     <AlertDialogDescription>
                       این عمل غیرقابل بازگشت است. تمام داده‌های شما شامل سوابق دارویی، آزمایش‌ها و یادآوری‌ها به طور دائمی حذف خواهند شد.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
-                  <AlertDialogFooter>
+                  <AlertDialogFooter className="flex-row-reverse">
                     <AlertDialogCancel>انصراف</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDeleteAccount}
