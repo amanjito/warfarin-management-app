@@ -191,13 +191,15 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-right">
-              <div className="flex flex-row-reverse items-center justify-between">
-                <Switch
-                  id="push-notifications"
-                  checked={settings.pushNotifications}
-                  onCheckedChange={() => handleToggleSetting('pushNotifications')}
-                  disabled={!pushSupported || isPending}
-                />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Switch
+                    id="push-notifications"
+                    checked={settings.pushNotifications}
+                    onCheckedChange={() => handleToggleSetting('pushNotifications')}
+                    disabled={!pushSupported || isPending}
+                  />
+                </div>
                 <div className="space-y-0.5">
                   <Label htmlFor="push-notifications">اعلان‌های پوش</Label>
                   <p className="text-sm text-muted-foreground">
@@ -206,12 +208,14 @@ export default function Settings() {
                 </div>
               </div>
               
-              <div className="flex flex-row-reverse items-center justify-between">
-                <Switch
-                  id="reminder-notifications"
-                  checked={settings.reminderNotifications}
-                  onCheckedChange={() => handleToggleSetting('reminderNotifications')}
-                />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Switch
+                    id="reminder-notifications"
+                    checked={settings.reminderNotifications}
+                    onCheckedChange={() => handleToggleSetting('reminderNotifications')}
+                  />
+                </div>
                 <div className="space-y-0.5">
                   <Label htmlFor="reminder-notifications">یادآوری‌های دارو</Label>
                   <p className="text-sm text-muted-foreground">
@@ -220,12 +224,14 @@ export default function Settings() {
                 </div>
               </div>
               
-              <div className="flex flex-row-reverse items-center justify-between">
-                <Switch
-                  id="pt-test-reminders"
-                  checked={settings.ptTestReminders}
-                  onCheckedChange={() => handleToggleSetting('ptTestReminders')}
-                />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Switch
+                    id="pt-test-reminders"
+                    checked={settings.ptTestReminders}
+                    onCheckedChange={() => handleToggleSetting('ptTestReminders')}
+                  />
+                </div>
                 <div className="space-y-0.5">
                   <Label htmlFor="pt-test-reminders">یادآوری‌های آزمایش PT</Label>
                   <p className="text-sm text-muted-foreground">
@@ -234,12 +240,14 @@ export default function Settings() {
                 </div>
               </div>
               
-              <div className="flex flex-row-reverse items-center justify-between">
-                <Switch
-                  id="medication-updates"
-                  checked={settings.medicationUpdates}
-                  onCheckedChange={() => handleToggleSetting('medicationUpdates')}
-                />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Switch
+                    id="medication-updates"
+                    checked={settings.medicationUpdates}
+                    onCheckedChange={() => handleToggleSetting('medicationUpdates')}
+                  />
+                </div>
                 <div className="space-y-0.5">
                   <Label htmlFor="medication-updates">به‌روزرسانی‌های دارویی</Label>
                   <p className="text-sm text-muted-foreground">
@@ -260,12 +268,14 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-right">
-              <div className="flex flex-row-reverse items-center justify-between">
-                <Switch
-                  id="dark-mode"
-                  checked={settings.darkMode}
-                  onCheckedChange={() => handleToggleSetting('darkMode')}
-                />
+              <div className="flex items-center justify-between">
+                <div>
+                  <Switch
+                    id="dark-mode"
+                    checked={settings.darkMode}
+                    onCheckedChange={() => handleToggleSetting('darkMode')}
+                  />
+                </div>
                 <div className="space-y-0.5">
                   <Label htmlFor="dark-mode">حالت تاریک</Label>
                   <p className="text-sm text-muted-foreground">
@@ -301,38 +311,38 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 text-right">
-              <div className="flex flex-row-reverse items-center justify-between">
-                <div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
-                  <div className="bg-primary/10 p-2 rounded-full">
-                    <HelpCircle className="h-6 w-6 text-primary" />
-                  </div>
+              <div className="flex items-center justify-between">
+                <Button variant="ghost" size="sm">
+                  مشاهده
+                </Button>
+                <div className="flex items-center space-x-4 space-x-reverse">
                   <div>
                     <h3 className="font-medium">راهنمای استفاده</h3>
                     <p className="text-sm text-muted-foreground">
                       آشنایی با قابلیت‌های برنامه و نحوه استفاده
                     </p>
                   </div>
+                  <div className="bg-primary/10 p-2 rounded-full">
+                    <HelpCircle className="h-6 w-6 text-primary" />
+                  </div>
                 </div>
-                <Button variant="ghost" size="sm">
-                  مشاهده
-                </Button>
               </div>
               
-              <div className="flex flex-row-reverse items-center justify-between">
-                <div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
-                  <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded-full">
-                    <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  </div>
+              <div className="flex items-center justify-between">
+                <Button variant="ghost" size="sm">
+                  مطالعه
+                </Button>
+                <div className="flex items-center space-x-4 space-x-reverse">
                   <div>
                     <h3 className="font-medium">درباره وارفارین</h3>
                     <p className="text-sm text-muted-foreground">
                       اطلاعات دارویی و نکات مهم درباره مصرف وارفارین
                     </p>
                   </div>
+                  <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded-full">
+                    <BookOpen className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  </div>
                 </div>
-                <Button variant="ghost" size="sm">
-                  مطالعه
-                </Button>
               </div>
             </CardContent>
           </Card>
